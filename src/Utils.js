@@ -7,7 +7,7 @@ const {requestUrl, webSocketUrl, dailyContestDomain, env = ''} = require('./loca
 
 class Utils{
 	static userInfoString = `${env}USERINFO`;
-	static loggedInUserinfo = cookie.load(this.userInfoString);
+	static loggedInUserinfo = cookie.load(`${env}USERINFO`);
 	static webSocket;
 
 	static setLoggedInUserInfo(object){

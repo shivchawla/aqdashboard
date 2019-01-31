@@ -1,26 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Route from 'react-router/Route';
+import Switch from 'react-router-dom/Switch';
+import {MuiPickersUtilsProvider} from 'material-ui-pickers';
+import MomentUtils from '@date-io/moment';
+import Research from './Research/Research';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      	<MuiPickersUtilsProvider utils={MomentUtils}>
+			<div className="App">
+				<Switch>
+					<Route exact={true} path='/research' component={Research} />
+				</Switch>
+			</div>
+		</MuiPickersUtilsProvider>
     );
   }
 }
