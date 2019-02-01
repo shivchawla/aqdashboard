@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import styled from 'styled-components';
 import Utils from './../../Utils';
 import axios from 'axios';
-import {
-    Select, DatePicker, Row, Col, Icon, Input, Modal, Spin, Tabs,
-    Radio, message
-} from 'antd';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import ActionIcon from '../../components/Buttons/ActionIcon';
+import RadioGroup from '../../components/Selections/RadioGroup';
+import DateComponent from '../../components/Selections/DateComponent';
+import CardRadio from '../../components/Selections/CardCustomRadio';
 import { withRouter, Link } from 'react-router-dom';
 import NewStartegy from './../NewStrategy/NewStrategy.jsx';
 import AceEditor from 'react-ace';
@@ -13,15 +24,16 @@ import 'brace/theme/tomorrow_night_bright';
 import 'brace/mode/julia';
 import moment from 'moment';
 import RunningBackTest from './RunningBackTest/RunningBackTest.jsx';
-import Loading from 'react-loading-bar'
-import 'react-loading-bar/dist/index.css';
+import AqLayoutDesktop from '../../components/Layout/AqDesktopLayout';
+import {benchmarks} from '../../constants/benchmarks';
+import {universe} from '../../constants/universe';
+import { primaryColor, verticalBox, horizontalBox } from '../../constants';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
 const endDate = moment(DateHelper.getPreviousNonHolidayWeekday(moment().add(1, 'days')));
 
 class StartegyDetail extends Component {
-
     _mounted = false;
     cancelGetStrategy = undefined;
     cancelGetBenchmark = undefined;
@@ -88,6 +100,7 @@ class StartegyDetail extends Component {
             'newBacktestRunData': {},
             'backtestProgress': 0,
             'showBacktestRedirectModal': false,
+            settingsTab: 0,
             logsData: []
         };
         this.updateState = (data) => {
@@ -127,41 +140,14 @@ class StartegyDetail extends Component {
         }
 
         this.loadBenchMarkDropdownData = () => {
-            axios(Utils.getBenchMarkUrl(), {
-                cancelToken: new axios.CancelToken((c) => {
-                    // An executor function receives a cancel function as a parameter
-                    this.cancelGetBenchmark = c;
-                })
-            })
-                .then((response) => {
-                    const benchmarks = _.get(response, 'data.benchmark', []);
-                    const universe = _.get(response, 'data.universe', 'Nifty 50');
-                    let selectedBenchmark = "";
-                    let selectedUniverse = "";
-                    if (benchmarks.length > 0) {
-                        selectedBenchmark = benchmarks[0];
-                    }
-                    if (universe.length > 0) {
-                        selectedUniverse = universe[0];
-                    }
-                    this.updateState({
-                        'benchmark': benchmarks,
-                        'universe': universe,
-                        'selectedBenchmark': selectedBenchmark,
-                        'selectedUniverse': selectedUniverse
-                    });
-                    this.cancelGetBenchmark = undefined;
-                })
-                .catch((error) => {
-                    Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                    }
-                    this.cancelGetBenchmark = undefined;
-                });
+            const selectedBenchmark = benchmarks[0];
+            const selectedUniverse = universe[0];
+            this.updateState({
+                'benchmark': benchmarks,
+                'universe': universe,
+                'selectedBenchmark': selectedBenchmark,
+                'selectedUniverse': selectedUniverse
+            });
         }
 
         this.startegyNameChange = (e) => {
@@ -181,16 +167,19 @@ class StartegyDetail extends Component {
             this.updateState({ 'endDate': date });
         }
 
-        this.onBenchmarkChange = (value) => {
-            this.updateState({ 'selectedBenchmark': value });
+        this.onBenchmarkChange = (e) => {
+            this.updateState({ 'selectedBenchmark': e.target.value });
         }
 
-        this.onUniverseChange = (value) => {
-            this.updateState({ 'selectedUniverse': value });
+        this.onUniverseChange = (e) => {
+            this.updateState({ 'selectedUniverse': e.target.value });
         }
 
-        this.onRebalanceChange = (e) => {
-            this.updateState({ 'selectedRebalance': e.target.value });
+        this.onRebalanceChange = (selectedValue = 0) => {
+            const values = ['Daily', 'Weekly', 'Monthly'];
+            const value = selectedValue >= values.length ? values[0] : values[selectedValue];
+
+            this.updateState({ 'selectedRebalance': value });
         }
 
         this.clickedOnAddNewStrategy = () => {
@@ -236,7 +225,8 @@ class StartegyDetail extends Component {
             })
                 .then((response) => {
                     if (showResultInfo) {
-                        message.success('Strategy saved successfully');
+                        // message.success('Strategy saved successfully');
+                        console.log('Strategy saved successfully');
                     }
                     resolve(true);
                 })
@@ -250,7 +240,8 @@ class StartegyDetail extends Component {
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
                     if (showResultInfo) {
-                        message.error('Unable to save strategy');
+                        // message.error('Unable to save strategy');
+                        console.log('Unable to save strategy');
                     }
                 });
         })
@@ -455,18 +446,19 @@ class StartegyDetail extends Component {
     renderBacktestRedirectModal = () => {
         const backtestRedirectUrl = '/research/backtests/' + this.state.strategyId + '?type=backtest&strategyName=' + this.state.strategy.name + '&backtestName=New Backtest';
         return (
-            <Modal
-                title="Redirect to Backtest"
-                onOk={
-                    () => this.props.history.push(backtestRedirectUrl)
-                }
-                onCancel={() => {
-                    this.updateState({ showBacktestRedirectModal: false })
-                }}
-                visible={this.state.showBacktestRedirectModal}
-            >
-                <h3>Backtest is taking too long to complete. Redirect to Backtest Detail</h3>
-            </Modal>
+            // <Modal
+            //     title="Redirect to Backtest"
+            //     onOk={
+            //         () => this.props.history.push(backtestRedirectUrl)
+            //     }
+            //     onCancel={() => {
+            //         this.updateState({ showBacktestRedirectModal: false })
+            //     }}
+            //     visible={this.state.showBacktestRedirectModal}
+            // >
+            //     <h3>Backtest is taking too long to complete. Redirect to Backtest Detail</h3>
+            // </Modal>
+            null
         );
     }
 
@@ -755,7 +747,7 @@ class StartegyDetail extends Component {
         if (!Utils.isLoggedIn()) {
             Utils.goToLoginPage(this.props.history, window.location.href);
         } else {
-            this.props.pageChange('research');
+            // this.props.pageChange('research');
             if (this._mounted) {
                 this.loadStrategyinfo();
                 this.loadBenchMarkDropdownData();
@@ -809,40 +801,46 @@ class StartegyDetail extends Component {
         }
     }
 
+    onSettingsTabChanged = (event, value) => {
+        this.updateState({settingsTab: value});
+    }
+
     render() {
 
-        const antIconLoading = <Icon type="loading" style={{ fontSize: 34 }} spin />;
+        const antIconLoading = <ActionIcon type="loading" style={{ fontSize: 34 }} spin />;
 
         const getNewStartegyModal = () => {
             return (
-                <Modal
-                    title=""
-                    wrapClassName="vertical-center-modal"
-                    visible={this.state.showNewStartegyDiv}
-                    footer={null}
-                    onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
-                >
-                    <NewStartegy
-                        onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
-                    />
-                </Modal>
+                // <Modal
+                //     title=""
+                //     wrapClassName="vertical-center-modal"
+                //     visible={this.state.showNewStartegyDiv}
+                //     footer={null}
+                //     onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
+                // >
+                //     <NewStartegy
+                //         onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
+                //     />
+                // </Modal>
+                null
             );
         }
 
         const getCloneStrategyModal = () => {
             return (
-                <Modal
-                    title=""
-                    wrapClassName="vertical-center-modal"
-                    visible={this.state.showCloneStartegyDiv}
-                    footer={null}
-                    onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
-                >
-                    <NewStartegy
-                        startegyClone={this.state.strategy}
-                        onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
-                    />
-                </Modal>
+                // <Modal
+                //     title=""
+                //     wrapClassName="vertical-center-modal"
+                //     visible={this.state.showCloneStartegyDiv}
+                //     footer={null}
+                //     onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
+                // >
+                //     <NewStartegy
+                //         startegyClone={this.state.strategy}
+                //         onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
+                //     />
+                // </Modal>
+                null
             );
         }
 
@@ -850,216 +848,304 @@ class StartegyDetail extends Component {
             const tabs = [];
             const Option = Select.Option;
 
+            const rebalanceRadioItems = ['Daily', 'Weekly', 'Monthly'];
+            const cancelPolicyRadioItems = ['EOD', 'GTC'];
+            const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
+            const selectedSlipPageTypeRadioItems = ['Variable', 'Spread'];
+
             const benchmarksOptions = [];
             for (let i = 0; i < this.state.benchmark.length; i++) {
-                benchmarksOptions.push(<Option key={i} value={this.state.benchmark[i]}>{this.state.benchmark[i]}</Option>);
+                benchmarksOptions.push(<MenuItem key={i} value={this.state.benchmark[i]}>{this.state.benchmark[i]}</MenuItem>);
             }
 
             const universeOptions = [];
             for (let i = 0; i < this.state.universe.length; i++) {
-                universeOptions.push(<Option key={i} value={this.state.universe[i]}>{this.state.universe[i]}</Option>);
+                universeOptions.push(<MenuItem key={i} value={this.state.universe[i]}>{this.state.universe[i]}</MenuItem>);
             }
 
             tabs.push(
-                <Tabs.TabPane tab="BASIC" key="basic">
+                <React.Fragment>
                     <div style={{ 'height': '100%', 'overflowY': 'auto' }}>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Initial Capital:
-              </p>
-                            <Input style={{ 'flex': '1' }}
-                                placeholder="Initial Capital" type="number"
+                        <div 
+                                style={{
+                                    ...horizontalBox,
+                                    justifyContent: 'space-between',
+                                    padding: '10px'
+                                }}
+                        >
+                            <TextField
+                                style={{ 'flex': '1' }} 
+                                label="Initial Capital"
+                                variant="outlined"
                                 value={this.state.initialCapital}
                                 onChange={(e) => { this.updateState({ 'initialCapital': e.target.value }) }}
-                                disabled={this.state.isBacktestRunning}
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="dense"
                             />
                         </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p 
-                                    style={{
-                                        'margin': '0px 10px 0px 0px',
-                                        'color': '#7c7c7c', 'minWidth': '100px'
-                                    }}
-                            >
-                                Start Date:
-                            </p>
-                            <DatePicker
-                                style={{ 'flex': '1' }}
-                                placeholder="Start Date"
+                        <div 
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '0 10px'
+                                }}
+                        >
+                            <Label>Start Date</Label>
+                            <DateComponent
+                                style={{flex: '1', padding: 0, marginLeft: '-20px'}}
                                 value={this.state.startDate}
                                 onChange={this.onStartDateChange}
                                 format="MM/DD/YYYY"
                                 disabledDate={this.getDisabledStartDate}
-                                disabled={this.state.isBacktestRunning} />
+                                disabled={this.state.isBacktestRunning} 
+                                color='#222'
+                                compact
+                            />
                         </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p 
-                                    style={{
-                                        'margin': '0px 10px 0px 0px',
-                                        'color': '#7c7c7c', 'minWidth': '100px'
-                                    }}
-                            >
-                                End Date:
-                            </p>
-                            <DatePicker style={{ 'flex': '1' }} placeholder="End Date"
-                                value={this.state.endDate} onChange={this.onEndDateChange}
+                        <div
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '0 10px'
+                                }}
+                        >
+                            <Label>End Date</Label>
+                            <DateComponent 
+                                style={{flex: '1', padding: 0, marginLeft: '-20px'}}
+                                value={this.state.endDate} 
+                                onChange={this.onEndDateChange}
                                 format="MM/DD/YYYY"
                                 disabledDate={this.getDisabledEndDate}
-                                disabled={this.state.isBacktestRunning} />
+                                disabled={this.state.isBacktestRunning} 
+                                color='#222'
+                                compact
+                            />
                         </div>
                         <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Benchmark:
-              </p>
-                            <Select style={{ 'flex': '1' }} value={this.state.selectedBenchmark}
-                                onChange={this.onBenchmarkChange}
-                                disabled={this.state.isBacktestRunning}>
-                                {benchmarksOptions}
-                            </Select>
+                            <FormControl style={{flex: '1'}} variant="outlined">
+                                <InputLabel htmlFor="benchmark">Benchmark</InputLabel>
+                                <Select 
+                                        input={
+                                            <OutlinedInput
+                                              name="benchmark"
+                                              id="benchmark"
+                                              margin="dense"
+                                              labelWidth={80}
+                                            />
+                                        }
+                                        value={this.state.selectedBenchmark}
+                                        onChange={this.onBenchmarkChange}
+                                        disabled={this.state.isBacktestRunning}
+                                >
+                                    {benchmarksOptions}
+                                </Select>
+                            </FormControl>
                         </div>
                         <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Universe:
-              </p>
-                            <Select style={{ 'flex': '1' }} value={this.state.selectedUniverse}
-                                onChange={this.onUniverseChange}
-                                disabled={this.state.isBacktestRunning}>
-                                {universeOptions}
-                            </Select>
+                            <FormControl style={{flex: '1'}} variant="outlined">
+                                <InputLabel htmlFor="universe">Universe</InputLabel>
+                                <Select 
+                                        input={
+                                            <OutlinedInput
+                                              name="universe"
+                                              id="universe"
+                                              margin="dense"
+                                              labelWidth={60}
+                                            />
+                                        }
+                                        value={this.state.selectedUniverse}
+                                        onChange={this.onUniverseChange}
+                                        disabled={this.state.isBacktestRunning}
+                                        placeholder="Universe"
+                                >
+                                    {universeOptions}
+                                </Select>
+                            </FormControl>
                         </div>
                     </div>
-                </Tabs.TabPane>
+                </React.Fragment>
             );
             tabs.push(
-                <Tabs.TabPane tab="ADVANCED" key="advanced">
+                <React.Fragment label="ADVANCED">
                     <div style={{ 'height': '100%', 'overflowY': 'auto' }}>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Rebalance:
-              </p>
-                            <Radio.Group style={{ 'flex': '1' }}
-                                onChange={this.onRebalanceChange}
-                                value={this.state.selectedRebalance}
-                                disabled={this.state.isBacktestRunning}>
-                                <Radio.Button value="Daily">Daily</Radio.Button>
-                                <Radio.Button value="Weekly">Weekly</Radio.Button>
-                                <Radio.Button value="Monthly">Monthly</Radio.Button>
-                            </Radio.Group>
+                        <div
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '10px'
+                                }}
+                        >
+                            <Label>Rebalance</Label>
+                            <RadioGroup 
+                                items={rebalanceRadioItems}
+                                onChange={this.onRebalanceChange} 
+                                defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
+                                disabled={this.state.isBacktestRunning}
+                                CustomRadio={CardRadio}
+                                // small
+                                style={{marginTop: '10px'}}
+                            />
+                        </div>
+                        <div
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '10px'
+                                }}
+                        >
+                            <Label>Cancel Policy</Label>
+                            <RadioGroup 
+                                items={cancelPolicyRadioItems}
+                                onChange={(selectedValue) => { 
+                                    const value = selectedValue >= cancelPolicyRadioItems.length 
+                                        ? cancelPolicyRadioItems[0]
+                                        : cancelPolicyRadioItems[selectedValue]; 
+                                    this.updateState({ 'selectedCancelPolicy': value }) 
+                                }}
+                                defaultSelected={cancelPolicyRadioItems.indexOf(this.state.selectedRebalance)}
+                                disabled={this.state.isBacktestRunning}
+                                CustomRadio={CardRadio}
+                                // small
+                                style={{marginTop: '10px'}}
+                            />
+                        </div>
+                        <div
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '10px'
+                                }}
+                        >
+                            <Label>Commission</Label>
+                            <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
+                                
+                                <TextField
+                                    style={{ 
+                                        'width': '80px', 
+                                        'marginRight': '6px' 
+                                    }} 
+                                    // label="Commission"
+                                    value={this.state.selectedCommission}
+                                    onChange={(e) => { this.updateState({ 'selectedCommission': e.target.value }) }}
+                                    type="number"
+                                    variant="outlined"
+                                    margin="dense"
+                                    disabled={this.state.isBacktestRunning} 
+                                />
+                                <RadioGroup 
+                                    items={selectedCommissionTypeRadioItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue >= selectedCommissionTypeRadioItems.length 
+                                            ? selectedCommissionTypeRadioItems[0]
+                                            : selectedCommissionTypeRadioItems[selectedValue]; 
+                                        this.updateState({ 'selectedCommissionType': value }) 
+                                    }}
+                                    defaultSelected={selectedCommissionTypeRadioItems.indexOf(this.state.selectedRebalance)}
+                                    disabled={this.state.isBacktestRunning}
+                                    CustomRadio={CardRadio}
+                                    // small
+                                />
+                            </div>
+                        </div>
+                        <div
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '10px'
+                                }}
+                        >
+                            <Label>Slippage</Label>
+                            <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
+                                <TextField
+                                    style={{ 'width': '80px', 'marginRight': '6px' }}
+                                    value={this.state.selectedSlipPage}
+                                    onChange={(e) => { this.updateState({ 'selectedSlipPage': e.target.value }) }}
+                                    type="number"
+                                    margin="dense"
+                                    variant="outlined"
+                                    disabled={this.state.isBacktestRunning} 
+                                />
+                                <RadioGroup 
+                                    items={selectedSlipPageTypeRadioItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue >= selectedSlipPageTypeRadioItems.length 
+                                            ? selectedSlipPageTypeRadioItems[0]
+                                            : selectedSlipPageTypeRadioItems[selectedValue]; 
+                                        this.updateState({ 'selectedSlipPageType': value }) 
+                                    }}
+                                    defaultSelected={selectedSlipPageTypeRadioItems.indexOf(this.state.selectedRebalance)}
+                                    disabled={this.state.isBacktestRunning}
+                                    CustomRadio={CardRadio}
+                                    // small
+                                />
+                            </div>
                         </div>
                         <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Cancel Policy:
-              </p>
-                            <Radio.Group style={{ 'flex': '1' }}
-                                onChange={(e) => { this.updateState({ 'selectedCancelPolicy': e.target.value }) }}
-                                value={this.state.selectedCancelPolicy}
-                                disabled={this.state.isBacktestRunning}>
-                                <Radio.Button value="EOD">EOD</Radio.Button>
-                                <Radio.Button value="GTC">GTC</Radio.Button>
-                            </Radio.Group>
-                        </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Commission:
-              </p>
-                            <Input style={{ 'width': '80px', 'marginRight': '6px' }} placeholder="Commission" type="number"
-                                value={this.state.selectedCommission}
-                                onChange={(e) => { this.updateState({ 'selectedCommission': e.target.value }) }}
-                                disabled={this.state.isBacktestRunning} />
-                            <Radio.Group style={{ 'flex': '1' }}
-                                onChange={(e) => { this.updateState({ 'selectedCommissionType': e.target.value }) }}
-                                value={this.state.selectedCommissionType}
-                                disabled={this.state.isBacktestRunning}>
-                                <Radio.Button value="PerTrade">PerTrade</Radio.Button>
-                                <Radio.Button value="PerShare">PerShare</Radio.Button>
-                            </Radio.Group>
-                        </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Slip page:
-              </p>
-                            <Input style={{ 'width': '80px', 'marginRight': '6px' }} placeholder="Slip page"
-                                type="number"
-                                value={this.state.selectedSlipPage}
-                                onChange={(e) => { this.updateState({ 'selectedSlipPage': e.target.value }) }}
-                                disabled={this.state.isBacktestRunning} />
-                            <Radio.Group style={{ 'flex': '1' }}
-                                onChange={(e) => { this.updateState({ 'selectedSlipPageType': e.target.value }) }}
-                                value={this.state.selectedSlipPageType}
-                                disabled={this.state.isBacktestRunning}>
-                                <Radio.Button value="Variable">Variable</Radio.Button>
-                                <Radio.Button value="Spread">Spread</Radio.Button>
-                            </Radio.Group>
-                        </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Investment Plan:
-              </p>
-                            <Select style={{ 'flex': '1' }} value={this.state.selectedInvestmentPlan}
-                                onChange={(value) => this.updateState({ 'selectedInvestmentPlan': value })}
-                                disabled={this.state.isBacktestRunning}>
-                                <Option value="AllIn">AllIn</Option>
-                                <Option value="Monthly">Monthly</Option>
-                                <Option value="Yearly">Yearly</Option>
-                                <Option value="Weekly">Weekly</Option>
-                            </Select>
-                        </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <p style={{
-                                'margin': '0px 10px 0px 0px',
-                                'color': '#7c7c7c', 'minWidth': '100px'
-                            }}>
-                                Execution Policy:
-              </p>
-                            <Select style={{ 'flex': '1' }} value={this.state.selectedExecutionPolicy}
-                                onChange={(value) => this.updateState({ 'selectedExecutionPolicy': value })}
-                                disabled={this.state.isBacktestRunning}>
-                                <Option value="Close">Close</Option>
-                                <Option value="High">High</Option>
-                                <Option value="Low">Low</Option>
-                                <Option value="Open">Open</Option>
-                                <Option value="AverageHighLow">AverageHighLow</Option>
-                                <Option value="AverageAll">AverageAll</Option>
-                            </Select>
+                            <FormControl style={{flex: '1'}} variant="outlined">
+                            <InputLabel htmlFor="investment-plan">Investment Plan</InputLabel>
+                                <Select 
+                                        style={{ 'flex': '1' }} 
+                                        value={this.state.selectedInvestmentPlan}
+                                        onChange={e => this.updateState({ 'selectedInvestmentPlan': e.target.value })}
+                                        disabled={this.state.isBacktestRunning}
+                                        placeholder="Investment Plan"
+                                        input={
+                                            <OutlinedInput
+                                                name= "investment-plan"
+                                                id= "investment-plan"
+                                                margin="dense"
+                                                labelWidth={110}
+                                            />
+                                        }
+                                >
+                                    <MenuItem value="AllIn">AllIn</MenuItem>
+                                    <MenuItem value="Monthly">Monthly</MenuItem>
+                                    <MenuItem value="Yearly">Yearly</MenuItem>
+                                    <MenuItem value="Weekly">Weekly</MenuItem>
+                                </Select>
+                            </FormControl>
                         </div>
                     </div>
-                </Tabs.TabPane>
+                </React.Fragment>
             );
+            
             return tabs;
         }
 
         const getExtraSettingTabDiv = () => {
+            const {extraTabsContent = 'settings'} = this.state;
+
             return (
                 <React.Fragment>
-                    <Tabs style={{ display: this.state.extraTabsContent === 'settings' ? 'block' : 'none' }} defaultActiveKey="basic" animated={false}
-                        className="strategy-right-div-extra-settings-tabdiv">
-                        {getSettingsDivTabsRight()}
-                    </Tabs>
-                    <div id="logsDiv" ref={element => { this.logElement = element }} className="backtest-logs" style={{ display: this.state.extraTabsContent === 'logs' ? 'block' : 'none', 'height': '100%', 'overflowY': 'auto', 'background': '#323232' }}>
+                    <div 
+                            style={{
+                                display: extraTabsContent === 'settings' ? 'block' : 'none',
+                            }} 
+                    >
+                        <Tabs 
+                                animated={false}
+                                onChange={this.onSettingsTabChanged}
+                                value={this.state.settingsTab}
+                        >
+                            <Tab label='BASIC'/>
+                            <Tab label='ADVANCED'/>
+                        </Tabs>
+                        {getSettingsDivTabsRight()[this.state.settingsTab]}
+                    </div>
+                    <div 
+                            id="logsDiv" 
+                            ref={element => { this.logElement = element }} 
+                            className="backtest-logs" 
+                            style={{ 
+                                    display: extraTabsContent === 'logs' ? 'block' : 'none', 
+                                    height: '100%', 
+                                    overflowY: 'auto', 
+                                    background: '#323232',
+                                }}
+                    >
                     </div>
                 </React.Fragment>
             );
@@ -1067,15 +1153,19 @@ class StartegyDetail extends Component {
 
         const getGoToBackTestIcon = () => {
             if (this.state.isBacktestRunning &&
-                this.state.isBackTestRunComplete) {
+                this.state.isBackTestRunComplete
+            ) {
                 return (
                     <React.Fragment>
-                        <Icon type="codepen" onClick={() => {
-                            this.updateState({
-                                'isBacktestRunning': false,
-                                'isBackTestRunComplete': false
-                            });
-                        }} />
+                        <ActionIcon 
+                            type='code'
+                            onClick={() => {
+                                this.updateState({
+                                    'isBacktestRunning': false,
+                                    'isBackTestRunComplete': false
+                                });
+                            }}
+                        />
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
@@ -1092,58 +1182,79 @@ class StartegyDetail extends Component {
                 return (
                     <React.Fragment>
                         {getGoToBackTestIcon()}
-                        <Icon type="plus"
-                            className="inactive" />
-                        <Icon type="copy"
-                            className="inactive" />
-                        <Icon type="save"
-                            className="inactive" />
+                        <ActionIcon 
+                            type='add'
+                            disabled={true}
+                        />
+                        <ActionIcon 
+                            type='file_copy'
+                            disabled={true}
+                        />
+                        <ActionIcon 
+                            type='save'
+                            disabled={true}
+                        />
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
                             'margin': '0px 10px'
                         }}>
                         </div>
-                        <Link to={"/research/backtests/" + this.state.strategyId}><Icon type="bar-chart" /></Link>
-                        <Icon type="caret-right" className="inactive" />
+                        <ActionIcon 
+                            type='bar_chart'
+                            onClick={() => this.props.history.push('/research/backtests/' + this.state.strategyId)}
+                        />
+                        <ActionIcon type='play_arrow' disabled/>
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
                             'margin': '0px 10px'
                         }}>
                         </div>
-                        <Icon type="menu-unfold" className={this.state.rightDivOpen ? 'active' : ''}
-                            onClick={() => { this.updateState({ 'rightDivOpen': !this.state.rightDivOpen }) }} />
+                        <ActionIcon 
+                            type='menu'
+                            onClick={() => { this.updateState({ 'rightDivOpen': !this.state.rightDivOpen }) }}
+                        />
                     </React.Fragment>
                 );
             } else {
                 return (
                     <React.Fragment>
-                        <Icon type="plus"
-                            onClick={() => { this.updateState({ 'showNewStartegyDiv': true }) }} />
+                        <ActionIcon 
+                            type='add'
+                            onClick={() => { this.updateState({ 'showNewStartegyDiv': true }) }}
+                        />
                         {getNewStartegyModal()}
-                        <Icon type="copy"
-                            onClick={() => { this.updateState({ 'showCloneStartegyDiv': true }) }} />
+                        <ActionIcon 
+                            type='file_copy'
+                            nClick={() => { this.updateState({ 'showCloneStartegyDiv': true }) }}
+                        />
                         {getCloneStrategyModal()}
-                        <Icon type="save"
-                            onClick={() => this.clickedOnSave()} />
+                        <ActionIcon 
+                            type='save'
+                            onClick={() => this.clickedOnSave()}
+                        />
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
                             'margin': '0px 10px'
                         }}>
                         </div>
-                        <Link to={"/research/backtests/" + this.state.strategyId}><Icon type="bar-chart" /></Link>
-                        <Icon type="caret-right"
-                            onClick={this.clickedOnRunBacktest} />
+                        <ActionIcon 
+                            type='bar_chart'
+                            onClick={() => {this.props.history.push('/research/backtests/' + this.state.strategyId)}}
+                        />
+                        <ActionIcon type='play_arrow' onClick={this.clickedOnRunBacktest}/>
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
                             'margin': '0px 10px'
                         }}>
                         </div>
-                        <Icon type="menu-unfold" className={this.state.rightDivOpen ? 'active' : ''}
-                            onClick={() => { this.updateState({ 'rightDivOpen': !this.state.rightDivOpen }) }} />
+                        <ActionIcon 
+                            type='menu'
+                            onClick={() => { this.updateState({ 'rightDivOpen': !this.state.rightDivOpen }) }}
+                        />
                     </React.Fragment>
                 );
             }
@@ -1187,6 +1298,8 @@ class StartegyDetail extends Component {
             const backtestData = JSON.parse(JSON.stringify(this.state.newBacktestRunData));
             const statusText = backtestData.status === 'Complete' ? 'Complete' : 'Internal Exception';
             const statusColor = backtestData.status === 'Complete' ? 'teal' : '#cc6666';
+            const {extraTabsContent = 'settings'} = this.state;
+            const disabledColor = '#9b9b9b';
             if (this.state.loading) {
                 return (
                     <div style={{
@@ -1194,37 +1307,50 @@ class StartegyDetail extends Component {
                         'alignItems': 'center', 'justifyContent': 'center',
                         'minHeight': '400px'
                     }}>
-                        <Spin indicator={antIconLoading} />
+                        <CircularProgress size={24} />
                     </div>
                 );
             } else {
 
                 let rightDivWidth = this.state.rightDivOpen ? '435px' : '0px';
-                const topBandColWidthLeftMd = this.state.isBacktestRunning ? 9 : 12;
-                const topBandColWidthLeftSm = this.state.isBacktestRunning ? 12 : 24;
-                const topBandColWidthRightMd = this.state.isBacktestRunning ? 9 : 12;
+                const topBandColWidthLeftMd = this.state.isBacktestRunning ? 4 : 6;
+                const topBandColWidthLeftSm = this.state.isBacktestRunning ? 6 : 12;
+                const topBandColWidthRightMd = this.state.isBacktestRunning ? 4 : 6;
                 const topBandColWidthRightSm = 24;
-                const topBandColWidthMiddleMd = this.state.isBacktestRunning ? 6 : 0;
-                const topBandColWidthMiddleSm = this.state.isBacktestRunning ? 12 : 0;
+                const topBandColWidthMiddleMd = this.state.isBacktestRunning ? 3 : 0;
+                const topBandColWidthMiddleSm = this.state.isBacktestRunning ? 6 : 0;
 
                 return (
                     <div style={{ 'height': '100%', 'position': 'relative' }}>
-                        <Row type="flex" justify="center" style={{
-                            'minHeight': '50px', 'padding': '0px 20px 0px 20px',
-                            'boxShadow': '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)', 'zIndex': '10'
-                        }}>
-                            <Col sm={topBandColWidthLeftSm} md={topBandColWidthLeftMd} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                <Icon onClick={goBack} type="arrow-left" style={{
-                                    'fontSize': '20px',
-                                    'visibility': (this.state.isBacktestRunning ? 'hidden' : 'visible'),
-                                    'paddingRight': '15px', cursor: 'pointer', color: 'teal'
-                                }} />
-                                <Input placeholder="Strategy Name" onChange={this.startegyNameChange}
+                        <Grid 
+                                container 
+                                alignItems="center" 
+                                justify="space-between"
+                                style={{
+                                    minHeight: '50px', 'padding': '0px 20px 0px 20px',
+                                    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)', 
+                                    zIndex: 10
+                                }}
+                        >
+                            <Grid item sm={topBandColWidthLeftSm} md={topBandColWidthLeftMd} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                <ActionIcon 
+                                    onClick={goBack}
+                                    type='arrow_back'
+                                />
+                                <TextField
+                                    label=""
+                                    style={{width: 'auto', minWidth: '300px'}}
                                     value={this.state.strategy.name}
-                                    style={{ 'width': 'auto', 'minWidth': '300px' }}
-                                    disabled={this.state.isBacktestRunning} />
-                            </Col>
-                            <Col sm={topBandColWidthMiddleSm} md={topBandColWidthMiddleMd} style={{
+                                    onChange={this.startegyNameChange}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    margin="dense"
+                                    variant="outlined"
+                                    disabled={this.state.isBacktestRunning} 
+                                />
+                            </Grid>
+                            <Grid item sm={topBandColWidthMiddleSm} md={topBandColWidthMiddleMd} style={{
                                 'display': 'flex', 'alignItems': 'center',
                                 'justifyContent': 'center'
                             }}>
@@ -1245,7 +1371,7 @@ class StartegyDetail extends Component {
                                                 Progress: {this.state.backtestProgress} %
                                             </p>
                                         </div>
-                                        <Spin indicator={antIconLoading} style={{ 'marginLeft': '10px' }} />
+                                        <CircularProgress size={24} style={{marginLeft: '10px'}}/>
                                     </div>
                                     <h2 
                                             style={{
@@ -1256,14 +1382,14 @@ class StartegyDetail extends Component {
                                         {statusText}
                                     </h2>
                                 </div>
-                            </Col>
-                            <Col sm={topBandColWidthRightSm} md={topBandColWidthRightMd} style={{
+                            </Grid>
+                            <Grid item sm={topBandColWidthRightSm} md={topBandColWidthRightMd} style={{
                                 'display': 'flex', 'alignItems': 'center',
                                 'justifyContent': 'flex-end'
                             }} className="strategy-top-right-icons">
                                 {getRightTopIcons()}
-                            </Col>
-                        </Row>
+                            </Grid>
+                        </Grid>
                         <div style={{
                             'height': 'calc(100% - 50px)', 'display': 'flex',
                             'padding': '5px'
@@ -1277,25 +1403,35 @@ class StartegyDetail extends Component {
                                     {getExtraSettingTabDiv()}
                                 </div>
                                 <div style={{
-                                    'height': 'calc(100% - 25px)', 'width': '60px',
-                                    'paddingTop': '25px'
+                                    height: 'calc(100% - 25px)', 
+                                    width: '60px',
+                                    paddingTop: '25px',
+                                    borderLeft: '1px solid #e5e5e5'
                                 }}
                                     className="strategy-right-div-icon-holder">
                                     <div>
-                                        <Icon type="setting"
-                                            className={this.state.extraTabsContent === 'settings' ? 'active' : ''}
+                                        <ActionIcon 
+                                            color={extraTabsContent === 'settings' ? primaryColor : disabledColor}
+                                            type="settings"
                                             onClick={() => {
-                                                this.updateState({ 'extraTabsContent': 'settings', 'rightDivOpen': true });
+                                                this.updateState({ 
+                                                    extraTabsContent: 'settings', 
+                                                    rightDivOpen: true 
+                                                });
                                             }}
                                         />
                                     </div>
                                     <div>
-                                        <Icon type="database"
-                                            className={this.state.extraTabsContent === 'logs' ? 'active' : ''}
+                                        <ActionIcon 
+                                            type="dns"
+                                            color={extraTabsContent === 'logs' ? primaryColor : disabledColor}
                                             onClick={
                                                 () => {
-                                                    this.updateState({ 'extraTabsContent': 'logs', 'rightDivOpen': true });
-                                                }}
+                                                    this.updateState({ 
+                                                        extraTabsContent: 'logs', 
+                                                        rightDivOpen: true 
+                                                    });
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -1306,30 +1442,21 @@ class StartegyDetail extends Component {
             }
         }
 
-        const getTotalDiv = () => {
-            if (!this.state.loading) {
-                return (
-                    <div className="strategy-detail-div" style={{ 'width': '100%', 'height': 'calc(100vh - 65px)' }}>
-                        {getStrategyDiv()}
-                    </div>
-                );
-            }
-        }
-
         return (
-            <React.Fragment>
-                {this.renderBacktestRedirectModal()}
-                <div className="main-loader">
-                    <Loading
-                        show={this.state.loading}
-                        color="teal"
-                        showSpinner={false}
-                    />
+            <AqLayoutDesktop loading={this.state.loading} hideFooter>
+                <div style={{ 'width': '100%', 'height': 'calc(100vh - 50px)' }}>
+                    {getStrategyDiv()}
                 </div>
-                {getTotalDiv()}
-            </React.Fragment>
+            </AqLayoutDesktop>
         );
     }
 }
 
 export default withRouter(StartegyDetail);
+
+const Label = styled.h3`
+    color: #0000008a;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+`;

@@ -17,7 +17,7 @@ class AqDesktopLayout extends React.Component {
     }
 
     render() {
-        const {loading = false, hideHeader = false} = this.props;
+        const {loading = false, hideFooter = false} = this.props;
 
         return (
             <ContainerGrid container>
@@ -29,9 +29,8 @@ class AqDesktopLayout extends React.Component {
                         xs={12}
                         style={{
                             // height: 'calc(100vh - 80px)',
-                            overflow: 'hidden',
-                            overflowY: 'scroll',
-                            marginTop: '10px',
+                            // overflow: 'hidden',
+                            // overflowY: 'scroll',
                             borderRight: '1px solid #e9e8e8',
                         }}
                 >
@@ -44,7 +43,7 @@ class AqDesktopLayout extends React.Component {
                     </div>
                     {this.props.children}
                     {
-                        !loading && !hideHeader &&
+                        !loading && !hideFooter &&
                         <Footer style={{marginTop: '110px'}}/>
                     }
                 </ColContainer>

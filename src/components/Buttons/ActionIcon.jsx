@@ -25,7 +25,15 @@ export default class ActionIcons extends React.Component {
                     disabled={disabled}
                     {...iconButtonProps}
             >
-                <SIcon style={{color: this.props.color || primaryColor, fontSize: this.props.size || 20}} fontSize='inherit'>{type}</SIcon>
+                <SIcon 
+                        style={{
+                            color: disabled ? '#9b9b9b' : (this.props.color || primaryColor), 
+                            fontSize: this.props.size || 20
+                        }} 
+                        fontSize='inherit'
+                >
+                    {type}
+                </SIcon>
             </IconButton>
         );
     }
