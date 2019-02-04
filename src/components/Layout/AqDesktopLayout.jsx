@@ -23,6 +23,13 @@ class AqDesktopLayout extends React.Component {
             <ContainerGrid container>
                 <Grid item xs={12}>
                     <Header />
+                    <div className="main-loader">
+                        <Loading
+                            show={loading}
+                            color="teal"
+                            showSpinner={false}
+                        />
+                    </div>
                 </Grid>
                 <ColContainer 
                         item 
@@ -34,14 +41,10 @@ class AqDesktopLayout extends React.Component {
                             borderRight: '1px solid #e9e8e8',
                         }}
                 >
-                    <div className="main-loader">
-                        <Loading
-                            show={loading}
-                            color="teal"
-                            showSpinner={false}
-                        />
-                    </div>
-                    {this.props.children}
+                    {
+                        !loading &&
+                        this.props.children
+                    }
                     {
                         !loading && !hideFooter &&
                         <Footer style={{marginTop: '110px'}}/>
@@ -67,5 +70,5 @@ const ColContainer = styled(Grid)`
     display: 'flex';
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start
+    justify-content: flex-start;
 `;

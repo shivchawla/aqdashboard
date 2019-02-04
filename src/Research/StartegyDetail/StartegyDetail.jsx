@@ -1005,7 +1005,7 @@ class StartegyDetail extends Component {
                                         : cancelPolicyRadioItems[selectedValue]; 
                                     this.updateState({ 'selectedCancelPolicy': value }) 
                                 }}
-                                defaultSelected={cancelPolicyRadioItems.indexOf(this.state.selectedRebalance)}
+                                defaultSelected={cancelPolicyRadioItems.indexOf(this.state.selectedCancelPolicy)}
                                 disabled={this.state.isBacktestRunning}
                                 CustomRadio={CardRadio}
                                 // small
@@ -1043,7 +1043,7 @@ class StartegyDetail extends Component {
                                             : selectedCommissionTypeRadioItems[selectedValue]; 
                                         this.updateState({ 'selectedCommissionType': value }) 
                                     }}
-                                    defaultSelected={selectedCommissionTypeRadioItems.indexOf(this.state.selectedRebalance)}
+                                    defaultSelected={selectedCommissionTypeRadioItems.indexOf(this.state.selectedCommissionType)}
                                     disabled={this.state.isBacktestRunning}
                                     CustomRadio={CardRadio}
                                     // small
@@ -1076,7 +1076,7 @@ class StartegyDetail extends Component {
                                             : selectedSlipPageTypeRadioItems[selectedValue]; 
                                         this.updateState({ 'selectedSlipPageType': value }) 
                                     }}
-                                    defaultSelected={selectedSlipPageTypeRadioItems.indexOf(this.state.selectedRebalance)}
+                                    defaultSelected={selectedSlipPageTypeRadioItems.indexOf(this.state.selectedSlipPageType)}
                                     disabled={this.state.isBacktestRunning}
                                     CustomRadio={CardRadio}
                                     // small
@@ -1129,6 +1129,7 @@ class StartegyDetail extends Component {
                                 animated={false}
                                 onChange={this.onSettingsTabChanged}
                                 value={this.state.settingsTab}
+                                variant="fullWidth"
                         >
                             <Tab label='BASIC'/>
                             <Tab label='ADVANCED'/>
