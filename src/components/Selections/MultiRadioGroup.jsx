@@ -6,17 +6,22 @@ import {horizontalBox, primaryColor} from '../../constants';
 
 const disabledColor = '#bdbdbd';
 
-export default class RadioGroup extends React.Component {
+export default class MultiRadioGroup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: props.defaultSelected || 0
+            selected: props.defaultSelected || []
         };
     }
 
     handleChange = value => {
-        this.setState({selected: value});
-        this.props.onChange && this.props.onChange(value);
+        const selectedArray = _.map(this.state.selected, _.cloneDeep);
+        const valueIndex = _.findIndex(selectedArray, item => item === value);
+        if (valueIndex > -1) {
+            selectedArray.splice(valueIndex, valueIndex + 1);
+            this.setState({selected: selectedArray});
+            this.props.onChange && this.props.onChange(selectedArray);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -34,7 +39,7 @@ export default class RadioGroup extends React.Component {
     }
 
     render() {
-        const {items = ['One', 'Two'], CustomRadio = null, disabled = false, small = false} = this.props;
+        const {items = ['One', 'Two'], CustomRadio = null, small = false} = this.props;
         const CustomRadioComponent = CustomRadio !== null ? CustomRadio : RadioComponent;
 
         return (
@@ -52,10 +57,9 @@ export default class RadioGroup extends React.Component {
                             <CustomRadioComponent 
                                 key={index}
                                 label={item}
-                                checked={this.state.selected === index}
+                                checked={_.findIndex(this.state.selected, selectedItem => selectedItem === item) > -1}
                                 onChange={() => this.handleChange(index)}
                                 fontSize={this.props.fontSize || '14px'}
-                                disabled={disabled}
                                 small={small}
                             />
                         );

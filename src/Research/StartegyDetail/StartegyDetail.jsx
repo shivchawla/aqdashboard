@@ -17,7 +17,7 @@ import ActionIcon from '../../components/Buttons/ActionIcon';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import DateComponent from '../../components/Selections/DateComponent';
 import CardRadio from '../../components/Selections/CardCustomRadio';
-import { withRouter, Link } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import NewStartegy from './../NewStrategy/NewStrategy.jsx';
 import AceEditor from 'react-ace';
 import 'brace/theme/tomorrow_night_bright';
@@ -985,7 +985,6 @@ class StartegyDetail extends Component {
                                 defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
                                 disabled={this.state.isBacktestRunning}
                                 CustomRadio={CardRadio}
-                                // small
                                 style={{marginTop: '10px'}}
                             />
                         </div>
@@ -1126,7 +1125,6 @@ class StartegyDetail extends Component {
                             }} 
                     >
                         <Tabs 
-                                animated={false}
                                 onChange={this.onSettingsTabChanged}
                                 value={this.state.settingsTab}
                                 variant="fullWidth"

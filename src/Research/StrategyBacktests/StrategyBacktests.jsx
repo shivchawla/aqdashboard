@@ -5,13 +5,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import { withRouter } from 'react-router-dom';
 import BacktestsTable from './BacktestsTable';
 import axios from 'axios';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
-import { withRouter } from 'react-router-dom';
-import {processBacktests} from './utils';
-// import Compare from './../Compare/Compare.jsx';
-
+import { processBacktests } from './utils';
+import Compare from '../Compare/Compare';
+import DialogComponent from '../../components/Alerts/DialogComponent';
 
 class StrategyBacktests extends Component {
 
@@ -83,7 +83,7 @@ class StrategyBacktests extends Component {
             })
                 .then((response) => {
                     const backtests = processBacktests(response.data);
-                    this.updateState({backtests, loading: false});
+                    this.updateState({ backtests, loading: false });
                     this.cancelGetBackTests = undefined;
                 })
                 .catch((error) => {
@@ -258,6 +258,7 @@ class StrategyBacktests extends Component {
         }
 
         this.showcompareModal = () => {
+            console.log('showcompareModal called');
             this.updateState({ 'backtestsCompareModalVisible': true });
         }
     }
@@ -290,44 +291,41 @@ class StrategyBacktests extends Component {
         const selectedRowIndex = _.findIndex(clonedBacktests, backtest => backtest._id === rowBacktestId);
         if (selectedRowIndex > -1) {
             clonedBacktests[selectedRowIndex].selected = checked;
-            this.setState({backtests: clonedBacktests});
+            this.setState({
+                backtests: clonedBacktests,
+                selectedBacktests: clonedBacktests
+                    .filter(backtest => backtest.selected === true)
+                    .map(backtest => backtest._id)
+            });
         }
-        console.log('Row ', row);
-        console.log('Checked  ', checked);
     }
 
     render() {
-        const rowSelection = {
-            onChange: (selectedRowKeys, selectedRows) => {
-                this.updateState({
-                    'selectedBacktests': selectedRowKeys
-                })
+        const getCompareModal = () => {
+            const selectedBacktests = {};
+            for (let i = 0; i < this.state.backtests.length; i++) {
+                if (this.state.selectedBacktests.indexOf(this.state.backtests[i]._id) > -1) {
+                    selectedBacktests[this.state.backtests[i]._id] = 'Backtest ' + (i + 1);
+                }
             }
-        };
-
-        // const getCompareModal = () => {
-        //   const selectedBacktests = {};
-        //   for(let i=0; i<this.state.backtests.length; i++){
-        //     if (this.state.selectedBacktests.indexOf(this.state.backtests[i]._id) > -1){
-        //       selectedBacktests[this.state.backtests[i]._id] = 'Backtest ' + (i+1);
-        //     }
-        //   }
-        //   return (
-        //     <Modal
-        //       title="Bactests compare"
-        //       wrapClassName="vertical-center-modal"
-        //       visible={this.state.backtestsCompareModalVisible}
-        //       footer={null}
-        //       onCancel={() => this.updateState({'backtestsCompareModalVisible': false})}
-        //       className="attach-backtest-model no-padding" 
-        //     >
-        //       {(this.state.backtestsCompareModalVisible) ? (<Compare 
-        //         selectedBacktests={selectedBacktests}
-        //         strategy={this.state.strategy}
-        //         />) : null}
-        //     </Modal>
-        //   );
-        // }
+            return (
+                <DialogComponent
+                    title="Backtest Compare"
+                    open={this.state.backtestsCompareModalVisible}
+                    onClose={() => this.updateState({ 'backtestsCompareModalVisible': false })}
+                    style={{
+                        width: '90vw',
+                        height: '100vh'
+                    }}
+                    maxWidth='xl'
+                >
+                    <Compare
+                        selectedBacktests={selectedBacktests}
+                        strategy={this.state.strategy}
+                    />
+                </DialogComponent>
+            );
+        }
 
         const getTableButtons = () => {
             if (!this.state.loading) {
@@ -345,7 +343,7 @@ class StrategyBacktests extends Component {
                     return (
                         <React.Fragment>
                             {getCompareButton()}
-                            {/* {getCompareModal()} */}
+                            {getCompareModal()}
                             {getDeleteButton()}
                         </React.Fragment>
                     );
@@ -355,15 +353,15 @@ class StrategyBacktests extends Component {
 
         const getCompareButton = () => {
             return (
-                <Button 
-                        style={{ 'marginRight': '10px' }} 
-                        color="primary"
-                        // onClick={() => this.showcompareModal()}
-                        disabled={
-                            this.state.selectedBacktests && 
-                            this.state.selectedBacktests.length > 1 &&
-                            this.state.selectedBacktests.length <= 5
-                        }
+                <Button
+                    style={{ 'marginRight': '10px' }}
+                    color="primary"
+                    onClick={() => this.showcompareModal()}
+                    disabled={
+                        this.state.selectedBacktests &&
+                        this.state.selectedBacktests.length > 1 &&
+                        this.state.selectedBacktests.length <= 5
+                    }
                 >
                     Compare
                 </Button>
@@ -373,11 +371,12 @@ class StrategyBacktests extends Component {
         const getDeleteButton = () => {
             if (this.state.selectedBacktests && this.state.selectedBacktests.length > 0) {
                 return (
-                    <Button 
-                            color="secondary"
-                            onClick={() => {
-                                this.showDeleteConfirm('Are you sure you want to delete?', this.state.selectedBacktests.length + ' backtests will be deleted.')}
-                            }
+                    <Button
+                        color="secondary"
+                        onClick={() => {
+                            this.showDeleteConfirm('Are you sure you want to delete?', this.state.selectedBacktests.length + ' backtests will be deleted.')
+                        }
+                        }
                     >
                         <Icon>delete</Icon>Delete Selected
                     </Button>
@@ -392,55 +391,45 @@ class StrategyBacktests extends Component {
         }
 
         const getBacktestsDiv = () => {
-            if (this.state.loading) {
-                return (
-                    <div style={{
-                        'display': 'flex',
-                        'alignItems': 'center', 'justifyContent': 'center',
-                        'minHeight': '300px'
-                    }}>
-                        <CircularProgress size={22} />
-                    </div>
-                );
-            } else {
-                return (
-                    <div>
-                        <Grid container>
-                            <Grid item md={6} sm={12}>
-                                <h2>All Backtests for {this.state.strategy.name}</h2>
-                            </Grid>
-                            <Grid item md={6} sm={12}>
-                                <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                                    {getTableButtons()}
-                                </div>
-                            </Grid>
+            return (
+                <div>
+                    <Grid container>
+                        {/* <Grid item md={6} sm={12}>
+                            <h2>All Backtests for {this.state.strategy.name}</h2>
                         </Grid>
-                        <BacktestsTable 
-                            data={this.state.backtests}
-                            rowSelection={this.rowSelection}
-                        />
-                        {/* <Table 
-                            rowSelection={rowSelection}
-                            dataSource={data} 
-                            pagination={false} 
-                            style={{ 'border': '1px solid #e1e1e1' }}
-                            onRow={(record) => {
-                                return {
-                                    onClick: () => {
-                                        this.props.history.push('/research/backtests/'
-                                            + this.props.match.params.strategyId + '/' + record.key
-                                            + '?type=backtest&strategyName=' + this.state.strategy.name
-                                            + '&backtestName=' + record.name);
-                                    }
-                                };
-                            }
-                            }
-                        >
-                            {columns}
-                        </Table> */}
-                    </div>
-                );
-            }
+                        <Grid item md={6} sm={12}>
+                            <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
+                                {getTableButtons()}
+                            </div>
+                        </Grid> */}
+                    </Grid>
+                    <BacktestsTable
+                        data={this.state.backtests}
+                        strategyName={_.get(this.state, 'strategy.name', '')}
+                        rowSelection={this.rowSelection}
+                        openCompare={this.showcompareModal}
+                    />
+                    {/* <Table 
+                        rowSelection={rowSelection}
+                        dataSource={data} 
+                        pagination={false} 
+                        style={{ 'border': '1px solid #e1e1e1' }}
+                        onRow={(record) => {
+                            return {
+                                onClick: () => {
+                                    this.props.history.push('/research/backtests/'
+                                        + this.props.match.params.strategyId + '/' + record.key
+                                        + '?type=backtest&strategyName=' + this.state.strategy.name
+                                        + '&backtestName=' + record.name);
+                                }
+                            };
+                        }
+                        }
+                    >
+                        {columns}
+                    </Table> */}
+                </div>
+            );
         }
 
         // const getBreadCrumbAllBacktests = () => {
@@ -458,33 +447,29 @@ class StrategyBacktests extends Component {
 
         const getTotalDiv = () => {
             return (
-                <div 
-                        className="research-div" 
-                        style={{ 
-                            padding: '1% 3% 1% 3%', 
-                            width: '90vw', 
-                            minHeight: 'calc(100vh - 70px)' 
-                        }}
+                <div
+                    className="research-div"
+                    style={{
+                        padding: '1% 3% 1% 3%',
+                        width: '90vw',
+                        minHeight: 'calc(100vh - 70px)'
+                    }}
                 >
+                    {getCompareModal()}
                     <div style={{ 'display': 'flex', 'marginBottom': '10px' }}>
                         <div>
                             <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>All Backtests</h2>
                             {/* {getBreadCrumbAllBacktests()} */}
                         </div>
                     </div>
-                    <div className="card" style={{
-                        'width': '100%', 'background': 'white',
-                        'padding': '40px 2%'
-                    }}>
-                        {getBacktestsDiv()}
-                    </div>
+                    {getBacktestsDiv()}
                 </div>
             );
         }
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
-                {getTotalDiv()}                 
+                {getTotalDiv()}
             </AqDesktopLayout>
         );
     }

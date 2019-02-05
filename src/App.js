@@ -7,6 +7,8 @@ import Research from './Research/Research';
 import SampleTable from './samples/TableSample';
 import StrategyDetail from './Research/StartegyDetail/StartegyDetail';
 import StrategyBacktests from './Research/StrategyBacktests/StrategyBacktests';
+import BacktestDetail from './Research/BacktestDetail/BacktestDetail';
+import Community from './Community/Community';
 import './App.css';
 
 class App extends Component {
@@ -19,6 +21,8 @@ class App extends Component {
 					<Route exact={true} path='/table' component={SampleTable} />
 					<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
 					<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
+					<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
+					<Route exact={true} path='/community' component={Community}/>
 				</Switch>
 			</div>
 		</MuiPickersUtilsProvider>

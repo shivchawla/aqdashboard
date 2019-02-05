@@ -20,7 +20,7 @@ export default class CardCustomRadio extends React.Component {
         const color = checked ? '#fff' : '#7C7C7C';
         const fontSize = small ?  '12px' : '14px';
         const padding = small ? '4px 8px' : '6px 12px';
-        const boxShadow = checked ? '0 3px 7px #a3a3a3' : 'none';
+        // const boxShadow = checked ? '0 3px 7px #a3a3a3' : 'none';
 
         return (
             <ButtonBase 
@@ -30,7 +30,7 @@ export default class CardCustomRadio extends React.Component {
                         fontSize,
                         padding,
                         background,
-                        boxShadow,
+                        // boxShadow,
                     }}
                     onClick={this.props.onChange}
                     disabled={disabled}
@@ -44,12 +44,11 @@ export default class CardCustomRadio extends React.Component {
 const buttonStyle = {
     padding: '6px 12px',
     fontSize: '15px',
-    transition: 'all 0.4s ease-in-out',
+    // transition: 'all 0.4s ease-in-out',
     margin: '0 3px',
     borderRadius: '2px',
     cursor: 'pointer',
     color: inactiveColor,
     fontFamily: 'Lato, sans-serif',
     fontWeight: 500,
-    transition: 'all 0.3s ease-in-out'
 }

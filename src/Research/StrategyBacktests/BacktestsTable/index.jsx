@@ -1,6 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
+import styled from 'styled-components';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
+import {withRouter} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,12 +19,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {processRowData} from '../utils';
-
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-    counter += 1;
-    return { id: counter, name, calories, fat, carbs, protein };
-}
 
 const rows = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Backtest' },
@@ -60,7 +57,7 @@ class EnhancedTableHead extends React.Component {
                                         placement={row.numeric ? 'bottom-end' : 'bottom-start'}
                                         enterDelay={300}
                                     >
-                                        <span>{row.label}</span>
+                                        <RowLabel>{row.label}</RowLabel>
                                     </Tooltip>
                                 </TableCell>
                             ),
@@ -98,7 +95,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-    const { numSelected, classes } = props;
+    const { numSelected, classes, name = ''} = props;
 
     return (
         <Toolbar
@@ -119,7 +116,7 @@ let EnhancedTableToolbar = props => {
                         : 
                         (
                             <Typography variant="h6" id="tableTitle">
-                                Nutrition
+                                All Backtests for {name}
                             </Typography>
                         )
                 }
@@ -129,7 +126,13 @@ let EnhancedTableToolbar = props => {
                 {
                     numSelected > 0 && numSelected <= 5
                         ?
-                            <Button variant='contained' color='secondary'>Compare</Button>
+                            <Button 
+                                    variant='contained' 
+                                    color='secondary'
+                                    onClick={props.openCompare}
+                            >
+                                Compare
+                            </Button>
                         :   null
                 }
             </div>
@@ -155,7 +158,7 @@ EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
     root: {
-        margin: '20px'
+        marginTop: '20px'
     },
     tableWrapper: {
         overflowX: 'auto',
@@ -182,25 +185,13 @@ class EnhancedTable extends React.Component {
         this.setState({ selected: [] });
     };
 
-    handleClick = (event, id) => {
-        const { selected } = this.state;
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        this.setState({ selected: newSelected });
+    handleClick = (name, id) => {
+        console.log(name);
+        console.log(id);
+        this.props.history.push('/research/backtests/'
+            + this.props.match.params.strategyId + '/' + id
+            + '?type=backtest&strategyName=' + _.get(this.props, 'strategyName', '')
+            + '&backtestName=' + name);
     };
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -216,11 +207,14 @@ class EnhancedTable extends React.Component {
 
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar 
+                    numSelected={data.filter(item => item.selected === true).length} 
+                    openCompare={this.props.openCompare} 
+                />
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
-                            numSelected={selected.length}
+                            numSelected={data.filter(item => item.selected === true).length}
                             order={order}
                             orderBy={orderBy}
                             onSelectAllClick={this.handleSelectAllClick}
@@ -233,27 +227,34 @@ class EnhancedTable extends React.Component {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, dataItem.id)}
+                                            onClick={event => this.handleClick(dataItem.name, dataItem.id)}
                                             role="checkbox"
                                             aria-checked={item.selected}
                                             tabIndex={-1}
                                             key={dataItem.id}
                                             selected={item.selected}
                                         >
-                                            <TableCell align="left" padding="checkbox">
+                                            <STableCell 
+                                                    align="left" 
+                                                    padding="checkbox"
+                                                    onClick={e => e.stopPropagation()}
+                                            >
                                                 <Checkbox 
                                                     checked={item.selected} 
-                                                    onChange={e => this.onCheckboxChange(e.target.checked, item)}
+                                                    onChange={e => {
+                                                        e.stopPropagation();
+                                                        this.onCheckboxChange(e.target.checked, item)
+                                                    }}
                                                 />
-                                            </TableCell>
-                                            <TableCell align="left">
+                                            </STableCell>
+                                            <STableCell align="left">
                                                 {dataItem.name}
-                                            </TableCell>
-                                            <TableCell align="left">{dataItem.createdAt}</TableCell>
-                                            <TableCell align="left">{dataItem.status}</TableCell>
-                                            <TableCell align="left">{dataItem.dateRange}</TableCell>
-                                            <TableCell align="left">{dataItem.totalReturn}</TableCell>
-                                            <TableCell align="left">{dataItem.sharpeRatio}</TableCell>
+                                            </STableCell>
+                                            <STableCell align="left">{dataItem.createdAt}</STableCell>
+                                            <STableCell align="left">{dataItem.status}</STableCell>
+                                            <STableCell align="left">{dataItem.dateRange}</STableCell>
+                                            <STableCell align="left">{dataItem.totalReturn}</STableCell>
+                                            <STableCell align="left">{dataItem.sharpeRatio}</STableCell>
                                         </TableRow>
                                     );
                                 })
@@ -266,4 +267,17 @@ class EnhancedTable extends React.Component {
     }
 }
 
-export default withStyles(styles)(EnhancedTable);
+export default withStyles(styles)(withRouter(EnhancedTable));
+
+const RowLabel = styled.span`
+    font-size: 14px;
+    color: #252525;
+    font-weight: 500;
+    font-family: 'Lato', sans-serif;
+`;
+
+const STableCell = styled(TableCell)`
+    color: #595959;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+`;

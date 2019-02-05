@@ -35,7 +35,7 @@ class DialogComponent extends React.Component {
     }
 
     render() {
-        const {open = false, title = null, action = false, classes} = this.props;
+        const {open = false, title = null, action = false, classes, maxWidth='md'} = this.props;
 
         return (
             <Dialog 
@@ -43,17 +43,13 @@ class DialogComponent extends React.Component {
                     TransitionComponent={Transition}
                     onBackdropClick={this.props.onClose}
                     onEscapeKeyDown={this.props.onClose}
+                    maxWidth={maxWidth}
             >
                 {
                     title &&
                     <DialogTitle>{title}</DialogTitle>
                 }
-                <DialogContent 
-                        style={this.props.style}
-                        // classes={{
-                        //     root: classes.root
-                        // }}
-                >
+                <DialogContent style={this.props.style}>
                     {this.props.children}
                 </DialogContent>
                 {

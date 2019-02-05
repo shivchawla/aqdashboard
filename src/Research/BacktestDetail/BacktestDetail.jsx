@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import _ from 'lodash';
 import Utils from './../../Utils';
-import { Spin, Icon, Row, Col, Tabs, Button, Radio, Breadcrumb } from 'antd';
-import axios from 'axios';
+import ReactTable from "react-table";
+import Loading from 'react-loading-bar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import { withRouter, Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import moment from 'moment';
@@ -11,10 +17,10 @@ import 'brace/mode/julia';
 import 'brace/theme/xcode';
 import CustomHighCharts from './../../CustomHighCharts/CustomHighCharts.jsx';
 import RunningBacktestChart from './../../CustomHighCharts/RunningBacktestChart.jsx';
-import ReactTable from "react-table";
+import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
+import RadioGroup from '../../components/Selections/RadioGroup';
+import CardCustomRadio from '../../components/Selections/CardCustomRadio';
 import "react-table/react-table.css";
-import Loading from 'react-loading-bar';
-import { Footer } from '../../Footer/Footer';
 import 'react-loading-bar/dist/index.css';
 
 
@@ -233,8 +239,11 @@ class BacktestDetail extends Component {
             isBacktestRunning: false,
             isBackTestRunComplete: false,
             newBacktestRunData: {},
-            backtestProgress: 0
+            backtestProgress: 0,
+            defaultSelectedPortfolio: 0,
+            selectedTab: 0
         };
+
         this.updateState = (data) => {
             if (this._mounted) {
                 this.setState(data);
@@ -248,26 +257,26 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-            .then((response) => {
-                this.updateState({ 'strategy': response.data });
-                // console.log(response.data);
-                this.getBackTest();
-                this.cancelGetStrategy = undefined;
-            })
-            .catch((error) => {
-                Utils.checkForInternet(error, this.props.history);
-                if (error.response) {
+                .then((response) => {
+                    this.updateState({ 'strategy': response.data });
+                    // console.log(response.data);
+                    this.getBackTest();
+                    this.cancelGetStrategy = undefined;
+                })
+                .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
+                    if (error.response) {
+                        Utils.checkForInternet(error, this.props.history);
+                        if (error.response.status === 400 || error.response.status === 403) {
+                            this.props.history.push('/forbiddenAccess');
+                        }
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                }
-                this.updateState({
-                    'loading': false
+                    this.updateState({
+                        'loading': false
+                    });
+                    this.cancelGetStrategy = undefined;
                 });
-                this.cancelGetStrategy = undefined;
-            });
         }
         this.getBackTest = () => {
             axios(Utils.getBaseUrl() + '/backtest/' + _.get(props, 'match.params.backtestId', null), {
@@ -277,27 +286,27 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-            .then((response) => {
-                this.updateBacktestDataFromGetCall(response.data);
-                // console.log(response.data);
-                this.cancelGetBacktest = undefined;
-                this.getLogs();
-            })
-            .catch((error) => {
-                Utils.checkForInternet(error, this.props.history);
-                if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
+                .then((response) => {
+                    this.updateBacktestDataFromGetCall(response.data);
+                    // console.log(response.data);
+                    this.cancelGetBacktest = undefined;
+                    this.getLogs();
+                })
+                .catch((error) => {
+                    Utils.checkForInternet(error, this.props.history);
+                    if (error.response) {
+                        if (error.response.status === 400 || error.response.status === 403) {
+                            this.props.history.push('/forbiddenAccess');
+                        }
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                }
-                this.cancelGetBacktest = undefined;
-            })
-            .finally(() => {
-                this.updateState({
-                    'loading': false
-                });
-            })
+                    this.cancelGetBacktest = undefined;
+                })
+                .finally(() => {
+                    this.updateState({
+                        'loading': false
+                    });
+                })
         }
         this.getLogs = () => {
             this.updateState({
@@ -310,34 +319,34 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-            .then((response) => {
-                if (response.data && response.data.output && response.data.output.logs &&
-                    response.data.output.logs != null) {
-                    this.updateState({ 'logs': response.data.output.logs });
-                }
-                // console.log(response.data);
-                this.cancelGetLogs = undefined;
-                this.getTransactionHistory();
-            })
-            .catch((error) => {
-                Utils.checkForInternet(error, this.props.history);
-                if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
+                .then((response) => {
+                    if (response.data && response.data.output && response.data.output.logs &&
+                        response.data.output.logs != null) {
+                        this.updateState({ 'logs': response.data.output.logs });
                     }
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                }
-                this.cancelGetLogs = undefined;
-            })
-            .finally(() => {
-                this.updateState({
-                    loading: false,
-                    logsLoading: false
-                });
-            })
+                    // console.log(response.data);
+                    this.cancelGetLogs = undefined;
+                    this.getTransactionHistory();
+                })
+                .catch((error) => {
+                    Utils.checkForInternet(error, this.props.history);
+                    if (error.response) {
+                        if (error.response.status === 400 || error.response.status === 403) {
+                            this.props.history.push('/forbiddenAccess');
+                        }
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    }
+                    this.cancelGetLogs = undefined;
+                })
+                .finally(() => {
+                    this.updateState({
+                        loading: false,
+                        logsLoading: false
+                    });
+                })
         }
         this.getTransactionHistory = () => {
-            this.setState({transactionLoading: true});
+            this.setState({ transactionLoading: true });
             axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=transactionHistory', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
@@ -345,117 +354,117 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-            .then((response) => {
-                if (response.data && response.data.output && response.data.output.transactionHistory &&
-                    response.data.output.transactionHistory != null) {
-                    const transactionHistoryData = {};
-                    const transactionParentData = {};
-                    for (let i = 0; i < response.data.output.transactionHistory.length; i++) {
-                        const dtL1 = response.data.output.transactionHistory[i];
-                        if (dtL1.values) {
-                            for (let j = 0; j < dtL1.values.length; j++) {
-                                if (dtL1.values[j].transactions) {
-                                    const dtL2 = dtL1.values[j].transactions;
-                                    for (let k = 0; k < dtL2.length; k++) {
-                                        const dtL3 = dtL2[k];
-                                        let finalPushObj = {
-                                            'datetime': moment(dtL3.datetime).valueOf(),
-                                            'date': '-',
-                                            'symbol': '-',
-                                            'direction': 'BUY',
-                                            'quantity': dtL3.fillquantity,
-                                            'price': Utils.formatMoneyValueMaxTwoDecimals(dtL3.fillprice.toFixed(2)),
-                                            'orderfee': Utils.formatMoneyValueMaxTwoDecimals(dtL3.orderfee.toFixed(2)),
-                                            'key': i + '_' + j + '_' + k
-                                        };
-                                        try {
-                                            if (parseInt(dtL3.fillquantity, 10) < 0) {
-                                                finalPushObj['direction'] = 'SELL';
-                                            }
-                                        } catch (err) { }
-                                        try {
-                                            if (dtL3.securitysymbol) {
-                                                finalPushObj['symbol'] = dtL3.securitysymbol.ticker;
-                                            }
-                                        } catch (err) { }
-                                        try {
-                                            if (dtL3.datetime) {
-                                                finalPushObj['date'] = moment(dtL3.datetime).format('DD MMM YYYY');
-                                            }
-                                        } catch (err) { }
+                .then((response) => {
+                    if (response.data && response.data.output && response.data.output.transactionHistory &&
+                        response.data.output.transactionHistory != null) {
+                        const transactionHistoryData = {};
+                        const transactionParentData = {};
+                        for (let i = 0; i < response.data.output.transactionHistory.length; i++) {
+                            const dtL1 = response.data.output.transactionHistory[i];
+                            if (dtL1.values) {
+                                for (let j = 0; j < dtL1.values.length; j++) {
+                                    if (dtL1.values[j].transactions) {
+                                        const dtL2 = dtL1.values[j].transactions;
+                                        for (let k = 0; k < dtL2.length; k++) {
+                                            const dtL3 = dtL2[k];
+                                            let finalPushObj = {
+                                                'datetime': moment(dtL3.datetime).valueOf(),
+                                                'date': '-',
+                                                'symbol': '-',
+                                                'direction': 'BUY',
+                                                'quantity': dtL3.fillquantity,
+                                                'price': Utils.formatMoneyValueMaxTwoDecimals(dtL3.fillprice.toFixed(2)),
+                                                'orderfee': Utils.formatMoneyValueMaxTwoDecimals(dtL3.orderfee.toFixed(2)),
+                                                'key': i + '_' + j + '_' + k
+                                            };
+                                            try {
+                                                if (parseInt(dtL3.fillquantity, 10) < 0) {
+                                                    finalPushObj['direction'] = 'SELL';
+                                                }
+                                            } catch (err) { }
+                                            try {
+                                                if (dtL3.securitysymbol) {
+                                                    finalPushObj['symbol'] = dtL3.securitysymbol.ticker;
+                                                }
+                                            } catch (err) { }
+                                            try {
+                                                if (dtL3.datetime) {
+                                                    finalPushObj['date'] = moment(dtL3.datetime).format('DD MMM YYYY');
+                                                }
+                                            } catch (err) { }
 
-                                        if (transactionHistoryData[finalPushObj['date']]) {
-                                            transactionHistoryData[finalPushObj['date']].push(finalPushObj);
-                                        } else {
-                                            transactionHistoryData[finalPushObj['date']] = [finalPushObj];
-                                        }
-
-                                        let dataObj = {
-
-                                        };
-                                        if (transactionParentData[finalPushObj.date]) {
-                                            dataObj = transactionParentData[finalPushObj.date];
-                                        } else {
-                                            dataObj = {
-                                                'datetime': moment(finalPushObj['datetime']).valueOf(),
-                                                'date': finalPushObj['date'],
-                                                'posTrades': 0,
-                                                'negTrades': 0,
-                                                'posDollarValue': 0,
-                                                'negDollarValue': 0
+                                            if (transactionHistoryData[finalPushObj['date']]) {
+                                                transactionHistoryData[finalPushObj['date']].push(finalPushObj);
+                                            } else {
+                                                transactionHistoryData[finalPushObj['date']] = [finalPushObj];
                                             }
+
+                                            let dataObj = {
+
+                                            };
+                                            if (transactionParentData[finalPushObj.date]) {
+                                                dataObj = transactionParentData[finalPushObj.date];
+                                            } else {
+                                                dataObj = {
+                                                    'datetime': moment(finalPushObj['datetime']).valueOf(),
+                                                    'date': finalPushObj['date'],
+                                                    'posTrades': 0,
+                                                    'negTrades': 0,
+                                                    'posDollarValue': 0,
+                                                    'negDollarValue': 0
+                                                }
+                                            }
+                                            if (finalPushObj.quantity < 0) {
+                                                dataObj.negTrades = dataObj.negTrades + 1;
+                                                dataObj.negDollarValue = dataObj.negDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
+                                            } else {
+                                                dataObj.posDollarValue = dataObj.posDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
+                                                dataObj.posTrades = dataObj.posTrades + 1;
+                                            }
+                                            transactionParentData[finalPushObj.date] = dataObj;
                                         }
-                                        if (finalPushObj.quantity < 0) {
-                                            dataObj.negTrades = dataObj.negTrades + 1;
-                                            dataObj.negDollarValue = dataObj.negDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
-                                        } else {
-                                            dataObj.posDollarValue = dataObj.posDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
-                                            dataObj.posTrades = dataObj.posTrades + 1;
-                                        }
-                                        transactionParentData[finalPushObj.date] = dataObj;
                                     }
                                 }
                             }
                         }
+                        const finalTransactionParentData = [];
+                        for (let key in transactionParentData) {
+                            const abcLocal = transactionParentData[key];
+                            abcLocal['negDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['negDollarValue']);
+                            abcLocal['posDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['posDollarValue']);
+                            finalTransactionParentData.push(abcLocal);
+                        }
+                        finalTransactionParentData.sort((a, b) => {
+                            return b.datetime - a.datetime;
+                        });
+                        this.updateState({
+                            'transactionHistory': transactionHistoryData,
+                            'transactionHistoryParentData': finalTransactionParentData
+                        });
                     }
-                    const finalTransactionParentData = [];
-                    for (let key in transactionParentData) {
-                        const abcLocal = transactionParentData[key];
-                        abcLocal['negDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['negDollarValue']);
-                        abcLocal['posDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['posDollarValue']);
-                        finalTransactionParentData.push(abcLocal);
+                    // console.log(response.data);
+                    this.cancelGetTransactionHistory = undefined;
+                    this.getPortfolioHistory();
+                })
+                .catch((error) => {
+                    Utils.checkForInternet(error, this.props.history);
+                    if (error.response) {
+                        if (error.response.status === 400 || error.response.status === 403) {
+                            this.props.history.push('/forbiddenAccess');
+                        }
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
-                    finalTransactionParentData.sort((a, b) => {
-                        return b.datetime - a.datetime;
-                    });
+                    this.cancelGetTransactionHistory = undefined;
+                })
+                .finally(() => {
                     this.updateState({
-                        'transactionHistory': transactionHistoryData,
-                        'transactionHistoryParentData': finalTransactionParentData
+                        loading: false,
+                        transactionLoading: false
                     });
-                }
-                // console.log(response.data);
-                this.cancelGetTransactionHistory = undefined;
-                this.getPortfolioHistory();
-            })
-            .catch((error) => {
-                Utils.checkForInternet(error, this.props.history);
-                if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                }
-                this.cancelGetTransactionHistory = undefined;
-            })
-            .finally(() => {
-                this.updateState({
-                    loading: false,
-                    transactionLoading: false
-                });
-            })
+                })
         }
         this.getPortfolioHistory = () => {
-            this.updateState({portfolioHistoryLoading: true});
+            this.updateState({ portfolioHistoryLoading: true });
             axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=portfolioHistory', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
@@ -463,111 +472,112 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-            .then((response) => {
-                if (response.data && response.data.output && response.data.output.portfolioHistory &&
-                    response.data.output.portfolioHistory != null) {
-                    let finalPortfolioHistory = {};
-                    const portfolioParentData = {};
-                    for (let i = 0; i < response.data.output.portfolioHistory.length; i++) {
-                        const dtL1 = response.data.output.portfolioHistory[i];
-                        if (dtL1.values) {
-                            for (let j = 0; j < dtL1.values.length; j++) {
-                                const dtL2 = dtL1.values[j].portfolio;
-                                if (dtL2 && dtL2.portfolio && dtL2.portfolio.positions) {
-                                    for (let key in dtL2.portfolio.positions) {
-                                        const dtL3 = dtL2.portfolio.positions[key];
-                                        const dtPush = {
-                                            'date': '',
-                                            'datetime': moment(dtL1.values[j].date).valueOf(),
-                                            'symbol': dtL3.securitysymbol.ticker,
-                                            'avgPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.averageprice.toFixed(2)),
-                                            'quantity': dtL3.quantity,
-                                            'lastPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.lastprice.toFixed(2)),
-                                            'marketValue': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * dtL3.lastprice).toFixed(2)),
-                                            'unrealizedPnL': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * (dtL3.lastprice - dtL3.averageprice)).toFixed(2)),
-                                            'key': i + '_' + j + '_' + dtL3.securitysymbol.ticker
-                                        }
-                                        try {
-                                            dtPush.date = moment(dtL1.values[j].date).format('DD MMM YYYY');
-                                        } catch (err) { }
-                                        if (!finalPortfolioHistory[dtPush.date]) {
-                                            finalPortfolioHistory[dtPush.date] = [dtPush];
-                                        } else {
-                                            finalPortfolioHistory[dtPush.date].push(dtPush);
-                                        }
-
-                                        let dataObj = {
-
-                                        };
-                                        if (portfolioParentData[dtPush.date]) {
-                                            dataObj = portfolioParentData[dtPush.date];
-                                        } else {
-                                            dataObj = {
-                                                'datetime': moment(dtPush['datetime']).valueOf(),
-                                                'date': dtPush['date'],
-                                                'noOfPositions': 0,
-                                                'totalMarketValue': 0,
-                                                'totalUnrealisedPnL': 0
+                .then((response) => {
+                    if (response.data && response.data.output && response.data.output.portfolioHistory &&
+                        response.data.output.portfolioHistory != null) {
+                        let finalPortfolioHistory = {};
+                        const portfolioParentData = {};
+                        for (let i = 0; i < response.data.output.portfolioHistory.length; i++) {
+                            const dtL1 = response.data.output.portfolioHistory[i];
+                            if (dtL1.values) {
+                                for (let j = 0; j < dtL1.values.length; j++) {
+                                    const dtL2 = dtL1.values[j].portfolio;
+                                    if (dtL2 && dtL2.portfolio && dtL2.portfolio.positions) {
+                                        for (let key in dtL2.portfolio.positions) {
+                                            const dtL3 = dtL2.portfolio.positions[key];
+                                            const dtPush = {
+                                                'date': '',
+                                                'datetime': moment(dtL1.values[j].date).valueOf(),
+                                                'symbol': dtL3.securitysymbol.ticker,
+                                                'avgPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.averageprice.toFixed(2)),
+                                                'quantity': dtL3.quantity,
+                                                'lastPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.lastprice.toFixed(2)),
+                                                'marketValue': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * dtL3.lastprice).toFixed(2)),
+                                                'unrealizedPnL': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * (dtL3.lastprice - dtL3.averageprice)).toFixed(2)),
+                                                'key': i + '_' + j + '_' + dtL3.securitysymbol.ticker
                                             }
+                                            try {
+                                                dtPush.date = moment(dtL1.values[j].date).format('DD MMM YYYY');
+                                            } catch (err) { }
+                                            if (!finalPortfolioHistory[dtPush.date]) {
+                                                finalPortfolioHistory[dtPush.date] = [dtPush];
+                                            } else {
+                                                finalPortfolioHistory[dtPush.date].push(dtPush);
+                                            }
+
+                                            let dataObj = {
+
+                                            };
+                                            if (portfolioParentData[dtPush.date]) {
+                                                dataObj = portfolioParentData[dtPush.date];
+                                            } else {
+                                                dataObj = {
+                                                    'datetime': moment(dtPush['datetime']).valueOf(),
+                                                    'date': dtPush['date'],
+                                                    'noOfPositions': 0,
+                                                    'totalMarketValue': 0,
+                                                    'totalUnrealisedPnL': 0
+                                                }
+                                            }
+                                            dataObj.noOfPositions = dataObj.noOfPositions + 1;
+                                            dataObj.totalMarketValue = dataObj.totalMarketValue + (dtL3.quantity * dtL3.lastprice);
+                                            dataObj.totalUnrealisedPnL = dataObj.totalUnrealisedPnL + (dtL3.quantity * (dtL3.lastprice - dtL3.averageprice));
+                                            portfolioParentData[dtPush.date] = dataObj;
                                         }
-                                        dataObj.noOfPositions = dataObj.noOfPositions + 1;
-                                        dataObj.totalMarketValue = dataObj.totalMarketValue + (dtL3.quantity * dtL3.lastprice);
-                                        dataObj.totalUnrealisedPnL = dataObj.totalUnrealisedPnL + (dtL3.quantity * (dtL3.lastprice - dtL3.averageprice));
-                                        portfolioParentData[dtPush.date] = dataObj;
                                     }
                                 }
                             }
                         }
+                        let latestPortfolioParent = [];
+                        const finalPortfolioParentData = [];
+                        for (let key in portfolioParentData) {
+                            const abcLocal = portfolioParentData[key];
+                            abcLocal['totalMarketValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalMarketValue']);
+                            abcLocal['totalUnrealisedPnL'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalUnrealisedPnL']);
+                            finalPortfolioParentData.push(abcLocal);
+                        }
+                        finalPortfolioParentData.sort((a, b) => {
+                            return b.datetime - a.datetime;
+                        });
+                        if (finalPortfolioParentData.length > 0) {
+                            latestPortfolioParent.push(finalPortfolioParentData[0]);
+                        }
+                        this.updateState({
+                            'portfolioHistory': finalPortfolioHistory,
+                            'latestPortfolio': latestPortfolioParent,
+                            'portfolioParentData': finalPortfolioParentData,
+                        });
+                    } else {
+                        this.updateState({ 'loading': false });
                     }
-                    let latestPortfolioParent = [];
-                    const finalPortfolioParentData = [];
-                    for (let key in portfolioParentData) {
-                        const abcLocal = portfolioParentData[key];
-                        abcLocal['totalMarketValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalMarketValue']);
-                        abcLocal['totalUnrealisedPnL'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalUnrealisedPnL']);
-                        finalPortfolioParentData.push(abcLocal);
+                    // console.log(response.data);
+                    this.cancelGetPortfolioHistory = undefined;
+                })
+                .catch((error) => {
+                    Utils.checkForInternet(error, this.props.history);
+                    if (error.response) {
+                        if (error.response.status === 400 || error.response.status === 403) {
+                            this.props.history.push('/forbiddenAccess');
+                        }
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
-                    finalPortfolioParentData.sort((a, b) => {
-                        return b.datetime - a.datetime;
-                    });
-                    if (finalPortfolioParentData.length > 0) {
-                        latestPortfolioParent.push(finalPortfolioParentData[0]);
-                    }
+                    this.cancelGetPortfolioHistory = undefined;
+                })
+                .finally(() => {
                     this.updateState({
-                        'portfolioHistory': finalPortfolioHistory,
-                        'latestPortfolio': latestPortfolioParent,
-                        'portfolioParentData': finalPortfolioParentData,
+                        loading: false,
+                        portfolioHistoryLoading: false
                     });
-                } else {
-                    this.updateState({ 'loading': false });
-                }
-                // console.log(response.data);
-                this.cancelGetPortfolioHistory = undefined;
-            })
-            .catch((error) => {
-                Utils.checkForInternet(error, this.props.history);
-                if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                }
-                this.cancelGetPortfolioHistory = undefined;
-            })
-            .finally(() => {
-                this.updateState({
-                    loading: false,
-                    portfolioHistoryLoading: false
                 });
-            });
         }
 
         this.onCustomHighChartCreated = (chart) => {
             this.runningBackTestChart = chart;
         }
 
-        this.handleModeChange = (event) => {
-            this.updateState({ 'portfolioMode': event.target.value });
+        this.handleModeChange = value => {
+            const portfolioValues = ['LatestPortfolio', 'PortfolioHistory'];
+            this.updateState({ portfolioMode: portfolioValues[value] });
         }
 
         this.updateBacktestDataFromGetCall = (data) => {
@@ -819,12 +829,11 @@ class BacktestDetail extends Component {
         }
     }
 
+    handleTabChange = (event, value) => {
+        this.setState({selectedTab: value});
+    }
+
     render() {
-
-        const antIconLoading = <Icon type="loading" style={{ fontSize: 34 }} spin />;
-        const TabPane = Tabs.TabPane;
-
-
         const getLogsTabPane = () => {
             const logs = [];
             const logsJsonArr = [];
@@ -858,10 +867,10 @@ class BacktestDetail extends Component {
                         style={{ 'marginTop': '7px' }}>
                         <span className={"log-type " + logsJsonArr[i].messagetype}>
                             [{logsJsonArr[i].messagetype}]&nbsp;
-            </span>
+                        </span>
                         <span className="log-date-time">
                             [{logsJsonArr[i].dt}]&nbsp;
-            </span>
+                        </span>
                         <span className="log-message">
                             {logsJsonArr[i].message}
                         </span>
@@ -869,17 +878,23 @@ class BacktestDetail extends Component {
                 );
             }
             return (
-                <TabPane tab="Logs" key="logs" className="backtest-logs" style={{
-                    'maxHeight': '550px',
-                    'overflowY': 'auto', 'background': '#323232', 'padding': '10px', 'minHeight': '400px'
-                }}>
+                <div 
+                        className="backtest-logs" 
+                        style={{
+                            maxHeight: '550px',
+                            overflowY: 'auto', 
+                            background: '#323232', 
+                            padding: '10px', 
+                            minHeight: '400px'
+                        }}
+                >
                     <Loading
                         show={this.state.logsLoading}
                         color="teal"
                         showSpinner={false}
                     />
                     {logs}
-                </TabPane>
+                </div>
             );
         }
 
@@ -904,10 +919,13 @@ class BacktestDetail extends Component {
 
         const getTransactionHistoryTabPane = () => {
             return (
-                <TabPane tab="Transaction" key="transactionHistory" style={{
-                    'maxHeight': '550px',
-                    'overflowY': 'auto', 'padding': '10px'
-                }}>
+                <div 
+                        style={{
+                            maxHeight: '550px',
+                            overflowY: 'auto', 
+                            padding: '10px'
+                        }}
+                >
                     <Loading
                         show={this.state.transactionLoading}
                         color="teal"
@@ -934,7 +952,7 @@ class BacktestDetail extends Component {
                             );
                         }}
                         headerStyle={{ 'textAlign': 'left' }} />
-                </TabPane>
+                </div>
             );
         }
 
@@ -1010,10 +1028,12 @@ class BacktestDetail extends Component {
 
         const getPortfolioHistoryTabPane = () => {
             return (
-                <TabPane tab="Portfolio" key="portfolioHistory" style={{
-                    'maxHeight': '550px',
-                    'overflowY': 'auto', 'padding': '0px 10px'
-                }}>
+                <div 
+                        style={{
+                            maxHeight: '550px',
+                            overflowY: 'auto', 'padding': '0px 10px'
+                        }}
+                >
                     <Loading
                         show={this.state.portfolioHistoryLoading}
                         color="teal"
@@ -1023,13 +1043,15 @@ class BacktestDetail extends Component {
                         'display': 'flex', 'justifyContent': 'center',
                         'margin': '10px'
                     }}>
-                        <Radio.Group onChange={this.handleModeChange} defaultValue={'LatestPortfolio'}>
-                            <Radio.Button value="LatestPortfolio">Latest Portfolio</Radio.Button>
-                            <Radio.Button value="PortfolioHistory">Portfolio History</Radio.Button>
-                        </Radio.Group>
+                        <RadioGroup
+                            items={['Latest Portfolio', 'Portfolio History']}
+                            defaultSelected={this.state.defaultSelectedPortfolio}
+                            onChange={this.handleModeChange}
+                            CustomRadio={CardCustomRadio}
+                        />
                     </div>
                     {getPortfolioHistoryTable()}
-                </TabPane>
+                </div>
             );
         }
 
@@ -1042,146 +1064,148 @@ class BacktestDetail extends Component {
                 advancedSummary = JSON.parse(this.state.backTestData.settings.advanced);
             } catch (err) { }
             return (
-                <TabPane tab="Settings" key="settings" style={{
-                    'maxHeight': '550px',
-                    'overflowY': 'auto'
-                }}>
+                <div 
+                        style={{
+                            maxHeight: '550px',
+                            overflowY: 'auto'
+                        }}
+                >
                     <div style={{ 'padding': '20px', 'display': 'flex' }}>
                         <div style={{ 'border': '1px solid #e1e1e1', 'padding': '10px', 'minWidth': '450px' }}>
                             <h2 style={{ 'fontWeight': '700', 'fontSize': '18px' }}>Settings</h2>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Initial Cash:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.initialCash : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Start Date:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         <Moment format="DD MMM YYYY">
                                             {(this.state.backTestData.settings) ? this.state.backTestData.settings.startDate : undefined}
                                         </Moment>
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     End Date:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         <Moment format="DD MMM YYYY">
                                             {(this.state.backTestData.settings) ? this.state.backTestData.settings.endDate : undefined}
                                         </Moment>
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Benchmark:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.benchmark : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Universe:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.universeIndex : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Slippage:
-                  </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.slippage) ? advancedSummary.slippage.value : '-'}
                                     </p>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.slippage) ? advancedSummary.slippage.model : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Comission:
-                  </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.commission) ? advancedSummary.commission.value : '-'}
                                     </p>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.commission) ? advancedSummary.commission.model : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Cancel Policy:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.cancelPolicy}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Execution Policy:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.executionPolicy}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Rebalance:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.rebalance}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Investment Plan:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.investmentPlan}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Resolution:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.resolution}
                                     </p>
-                                </Col>
-                            </Row>
+                                </Grid>
+                            </Grid>
                         </div>
                     </div>
-                </TabPane>
+                </div>
             );
         }
 
@@ -1204,19 +1228,24 @@ class BacktestDetail extends Component {
         }
 
         const getBackTestTabs = () => {
-            if (!this.state.loading) {
-                const tabs = [];
-
-                tabs.push(<TabPane tab="Performance" key="performance" style={{
-                    'maxHeight': '550px',
-                    'overflowY': 'auto'
-                }}>
+            const tabs = [];
+            tabs.push(
+                <div 
+                        style={{
+                            maxHeight: '550px',
+                            overflowY: 'auto'
+                        }}
+                >
                     {getChartAccordingly()}
-                </TabPane>);
-                tabs.push(<TabPane tab="Code" key="code" style={{
-                    'maxHeight': '550px',
-                    'overflowY': 'auto'
-                }}>
+                </div>
+            );
+            tabs.push(
+                <div 
+                        style={{
+                            maxHeight: '550px',
+                            overflowY: 'auto'
+                        }}
+                >
                     <AceEditor
                         mode="julia"
                         theme="xcode"
@@ -1226,25 +1255,32 @@ class BacktestDetail extends Component {
                         width="100%"
                         editorProps={{ $blockScrolling: "Infinity" }}
                     />
-                </TabPane>);
-                tabs.push(getSettingsTabPane());
-                // if (this.state.logs){
-                tabs.push(getLogsTabPane());
-                // }
-                // if (this.state.transactionHistory){
-                tabs.push(getTransactionHistoryTabPane());
-                // }
-                // if (this.state.portfolioHistory){
-                tabs.push(getPortfolioHistoryTabPane());
-                // }
-                return (
-                    <div style={{ 'border': '1px solid #e1e1e1', 'marginTop': '15px' }}>
-                        <Tabs animated={false}>
-                            {tabs}
-                        </Tabs>
-                    </div>
-                );
-            }
+                </div>
+            );
+
+            tabs.push(getSettingsTabPane());
+            tabs.push(getLogsTabPane());
+            tabs.push(getTransactionHistoryTabPane());
+            tabs.push(getPortfolioHistoryTabPane());
+
+            return (
+                <div style={{ 'border': '1px solid #e1e1e1', 'marginTop': '15px' }}>
+                    <Tabs
+                        onChange={this.handleTabChange}
+                        value={this.state.selectedTab}
+                    >
+                        <Tab label='Performance' />
+                        <Tab label='Code' />
+                        <Tab label='Settings' />
+                        <Tab label='Logs' />
+                        <Tab label='Transaction' />
+                        <Tab label='Portfolio' />
+                    </Tabs>
+                    {
+                        tabs[this.state.selectedTab]
+                    }
+                </div>
+            );
         }
 
         const getBackTestDiv = () => {
@@ -1255,17 +1291,17 @@ class BacktestDetail extends Component {
                         'alignItems': 'center', 'justifyContent': 'center',
                         'minHeight': '300px'
                     }}>
-                        <Spin indicator={antIconLoading} />
+                        <CircularProgress size={22} />
                     </div>
                 );
             } else {
                 return (
                     <div>
-                        <Row>
-                            <Col span={8}>
+                        <Grid container>
+                            <Grid item xs={4}>
                                 <h2>{this.state.backTestName}</h2>
-                            </Col>
-                            <Col span={8} style={{
+                            </Grid>
+                            <Grid item xs={4} style={{
                                 'display': 'flex', 'alignItems': 'center',
                                 'justifyContent': 'center'
                             }}>
@@ -1278,40 +1314,44 @@ class BacktestDetail extends Component {
                                         <div style={{ 'display': 'block', 'textAlign': 'center' }}>
                                             <p style={{ 'margin': '0px', 'fontSize': '12px', 'fontWeight': '600' }}>
                                                 Running Backtest
-                      </p>
+                                            </p>
                                             <p style={{
                                                 'margin': '0px', 'fontSize': '12px', 'fontWeight': '700',
                                                 'color': 'teal'
                                             }}>
                                                 Progress: {this.state.backtestProgress} %
-                      </p>
+                                            </p>
                                         </div>
-                                        <Spin indicator={antIconLoading} style={{ 'marginLeft': '10px' }} />
+                                        <CircularProgress size={22} style={{ 'marginLeft': '10px' }} />
                                     </div>
                                     <h2 style={{
                                         'color': 'teal', 'margin': '0px', 'fontSize': '16px', 'fontWeight': '700',
                                         'display': (this.state.isBackTestRunComplete ? 'inherit' : 'none')
                                     }}>
                                         Complete
-                  </h2>
+                                    </h2>
                                 </div>
-                            </Col>
+                            </Grid>
                             {
                                 (!this.state.isBacktestRunning) ? (
-                                    <Col span={8}>
+                                    <Grid item xs={4}>
                                         <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
                                             <Link to={'/community/newPost?attachedBacktestId=' + this.props.match.params.backtestId}>
-                                                <Button type="primary" style={{ 'justifySelf': 'flex-end' }}>
+                                                <Button
+                                                    color="primary"
+                                                    style={{ 'justifySelf': 'flex-end' }}
+                                                >
                                                     SHARE BACKTEST
-                        </Button>
+                                                </Button>
                                             </Link>
                                         </div>
-                                    </Col>
+                                    </Grid>
                                 ) : null
                             }
-                        </Row>
-                        <Row style={{ 'marginTop': '10px' }}>
-                            <Col sm={12} md={6}>
+                        </Grid>
+
+                        <Grid container style={{ 'marginTop': '10px' }}>
+                            <Grid item sm={6} md={3}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -1321,11 +1361,11 @@ class BacktestDetail extends Component {
                                         'margin': '0px'
                                     }}>
                                         Strategy Name:&nbsp;
-                  </span>
+                                    </span>
                                     {this.state.backTestData.strategy_name}
                                 </h2>
-                            </Col>
-                            <Col sm={12} md={6}>
+                            </Grid>
+                            <Grid item sm={6} md={3}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -1335,11 +1375,11 @@ class BacktestDetail extends Component {
                                         'margin': '0px'
                                     }}>
                                         CreatedAt:&nbsp;
-                  </span>
+                                    </span>
                                     <Moment format="DD/MM/YYYY hh:mm A">{this.state.backTestData.createdAt}</Moment>
                                 </h2>
-                            </Col>
-                            <Col sm={12} md={6}>
+                            </Grid>
+                            <Grid item sm={6} md={3}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -1349,16 +1389,16 @@ class BacktestDetail extends Component {
                                         'margin': '0px'
                                     }}>
                                         Date Range:&nbsp;
-                  </span>
+                                    </span>
                                     <Moment format="DD/MM/YYYY">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.startDate : undefined}
                                     </Moment> -&nbsp;
-                  <Moment format="DD/MM/YYYY">
+                                    <Moment format="DD/MM/YYYY">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.endDate : undefined}
                                     </Moment>
                                 </h2>
-                            </Col>
-                            <Col sm={12} md={6}>
+                            </Grid>
+                            <Grid item sm={6} md={3}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -1368,21 +1408,25 @@ class BacktestDetail extends Component {
                                         'margin': '0px'
                                     }}>
                                         Status:&nbsp;
-                  </span>
+                                    </span>
                                     {Utils.firstLetterUppercase(this.state.backTestData.status)}
                                 </h2>
-                            </Col>
-                        </Row>
+                            </Grid>
+                        </Grid>
+
                         <div style={{
                             'width': '100%', 'height': '1px', 'margin': '10px 0px 10px 0px',
                             'background': '#e1e1e1'
                         }}>
                         </div>
+
                         <h3 stye={{ 'fontSize': '16px' }}>
                             Backtest Metrics
+
                         </h3>
-                        <Row style={{ 'marginTop': '10px' }}>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+
+                        <Grid container style={{ 'marginTop': '10px' }}>
+                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
@@ -1394,10 +1438,10 @@ class BacktestDetail extends Component {
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Total Return
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
@@ -1409,10 +1453,10 @@ class BacktestDetail extends Component {
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Annual Return
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
@@ -1424,10 +1468,10 @@ class BacktestDetail extends Component {
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Volatility
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
@@ -1439,10 +1483,10 @@ class BacktestDetail extends Component {
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Sharpe Ratio
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
@@ -1454,40 +1498,10 @@ class BacktestDetail extends Component {
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Information Ratio
-                  </p>
-                                </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
-                                    <h2 id="sortino_ratio" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
-                                        {
-                                            _.get(this.state, 'backTestData.output.summary.sortinoratio', '-')
-                                        }
-                                    </h2>
-                                    <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
-                                        Sortino Ratio
                                     </p>
                                 </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
-                                    <h2 id="avg_drawdown" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
-                                        {
-                                            _.get(this.state, 'backTestData.output.summary.avgdrawdown', '-')
-                                        }
-                                    </h2>
-                                    <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
-                                        Avg. Drawdown
-                                    </p>
-                                </div>
-                            </Col>
-                            <Col sm={6} md={3} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
@@ -1501,64 +1515,63 @@ class BacktestDetail extends Component {
                                         Max Drawdown
                                     </p>
                                 </div>
-                            </Col>
-                        </Row>
+                            </Grid>
+                        </Grid>
                         {getBackTestTabs()}
                     </div>
                 );
             }
         }
 
-        const getBreadCrumbBacktestDetail = () => {
-            if (!this.state.loading) {
-                return (
-                    <Breadcrumb separator=">" className="location-breadcrumb">
-                        <Breadcrumb.Item>Research</Breadcrumb.Item>
-                        <Breadcrumb.Item><Link to="/research">All Strategies</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item><Link to={"/research/strategy/" + this.state.strategy._id}>{this.state.strategy.name}</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item><Link to={"/research/backtests/" + this.state.strategy._id}>All Backtests</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item className="last">{this.state.backTestName}</Breadcrumb.Item>
-                    </Breadcrumb>
-                );
-            }
-        }
+        // const getBreadCrumbBacktestDetail = () => {
+        //     if (!this.state.loading) {
+        //         return (
+        //             <Breadcrumb separator=">" className="location-breadcrumb">
+        //                 <Breadcrumb.Item>Research</Breadcrumb.Item>
+        //                 <Breadcrumb.Item><Link to="/research">All Strategies</Link></Breadcrumb.Item>
+        //                 <Breadcrumb.Item><Link to={"/research/strategy/" + this.state.strategy._id}>{this.state.strategy.name}</Link></Breadcrumb.Item>
+        //                 <Breadcrumb.Item><Link to={"/research/backtests/" + this.state.strategy._id}>All Backtests</Link></Breadcrumb.Item>
+        //                 <Breadcrumb.Item className="last">{this.state.backTestName}</Breadcrumb.Item>
+        //             </Breadcrumb>
+        //         );
+        //     }
+        // }
 
         const getTotalDiv = () => {
-            if (!this.state.loading) {
-                return (
-                    <div style={{ 'padding': '1% 3% 1% 3%', 'width': '100%', 'minHeight': 'calc(100vh - 70px)' }}>
-                        <div style={{ 'display': 'flex', 'marginBottom': '10px' }}>
-                            <div>
-                                <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>Backtest Detail</h2>
-                                {getBreadCrumbBacktestDetail()}
-                            </div>
-                        </div>
-                        <div className="card" style={{
-                            'width': '100%', 'background': 'white',
-                            'padding': '10px'
-                        }}>
-                            {getBackTestDiv()}
+            return (
+                <div 
+                        style={{ 
+                            padding: '1% 3%', 
+                            width: '100%', 
+                            minHeight: 'calc(100vh - 70px)',
+                            boxSizing: 'border-box' 
+                        }}
+                >
+                    <div style={{ 'display': 'flex', 'marginBottom': '10px' }}>
+                        <div>
+                            <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>Backtest Detail</h2>
+                            {/* {getBreadCrumbBacktestDetail()} */}
                         </div>
                     </div>
-                );
-            }
+                    <div 
+                            className="card" 
+                            style={{
+                                width: '100%', 
+                                background: 'white',
+                                padding: '10px',
+                                boxSizing: 'border-box'
+                            }}
+                    >
+                        {getBackTestDiv()}
+                    </div>
+                </div>
+            );
         }
 
         return (
-            <React.Fragment>
-                <div className="main-loader">
-                    <Loading
-                        show={this.state.loading}
-                        color="teal"
-                        showSpinner={false}
-                    />
-                </div>
+            <AqDesktopLayout loading={this.state.loading}>
                 {getTotalDiv()}
-                {
-                    !this.state.loading &&
-                    <Footer />
-                }
-            </React.Fragment>
+            </AqDesktopLayout>
         );
     }
 }
