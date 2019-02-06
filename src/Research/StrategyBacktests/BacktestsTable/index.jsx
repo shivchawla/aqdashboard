@@ -142,7 +142,7 @@ let EnhancedTableToolbar = props => {
                         ?
                             (
                                 <Tooltip title="Delete">
-                                    <IconButton aria-label="Delete">
+                                    <IconButton aria-label="Delete" onClick={props.toggleDeleteDialog}>
                                         <DeleteIcon style={{color: 'red'}} />
                                     </IconButton>
                                 </Tooltip>
@@ -210,6 +210,7 @@ class EnhancedTable extends React.Component {
                 <EnhancedTableToolbar 
                     numSelected={data.filter(item => item.selected === true).length} 
                     openCompare={this.props.openCompare} 
+                    toggleDeleteDialog = {this.props.toggleDeleteDialog}
                 />
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">

@@ -34,8 +34,7 @@ class Header extends React.Component {
     
     handleMenuClose = (url = null) => {
         this.setState({ anchorEl: null });
-        // url !== null && Utils.goToResearchPage(url);
-        this.props.history.push(url);
+        url !== null && this.props.history.push(url);
     };
 
     renderQuantResearchMenu = () => {

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import Utils from './../../Utils';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
 import { withRouter } from 'react-router-dom';
 import BacktestsTable from './BacktestsTable';
 import axios from 'axios';
@@ -12,6 +9,8 @@ import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
 import { processBacktests } from './utils';
 import Compare from '../Compare/Compare';
 import DialogComponent from '../../components/Alerts/DialogComponent';
+import { CircularProgress } from '@material-ui/core';
+import { horizontalBox } from '../../constants';
 
 class StrategyBacktests extends Component {
 
@@ -23,14 +22,15 @@ class StrategyBacktests extends Component {
     constructor(props) {
         super();
         this.state = {
-            'loading': true,
-            'selectedBacktests': [],
-            'strategy': {},
-            'backtests': [],
-            'allSelected': false,
-            'disableRunTests': false,
-            'tableButtonsLoading': false,
-            'backtestsCompareModalVisible': false,
+            loading: true,
+            selectedBacktests: [],
+            strategy: {},
+            backtests: [],
+            allSelected: false,
+            disableRunTests: false,
+            tableButtonsLoading: false,
+            backtestsCompareModalVisible: false,
+            showDeleteDialog: false
         };
 
         this.updateState = (data) => {
@@ -228,10 +228,11 @@ class StrategyBacktests extends Component {
                 }
                 if (backtests.length > 0) {
                     this.updateState({
-                        'tableButtonsLoading': false,
-                        'selectedBacktests': [],
-                        'backtests': backtests,
-                        'allSelected': false
+                        tableButtonsLoading: false,
+                        selectedBacktests: [],
+                        backtests: backtests,
+                        allSelected: false,
+                        showDeleteDialog: false
                     });
                 } else {
                     this.props.history.push('/research');
@@ -241,20 +242,28 @@ class StrategyBacktests extends Component {
             }
         }
 
+        this.toggleDeleteDialog = () => {
+            this.setState({showDeleteDialog: !this.state.showDeleteDialog});
+        }
+
         this.showDeleteConfirm = (title, content) => {
-            // Modal.confirm({
-            //     title: title,
-            //     content: content,
-            //     okText: 'Yes',
-            //     okType: 'danger',
-            //     cancelText: 'No',
-            //     onOk: () => {
-            //         this.deleteSelectedBacktests()
-            //     },
-            //     onCancel: () => {
-            //     },
-            // });
-            return null;
+            return (
+                <DialogComponent
+                        title={title}
+                        open={this.state.showDeleteDialog}
+                        onCancel={this.toggleDeleteDialog}
+                        onOk={this.deleteSelectedBacktests}
+                        action
+                >
+                    {
+                        this.state.tableButtonsLoading
+                            ?   <div style={{...horizontalBox, justifyContent: 'center'}}>
+                                    <CircularProgress size={22} />
+                                </div>
+                            :   <span>{content}</span>
+                    }
+                </DialogComponent>
+            );
         }
 
         this.showcompareModal = () => {
@@ -327,69 +336,6 @@ class StrategyBacktests extends Component {
             );
         }
 
-        const getTableButtons = () => {
-            if (!this.state.loading) {
-                if (this.state.tableButtonsLoading) {
-                    return (
-                        <div style={{
-                            'display': 'flex',
-                            'alignItems': 'center', 'justifyContent': 'center',
-                            'minWidth': '100px'
-                        }}>
-                            <CircularProgress size={22} />
-                        </div>
-                    );
-                } else {
-                    return (
-                        <React.Fragment>
-                            {getCompareButton()}
-                            {getCompareModal()}
-                            {getDeleteButton()}
-                        </React.Fragment>
-                    );
-                }
-            }
-        }
-
-        const getCompareButton = () => {
-            return (
-                <Button
-                    style={{ 'marginRight': '10px' }}
-                    color="primary"
-                    onClick={() => this.showcompareModal()}
-                    disabled={
-                        this.state.selectedBacktests &&
-                        this.state.selectedBacktests.length > 1 &&
-                        this.state.selectedBacktests.length <= 5
-                    }
-                >
-                    Compare
-                </Button>
-            );
-        }
-
-        const getDeleteButton = () => {
-            if (this.state.selectedBacktests && this.state.selectedBacktests.length > 0) {
-                return (
-                    <Button
-                        color="secondary"
-                        onClick={() => {
-                            this.showDeleteConfirm('Are you sure you want to delete?', this.state.selectedBacktests.length + ' backtests will be deleted.')
-                        }
-                        }
-                    >
-                        <Icon>delete</Icon>Delete Selected
-                    </Button>
-                );
-            } else {
-                return (
-                    <Button color="secondary" disabled>
-                        <Icon>delete</Icon>Delete Selected
-                    </Button>
-                );
-            }
-        }
-
         const getBacktestsDiv = () => {
             return (
                 <div>
@@ -408,6 +354,7 @@ class StrategyBacktests extends Component {
                         strategyName={_.get(this.state, 'strategy.name', '')}
                         rowSelection={this.rowSelection}
                         openCompare={this.showcompareModal}
+                        toggleDeleteDialog={this.toggleDeleteDialog}
                     />
                     {/* <Table 
                         rowSelection={rowSelection}
@@ -469,6 +416,7 @@ class StrategyBacktests extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
+                {this.showDeleteConfirm('Are you sure you want to delete?', this.state.selectedBacktests.length + ' backtests will be deleted.')}
                 {getTotalDiv()}
             </AqDesktopLayout>
         );

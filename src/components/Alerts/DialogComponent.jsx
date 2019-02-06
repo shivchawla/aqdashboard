@@ -35,7 +35,14 @@ class DialogComponent extends React.Component {
     }
 
     render() {
-        const {open = false, title = null, action = false, classes, maxWidth='md'} = this.props;
+        const {
+            open = false, 
+            title = null, 
+            action = false, 
+            maxWidth = 'md',
+            cancelButtonStyle = {},
+            okButtonStyle = {}
+        } = this.props;
 
         return (
             <Dialog 
@@ -55,10 +62,18 @@ class DialogComponent extends React.Component {
                 {
                     action &&
                     <DialogActions>
-                        <Button onClick={this.onCancel} color="secondary">
+                        <Button 
+                                onClick={this.onCancel} 
+                                color="secondary"
+                                style={cancelButtonStyle}
+                        >
                             CANCEL
                         </Button>
-                        <Button onClick={this.onOk} color="primary">
+                        <Button 
+                                onClick={this.onOk} 
+                                color="primary"
+                                style={okButtonStyle}
+                        >
                             OK
                         </Button>
                     </DialogActions>
