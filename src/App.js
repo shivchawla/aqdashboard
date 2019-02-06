@@ -9,6 +9,8 @@ import StrategyDetail from './Research/StartegyDetail/StartegyDetail';
 import StrategyBacktests from './Research/StrategyBacktests/StrategyBacktests';
 import BacktestDetail from './Research/BacktestDetail/BacktestDetail';
 import Community from './Community/Community';
+import ThreadView from './Community/ThreadView/ThreadView';
+import NewPost from './Community/NewPost/NewPost';
 import './App.css';
 
 class App extends Component {
@@ -23,6 +25,8 @@ class App extends Component {
 					<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
 					<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
 					<Route exact={true} path='/community' component={Community}/>
+					<Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
+					<Route exact={true} path='/community/newPost' component={NewPost} />
 				</Switch>
 			</div>
 		</MuiPickersUtilsProvider>

@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import { Spin, Icon, Row, Col, Tabs } from 'antd';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Utils from './../../../Utils';
 import Moment from 'react-moment';
 import AceEditor from 'react-ace';
@@ -18,8 +21,9 @@ class AttachedBackTest extends Component {
     constructor(props) {
         super();
         this.state = {
-            "backTestData": {},
-            "loading": true
+            backTestData: {},
+            loading: true,
+            selectedTab: 0
         };
 
         this.getBacktestData = () => {
@@ -76,11 +80,12 @@ class AttachedBackTest extends Component {
         }
     }
 
+    onTabChanged = (event, value) => {
+        this.setState({ selectedTab: value });
+    }
+
     render() {
         const TabPane = Tabs.TabPane;
-
-        const antIconLoading = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-
         const getLoadingDiv = () => {
             if (this.state.loading) {
                 return (
@@ -89,7 +94,7 @@ class AttachedBackTest extends Component {
                         'alignItems': 'center', 'justifyContent': 'center',
                         'minHeight': '300px'
                     }}>
-                        <Spin indicator={antIconLoading} />
+                        <CircularProgress size={22} />
                     </div>
                 );
             }
@@ -103,146 +108,150 @@ class AttachedBackTest extends Component {
                 advancedSummary = JSON.parse(this.state.backTestData.settings.advanced);
             } catch (err) { }
             return (
-                <TabPane tab="Settings" key="settings" style={{
-                    'maxHeight': '500px',
-                    'overflowY': 'auto'
-                }}>
+                <div 
+                        tab="Settings" 
+                        key="settings" 
+                        style={{
+                            maxHeight: '500px',
+                            overflowY: 'auto'
+                        }}
+                >
                     <div style={{ 'padding': '20px', 'display': 'flex' }}>
                         <div style={{ 'border': '1px solid #e1e1e1', 'padding': '10px', 'minWidth': '450px' }}>
                             <h2 style={{ 'fontWeight': '700', 'fontSize': '18px' }}>Settings</h2>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Initial Cash:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.initialCash : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Start Date:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         <Moment format="DD MMM YYYY">
                                             {(this.state.backTestData.settings) ? this.state.backTestData.settings.startDate : undefined}
                                         </Moment>
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     End Date:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         <Moment format="DD MMM YYYY">
                                             {(this.state.backTestData.settings) ? this.state.backTestData.settings.endDate : undefined}
                                         </Moment>
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Benchmark:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.benchmark : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Universe:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {(this.state.backTestData.settings) ? this.state.backTestData.settings.universeIndex : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Slippage:
-                  </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.slippage) ? advancedSummary.slippage.value : '-'}
                                     </p>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.slippage) ? advancedSummary.slippage.model : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Comission:
-                  </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.commission) ? advancedSummary.commission.value : '-'}
                                     </p>
                                     <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
                                         {(advancedSummary.commission) ? advancedSummary.commission.model : '-'}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Cancel Policy:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.cancelPolicy}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Execution Policy:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.executionPolicy}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Rebalance:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.rebalance}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Investment Plan:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.investmentPlan}
                                     </p>
-                                </Col>
-                            </Row>
-                            <Row type="flex" align="middle" style={{ 'marginTop': '10px' }}>
-                                <Col span={8}>
+                                </Grid>
+                            </Grid>
+                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4}>
                                     Resolution:
-                </Col>
-                                <Col span={16} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
                                         {advancedSummary.resolution}
                                     </p>
-                                </Col>
-                            </Row>
+                                </Grid>
+                            </Grid>
                         </div>
                     </div>
-                </TabPane>
+                </div>
             );
         }
 
@@ -250,36 +259,56 @@ class AttachedBackTest extends Component {
             if (!this.state.loading) {
                 const tabs = [];
 
-                tabs.push(<TabPane tab="Performance" key="performance" style={{
-                    'maxHeight': '500px',
-                    'overflowY': 'auto'
-                }}>
-                    <CustomHighCharts
-                        output={this.state.backTestData.output}
-                        uniqueKey={this.state.backTestData._id + '__' + Math.floor((Math.random() * 100) + 1)} />
-                </TabPane>);
-                tabs.push(<TabPane tab="Code" key="code" style={{
-                    'maxHeight': '500px',
-                    'overflowY': 'auto'
-                }}>
-                    <AceEditor
-                        mode="julia"
-                        theme="xcode"
-                        name="UNIQUE_ID_OF_DIV"
-                        readOnly={true}
-                        value={this.state.backTestData.code}
-                        width="100%"
-                        editorProps={{ $blockScrolling: "Infinity" }}
-                    />
-                </TabPane>);
+                tabs.push(
+                    <div 
+                            tab="Performance" 
+                            key="performance" 
+                            style={{
+                                maxHeight: '500px',
+                                overflowY: 'auto'
+                            }}
+                    >
+                        <CustomHighCharts
+                            output={this.state.backTestData.output}
+                            uniqueKey={this.state.backTestData._id + '__' + Math.floor((Math.random() * 100) + 1)} 
+                        />
+                    </div>
+                );
+                tabs.push(
+                    <div 
+                            tab="Code" 
+                            key="code" 
+                            style={{
+                                maxHeight: '500px',
+                                overflowY: 'auto'
+                            }}
+                    >
+                        <AceEditor
+                            mode="julia"
+                            theme="xcode"
+                            name="UNIQUE_ID_OF_DIV"
+                            readOnly={true}
+                            value={this.state.backTestData.code}
+                            width="100%"
+                            editorProps={{ $blockScrolling: "Infinity" }}
+                        />
+                    </div>
+                );
                 tabs.push(getSettingsTabPane());
+
                 return (
-                    <div style={{ 'width': '100%', 'padding': '15px' }}>
+                    <div 
+                            style={{ 
+                                width: '100%', 
+                                padding: '15px',
+                                boxSizing: 'border-box'
+                            }}
+                    >
                         <h1 style={{ 'fontWeight': '700', 'fontSize': '22px' }}>
                             Attached Backtest Details
                         </h1>
-                        <Row>
-                            <Col sm={12} md={6} style={{ 'textAlign': 'center' }}>
+                        <Grid container>
+                            <Grid item sm={6} md={3} style={{ 'textAlign': 'center' }}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -292,8 +321,8 @@ class AttachedBackTest extends Component {
                                 }}>
                                     Strategy Name
                                 </p>
-                            </Col>
-                            <Col sm={12} md={6} style={{ 'textAlign': 'center' }}>
+                            </Grid>
+                            <Grid item sm={6} md={3} style={{ 'textAlign': 'center' }}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -308,23 +337,23 @@ class AttachedBackTest extends Component {
                                 }}>
                                     CreatedAt
                                 </p>
-                            </Col>
-                            <Col sm={12} md={6} style={{ 'textAlign': 'center' }}>
+                            </Grid>
+                            <Grid item sm={6} md={3} style={{ 'textAlign': 'center' }}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
                                 }}>
                                     <Moment format="DD/MM/YYYY">
                                         {
-                                            (this.state.backTestData.settings) 
-                                                ? this.state.backTestData.settings.startDate 
+                                            (this.state.backTestData.settings)
+                                                ? this.state.backTestData.settings.startDate
                                                 : undefined
                                         }
                                     </Moment> -&nbsp;
-                  <Moment format="DD/MM/YYYY">
+                                    <Moment format="DD/MM/YYYY">
                                         {
-                                            (this.state.backTestData.settings) 
-                                                ? this.state.backTestData.settings.endDate 
+                                            (this.state.backTestData.settings)
+                                                ? this.state.backTestData.settings.endDate
                                                 : undefined
                                         }
                                     </Moment>
@@ -334,9 +363,9 @@ class AttachedBackTest extends Component {
                                     'margin': '0px'
                                 }}>
                                     Date Range
-                </p>
-                            </Col>
-                            <Col sm={12} md={6} style={{ 'textAlign': 'center' }}>
+                                </p>
+                            </Grid>
+                            <Grid item sm={6} md={3} style={{ 'textAlign': 'center' }}>
                                 <h2 style={{
                                     'fontWeight': '400', 'fontSize': '14px',
                                     'margin': '0px'
@@ -348,9 +377,9 @@ class AttachedBackTest extends Component {
                                     'margin': '0px'
                                 }}>
                                     Status
-                </p>
-                            </Col>
-                        </Row>
+                                </p>
+                            </Grid>
+                        </Grid>
                         <div style={{
                             'width': '100%', 'height': '1px', 'margin': '10px 0px 10px 0px',
                             'background': '#e1e1e1'
@@ -358,115 +387,121 @@ class AttachedBackTest extends Component {
                         </div>
                         <h3 stye={{ 'fontSize': '16px' }}>
                             Backtest Metrics
-            </h3>
-                        <Row>
-                            <Col sm={8} md={4} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                        </h3>
+                        <Grid container>
+                            <Grid item sm={4} md={2} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
                                 }}>
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            (this.state.backTestData.output && this.state.backTestData.output.summary) 
-                                                ?   this.state.backTestData.output.summary.totalreturn.toFixed(2) + ' %' 
-                                                :   '-'
+                                            (this.state.backTestData.output && this.state.backTestData.output.summary)
+                                                ? this.state.backTestData.output.summary.totalreturn.toFixed(2) + ' %'
+                                                : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Total Return
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={8} md={4} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={4} md={2} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
                                 }}>
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            (this.state.backTestData.output && this.state.backTestData.output.summary) 
-                                                ?   this.state.backTestData.output.summary.annualreturn.toFixed(2) + ' %' 
-                                                :   '-'
+                                            (this.state.backTestData.output && this.state.backTestData.output.summary)
+                                                ? this.state.backTestData.output.summary.annualreturn.toFixed(2) + ' %'
+                                                : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Annual Return
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={8} md={4} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={4} md={2} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
                                 }}>
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            (this.state.backTestData.output && this.state.backTestData.output.summary) 
-                                                ?   this.state.backTestData.output.summary.annualstandarddeviation.toFixed(2) + ' %' 
-                                                :   '-'
+                                            (this.state.backTestData.output && this.state.backTestData.output.summary)
+                                                ? this.state.backTestData.output.summary.annualstandarddeviation.toFixed(2) + ' %'
+                                                : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Volatility
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={8} md={4} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={4} md={2} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
                                 }}>
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            (this.state.backTestData.output && this.state.backTestData.output.summary) 
-                                                ?   this.state.backTestData.output.summary.sharperatio.toFixed(2) 
+                                            (this.state.backTestData.output && this.state.backTestData.output.summary)
+                                                ? this.state.backTestData.output.summary.sharperatio.toFixed(2)
                                                 : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Sharpe Ratio
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={8} md={4} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={4} md={2} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
                                 }}>
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            (this.state.backTestData.output && this.state.backTestData.output.summary) 
-                                                ?   this.state.backTestData.output.summary.informationratio.toFixed(2)
-                                                :   '-'
+                                            (this.state.backTestData.output && this.state.backTestData.output.summary)
+                                                ? this.state.backTestData.output.summary.informationratio.toFixed(2)
+                                                : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Information Ratio
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                            <Col sm={8} md={4} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
+                            </Grid>
+                            <Grid item sm={4} md={2} style={{ 'display': 'flex', 'justifyContent': 'center' }}>
                                 <div style={{
                                     'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
                                     'textAlign': 'left'
                                 }}>
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            (this.state.backTestData.output && this.state.backTestData.output.summary) 
-                                            ?   this.state.backTestData.output.summary.maxdrawdown.toFixed(2)
-                                            :   '-'
+                                            (this.state.backTestData.output && this.state.backTestData.output.summary)
+                                                ? this.state.backTestData.output.summary.maxdrawdown.toFixed(2)
+                                                : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Max Drawdown
-                  </p>
+                                    </p>
                                 </div>
-                            </Col>
-                        </Row>
+                            </Grid>
+                        </Grid>
                         <div style={{ 'border': '1px solid #e1e1e1', 'marginTop': '15px' }}>
-                            <Tabs>
-                                {tabs}
+                            <Tabs
+                                value={this.state.selectedTab}
+                                onChange={this.onTabChanged}
+                            >
+                                <Tab label='Performance' />
+                                <Tab label='Code' />
+                                <Tab label='Settings' />
                             </Tabs>
+                            {tabs[this.state.selectedTab]}
                         </div>
                     </div>
                 );

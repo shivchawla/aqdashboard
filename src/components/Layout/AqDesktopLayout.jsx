@@ -38,7 +38,7 @@ class AqDesktopLayout extends React.Component {
                             // height: 'calc(100vh - 80px)',
                             // overflow: 'hidden',
                             // overflowY: 'scroll',
-                            borderRight: '1px solid #e9e8e8',
+                            // borderRight: '1px solid #e9e8e8',
                         }}
                 >
                     {

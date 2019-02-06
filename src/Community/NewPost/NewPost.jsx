@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import Utils from './../../Utils';
-import {
-    Tag, Row, Col, Radio, Modal, Button, Icon, Spin, Breadcrumb,
-    message
-} from 'antd';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import DialogComponent from '../../components/Alerts/DialogComponent';
+import RadioGroup from '../../components/Selections/RadioGroup';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { withRouter, Link } from 'react-router-dom';
 import AvailableBackTests from './../ThreadView/AvailableBackTests/AvailableBackTests.jsx';
 import ReactQuill from 'react-quill';
 import ThreadPost from './../ThreadView/ThreadPost/ThreadPost.jsx';
 import axios from 'axios';
-import { Footer } from '../../Footer/Footer';
+import AqLayoutDesktop from '../../components/Layout/AqDesktopLayout';
 import 'react-quill/dist/quill.snow.css';
 
+const postTypes = ['Share your Idea', 'Questions and Answers'];
 
 class NewPost extends Component {
 
@@ -55,7 +59,7 @@ class NewPost extends Component {
                     })
                     event.target.value = '';
                 } else {
-                    message.error('Max 5 tags allowed.');
+                    // message.error('Max 5 tags allowed.');
                 }
             }
         }
@@ -68,8 +72,8 @@ class NewPost extends Component {
             this.updateState({ 'tags': tags });
         }
 
-        this.onPostTypeChange = (event) => {
-            this.updateState({ 'selectedPostType': event.target.value });
+        this.onPostTypeChange = (value) => {
+            this.updateState({ 'selectedPostType': postTypes[value]});
         }
 
         this.onBackTestClicked = (batcktestId) => {
@@ -135,7 +139,7 @@ class NewPost extends Component {
                 this.state.backtestId)) {
             return true;
         }
-        message.error('No preview available for empty post. Please create a valid post and a header.');
+        // message.error('No preview available for empty post. Please create a valid post and a header.');
         return false;
     }
 
@@ -152,43 +156,68 @@ class NewPost extends Component {
 
 
     render() {
-
-        const antIconLoading = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-
         const tags = [];
         for (let i = 0; i < this.state.tags.length; i++) {
-            tags.push(<Tag closable color="#cc6666" key={i} onClose={(e) => { e.preventDefault(); this.tagClosed(i) }}>{this.state.tags[i]}</Tag>)
+            tags.push(
+                <Chip 
+                    label={this.state.tags[i]}
+                    key={i}
+                    onDelete={e => {
+                        e.preventDefault(); 
+                        this.tagClosed(i); 
+                    }}
+                    style={{
+                        background: '#cc6666',
+                        color: '#fff'
+                    }}
+                />
+            );
         }
-
-        const RadioGroup = Radio.Group;
 
         const attachBackTestModal = () => {
             return (
-                <Modal
-                    title="Attach BackTest"
-                    wrapClassName="vertical-center-modal"
-                    visible={this.state.attachBackTestModalVisible}
-                    footer={null}
-                    onCancel={() => this.updateState({ 'attachBackTestModalVisible': false })}
-                    className="attach-backtest-model"
+                <DialogComponent
+                        title="Attach BackTest"
+                        open={this.state.attachBackTestModalVisible}
+                        onClose={() => this.updateState({ 'attachBackTestModalVisible': false })}
+                        style={{
+                            width: '90vw',
+                            height: '100vh'
+                        }}
+                        maxWidth='xl'
                 >
-                    <AvailableBackTests style={{ 'height': '100%', 'width': '100%' }} onBackTestClicked={this.onBackTestClicked} />
-                </Modal>
+                    <AvailableBackTests 
+                        style={{ 
+                            height: '100%', 
+                            width: '100%' 
+                        }} 
+                        onBackTestClicked={this.onBackTestClicked} 
+                    />
+                </DialogComponent>
             );
         }
 
         const getAttachButtonDiv = () => {
             if (this.state.backtestId) {
                 return (
-                    <Tag color="#cc6666" closable
-                        onClose={(e) => { e.preventDefault(); this.updateState({ 'backtestId': undefined }) }}>
-                        Attached Backtest ID: {this.state.backtestId}
-                    </Tag>
+                    <Chip 
+                        label={`Attached Backtest ID: ${this.state.backtestId}`}
+                        style={{
+                            backgroundColor: '#cc6666',
+                            color: '#fff'
+                        }}
+                        onDelete={e => {
+                            e.preventDefault(); 
+                            this.updateState({backtestId: undefined})
+                        }}
+                    />
                 );
             } else {
                 return (
-                    <Button onClick={() => { this.attachBackTest() }}>ATTACH
-            <Icon style={{ 'transform': 'rotate(-45deg)' }} type="paper-clip" />
+                    <Button 
+                            onClick={() => { this.attachBackTest() }}
+                    >
+                        ATTACH<Icon>attach</Icon>
                     </Button>
                 );
             }
@@ -241,39 +270,58 @@ class NewPost extends Component {
                         'alignItems': 'center', 'justifyContent': 'flex-end',
                         'minWidth': '100px'
                     }}>
-                        <Spin indicator={antIconLoading} />
+                        <CircularProgress size={22} />
                     </div>
                 );
             } else {
                 if (this.state.showReplyPreview) {
                     return (
-                        <Row style={{ 'marginTop': '10px' }}>
-                            <Col span={24} style={{ 'textAlign': 'right' }}>
-                                <Button onClick={() => { this.updateState({ 'showReplyPreview': false }) }}
-                                    className="no-border-radius-button" size="small" type="primary"
-                                    style={{ 'marginRight': '15px' }}>
+                        <Grid container style={{ 'marginTop': '10px' }}>
+                            <Grid item xs={12} style={{ 'textAlign': 'right' }}>
+                                <Button 
+                                        onClick={() => { this.updateState({ 'showReplyPreview': false }) }}
+                                        className="no-border-radius-button" 
+                                        small
+                                        color="primary"
+                                        style={{ 'marginRight': '15px' }}
+                                >
                                     EDIT
-                </Button>
-                                <Button onClick={this.createPost} className="no-border-radius-button" size="small" type="primary">
+                                </Button>
+                                <Button 
+                                        onClick={this.createPost} 
+                                        className="no-border-radius-button" 
+                                        small 
+                                        color="primary"
+                                >
                                     SUBMIT
-                </Button>
-                            </Col>
-                        </Row>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     );
                 } else {
                     return (
-                        <Row style={{ 'marginTop': '10px' }}>
-                            <Col span={12}>
-                                <Button onClick={() => { if (this.validatePost()) { this.updateState({ 'showReplyPreview': true }) } }} className="no-border-radius-button" size="small" type="primary">
+                        <Grid container style={{ 'marginTop': '10px' }}>
+                            <Grid item xs={6}>
+                                <Button 
+                                        onClick={() => { if (this.validatePost()) { this.updateState({ 'showReplyPreview': true }) } }} 
+                                        className="no-border-radius-button" 
+                                        small
+                                        color="primary"
+                                >
                                     PREVIEW
-                </Button>
-                            </Col>
-                            <Col span={12} style={{ 'textAlign': 'right' }}>
-                                <Button onClick={this.createPost} className="no-border-radius-button" size="small" type="primary">
+                                </Button>
+                            </Grid>
+                            <Grid item xs={6} style={{ 'textAlign': 'right' }}>
+                                <Button 
+                                        onClick={this.createPost} 
+                                        className="no-border-radius-button" 
+                                        small
+                                        color="primary"
+                                >
                                     CREATE POST
-                </Button>
-                            </Col>
-                        </Row>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     );
                 }
             }
@@ -289,68 +337,103 @@ class NewPost extends Component {
                             'border': '1px solid #e1e1e1'
                         }} placeholder="Title"
                             onChange={this.titleChange} />
-                        <Row type="flex" align="middle" style={{ 'marginTop': '15px', 'border': '1px solid #e1e1e1' }}>
-                            <Col sm={24} md={12}>
+                        <Grid
+                                container 
+                                align="middle" 
+                                style={{ 'marginTop': '15px', 'border': '1px solid #e1e1e1' }}
+                        >
+                            <Grid item sm={12} md={6}>
                                 <input type="text" style={{
                                     'width': '100%',
                                     'border': 'none', 'padding': '4px 10px 4px 10px'
                                 }} placeholder="Add tags here"
                                     onKeyPress={this.handleAddTagKeyPress} />
-                            </Col>
-                            <Col sm={24} md={12}>
+                            </Grid>
+                            <Grid item sm={12} md={6}>
                                 {tags}
-                            </Col>
-                        </Row>
+                            </Grid>
+                        </Grid>
                         <div style={{ 'marginTop': '5px' }}>
                             <p style={{ 'float': 'right', 'fontSize': '12px' }}>Add upto 5 tags</p>
                         </div>
                         <div style={{ 'marginTop': '20px', 'display': 'flex', 'alignItems': 'center' }}>
                             <p style={{ 'fontSize': '14px', 'margin': '0px 10px 0px 0px' }}>Post Type: </p>
-                            <RadioGroup onChange={this.onPostTypeChange} value={this.state.selectedPostType}>
-                                <Radio value={'Share your Idea'}>Share your Idea</Radio>
-                                <Radio value={'Questions and Answers'}>Questions and Answers</Radio>
-                            </RadioGroup>
+                            <RadioGroup 
+                                items={postTypes}
+                                defaultSelected={0}
+                                onChange={this.onPostTypeChange}
+                                small
+                            />
                         </div>
                     </React.Fragment>
                 );
             }
         }
 
-        const getBreadcrumbNewPost = () => {
-            return (
-                <Breadcrumb separator=">" className="location-breadcrumb">
-                    <Breadcrumb.Item><Link to="/community">Community</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item className="last">Create a Post</Breadcrumb.Item>
-                </Breadcrumb>
-            );
-        }
+        // const getBreadcrumbNewPost = () => {
+        //     return (
+        //         <Breadcrumb separator=">" className="location-breadcrumb">
+        //             <Breadcrumb.Item><Link to="/community">Community</Link></Breadcrumb.Item>
+        //             <Breadcrumb.Item className="last">Create a Post</Breadcrumb.Item>
+        //         </Breadcrumb>
+        //     );
+        // }
 
         return (
-            <React.Fragment>
-                <div className="thread-view-div" style={{ 'padding': '1% 3% 1% 3%', 'width': '100%', 'minHeight': 'calc(100vh - 70px)' }}>
-                    <Row style={{ 'marginBottom': '10px' }} type="flex" align="middle">
-                        <Col span={12}>
-                            <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>Create a Post</h2>
-                            {getBreadcrumbNewPost()}
-                        </Col>
-                        <Col span={12} style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
+            <AqLayoutDesktop>
+                <div 
+                        className="thread-view-div" 
+                        style={{ 
+                            padding: '1% 3%', 
+                            width: '100%', 
+                            minHeight: 'calc(100vh - 70px)',
+                            boxSizing: 'border-box'
+                        }}
+                >
+                    <Grid 
+                            container 
+                            style={{ 'marginBottom': '10px' }} 
+                            align="middle"
+                    >
+                        <Grid item xs={6}>
+                            <h2 
+                                    style={{ 
+                                        color: '#3c3c3c', 
+                                        fontWeight: 'normal', 
+                                        margin: '0px',
+                                        textAlign: 'start'
+                                    }}
+                            >
+                                Create a Post
+                            </h2>
+                            {/* {getBreadcrumbNewPost()} */}
+                        </Grid>
+                        <Grid 
+                                item 
+                                xs={6} 
+                                style={{ 
+                                    display: 'flex', 
+                                    justifyContent: 'flex-end' 
+                                }}
+                        >
                             {(this.state.showReplyPreview) ? getUserReplyButtons() : ''}
-                        </Col>
-                    </Row>
-                    <div className="card" style={{
-                        'width': '100%', 'background': 'white',
-                        'padding': '40px 5% 40px 5%'
-                    }}>
+                        </Grid>
+                    </Grid>
+                    <div 
+                            className="card" 
+                            style={{
+                                width: '100%', 
+                                background: 'white',
+                                padding: '40px 5%',
+                                boxSizing: 'border-box'
+                            }}
+                    >
                         {getHeaderDiv()}
                         {getUserReplyDiv()}
                         {getUserReplyButtons()}
                     </div>
                 </div>
-                {
-                    !this.state.loading &&
-                    <Footer />
-                }
-            </React.Fragment>
+            </AqLayoutDesktop>
         );
     }
 }

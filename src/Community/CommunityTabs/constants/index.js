@@ -1,0 +1,1 @@
+export const communityTabsArray = ['popular', 'newest', 'following', 'personal'];

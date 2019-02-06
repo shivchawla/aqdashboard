@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import axios from 'axios';
 import Utils from './../Utils';
 // import {Breadcrumb} from 'antd';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import MultiRadioGroup from '../components/Selections/MultiRadioGroup';
 import { Link, withRouter } from 'react-router-dom';
 import Search from './Search/Search.jsx';
@@ -12,6 +12,7 @@ import CommunityTabs from './CommunityTabs/CommunityTabs.jsx';
 import ThreadList from './ThreadList/ThreadList.jsx';
 import Pagination from './Pagination/Pagination.jsx';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
+import {communityTabsArray} from './CommunityTabs/constants';
 import 'react-loading-bar/dist/index.css';
 
 class Community extends Component {
@@ -105,7 +106,9 @@ class Community extends Component {
             }
         }
 
-        this.onTabChanged = (event) => {
+        this.onTabChanged = (e, value) => {
+            const event = communityTabsArray[value];
+
             Utils.saveCommunityTab(event);
             if (event === 'newest') {
                 this.getThreads({
@@ -197,7 +200,11 @@ class Community extends Component {
             }
         }
 
-        this.categorySelectionChange = (checkedList) => {
+        this.categorySelectionChange = (selectedItems) => {
+            let categoryCheckBoxOptions = ['All', 'Ideas', 'Questions', 'News'];
+            const checkedList = categoryCheckBoxOptions.filter((item, index) => {
+                return _.findIndex(selectedItems, (selectedItem, selectedItemIndex) => selectedItemIndex === index) > -1;
+            });
             let category = '';
             if (checkedList.indexOf('All') === -1 && checkedList.length < 3) {
                 if (checkedList.indexOf('Ideas') > -1) {
@@ -371,17 +378,17 @@ class Community extends Component {
             let returnData = [];
             if (this.savedCommunityFilters.checkboxes) {
                 if (this.savedCommunityFilters.checkboxes.indexOf('Share your Idea') >= 0) {
-                    returnData.push('Ideas');
+                    returnData.push(1);
                 }
                 if (this.savedCommunityFilters.checkboxes.indexOf('Questions and Answers') >= 0) {
-                    returnData.push('Questions');
+                    returnData.push(2);
                 }
                 if (this.savedCommunityFilters.checkboxes.indexOf('News and Announcements') >= 0) {
-                    returnData.push('News');
+                    returnData.push(3);
                 }
             }
             if (returnData.length === 0 || returnData.length >= 3) {
-                returnData = ['All'];
+                returnData = [0];
             }
             return returnData;
         }
@@ -392,13 +399,8 @@ class Community extends Component {
                     <MultiRadioGroup 
                         items={categoryCheckBoxOptions}
                         onChange={this.categorySelectionChange} 
+                        defaultSelected={getCheckBoxDefaultSelection()}
                     />
-                    // <CheckboxGroup 
-                    //     className="category-checkbox-group" 
-                    //     options={categoryCheckBoxOptions} 
-                    //     defaultValue={getCheckBoxDefaultSelection()} 
-                    //     onChange={this.categorySelectionChange} 
-                    // />
                 );
             }
         }

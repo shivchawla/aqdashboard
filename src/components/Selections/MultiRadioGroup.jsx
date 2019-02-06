@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Radio from '@material-ui/core/Radio';
+import Checkbox from '@material-ui/core/Checkbox';
 import {horizontalBox, primaryColor} from '../../constants';
 
 const disabledColor = '#bdbdbd';
@@ -19,9 +20,12 @@ export default class MultiRadioGroup extends React.Component {
         const valueIndex = _.findIndex(selectedArray, item => item === value);
         if (valueIndex > -1) {
             selectedArray.splice(valueIndex, valueIndex + 1);
-            this.setState({selected: selectedArray});
-            this.props.onChange && this.props.onChange(selectedArray);
+        } else  {
+            selectedArray.push(value);
         }
+        console.log('Selected Array ', selectedArray);
+        this.setState({selected: selectedArray});
+        this.props.onChange && this.props.onChange(selectedArray);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,7 +44,7 @@ export default class MultiRadioGroup extends React.Component {
 
     render() {
         const {items = ['One', 'Two'], CustomRadio = null, small = false} = this.props;
-        const CustomRadioComponent = CustomRadio !== null ? CustomRadio : RadioComponent;
+        // const CustomRadioComponent = CustomRadio !== null ? CustomRadio : RadioComponent;
 
         return (
             <div 
@@ -54,10 +58,10 @@ export default class MultiRadioGroup extends React.Component {
                 {
                     items.map((item, index) => {
                         return (
-                            <CustomRadioComponent 
+                            <RadioComponent 
                                 key={index}
                                 label={item}
-                                checked={_.findIndex(this.state.selected, selectedItem => selectedItem === item) > -1}
+                                checked={_.findIndex(this.state.selected, selectedItem => selectedItem === index) > -1}
                                 onChange={() => this.handleChange(index)}
                                 fontSize={this.props.fontSize || '14px'}
                                 small={small}
@@ -75,7 +79,7 @@ const RadioComponent = ({label, checked, onChange, fontSize = 14, disabled=false
 
     return (
         <div style={radioContainerStyle}>
-            <Radio checked={checked} onChange={onChange} disabled={disabled} />
+            <Checkbox checked={checked} onChange={onChange} disabled={disabled} />
             <RadioLabel 
                     fontSize={fontSize} 
                     onClick={!disabled ? onChange : null}

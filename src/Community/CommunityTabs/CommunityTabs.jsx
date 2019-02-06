@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withRouter } from 'react-router-dom';
+import {communityTabsArray} from './constants';
 import { verticalBox } from '../../constants';
 
 class CommunityTabs extends Component {
     render() {
+        const selectedTabIndex = _.findIndex(communityTabsArray, tab => tab === this.props.selectedTabValue);
+
         return (
             <div style={{...verticalBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
                 <Tabs 
-                        className="height_width_full community-tabs" 
-                        animated={false} 
                         onChange={this.props.onTabChanged}
-                        activeKey={this.props.selectedTabValue}
+                        value={selectedTabIndex}
                 >
                     <Tab label='Popular' />
                     <Tab label='Newest' />
