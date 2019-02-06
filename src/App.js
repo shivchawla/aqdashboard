@@ -11,25 +11,29 @@ import BacktestDetail from './Research/BacktestDetail/BacktestDetail';
 import Community from './Community/Community';
 import ThreadView from './Community/ThreadView/ThreadView';
 import NewPost from './Community/NewPost/NewPost';
+import Help from './HelpFrame';
+import Tutorial from './TutorialFrame';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
       	<MuiPickersUtilsProvider utils={MomentUtils}>
-			<div className="App">
-				<Switch>
-					<Route exact={true} path='/research' component={Research} />
-					<Route exact={true} path='/table' component={SampleTable} />
-					<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
-					<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
-					<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
-					<Route exact={true} path='/community' component={Community}/>
-					<Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
-					<Route exact={true} path='/community/newPost' component={NewPost} />
-				</Switch>
-			</div>
-		</MuiPickersUtilsProvider>
+					<div className="App">
+						<Switch>
+							<Route exact={true} path='/research' component={Research} />
+							<Route exact={true} path='/table' component={SampleTable} />
+							<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
+							<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
+							<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
+							<Route exact={true} path='/community' component={Community}/>
+							<Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
+							<Route exact={true} path='/community/newPost' component={NewPost} />
+							<Route exact={true} path='/help' component={Help}/>
+							<Route exact={true} path='/tutorial' component={Tutorial}/>
+						</Switch>
+					</div>
+				</MuiPickersUtilsProvider>
     );
   }
 }

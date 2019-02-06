@@ -19,6 +19,8 @@ import DateComponent from '../../components/Selections/DateComponent';
 import CardRadio from '../../components/Selections/CardCustomRadio';
 import {withRouter} from 'react-router-dom';
 import NewStartegy from './../NewStrategy/NewStrategy.jsx';
+import DialogComponent from '../../components/Alerts/DialogComponent';
+import SnackbarComponent from '../../components/Alerts/SnackbarComponent';
 import AceEditor from 'react-ace';
 import 'brace/theme/tomorrow_night_bright';
 import 'brace/mode/julia';
@@ -73,36 +75,43 @@ class StartegyDetail extends Component {
         }
         savedSettings = JSON.parse(savedSettings);
         this.state = {
-            'loading': true,
-            'strategyId': props.match.params.strategyId,
-            'strategy': {},
-            'showNewStartegyDiv': false,
-            'showCloneStartegyDiv': false,
-            'rightDivOpen': (window.innerWidth < 800) ? false : true,
-            'extraTabsContent': 'settings',
-            'benchmark': [],
-            'universe': [],
-            'selectedBenchmark': (savedSettings.selectedBenchmark) ? savedSettings.selectedBenchmark : '',
-            'selectedUniverse': (savedSettings.selectedUniverse) ? savedSettings.selectedBenchmark : '',
-            'selectedRebalance': (savedSettings.selectedRebalance) ? savedSettings.selectedRebalance : 'Daily',
-            'selectedCancelPolicy': (savedSettings.selectedCancelPolicy) ? (savedSettings.selectedCancelPolicy) : 'EOD',
-            'selectedCommissionType': (savedSettings.selectedCommissionType) ? (savedSettings.selectedCommissionType) : 'PerTrade',
-            'selectedCommission': (savedSettings.selectedCommission || savedSettings.selectedCommission === 0) ? Number(savedSettings.selectedCommission) : 0.1,
-            'selectedSlipPage': (savedSettings.selectedSlipPage || savedSettings.selectedSlipPage === 0) ? Number(savedSettings.selectedSlipPage) : 0.05,
-            'selectedSlipPageType': (savedSettings.selectedSlipPageType) ? savedSettings.selectedSlipPageType : 'Variable',
-            'selectedInvestmentPlan': (savedSettings.selectedInvestmentPlan) ? savedSettings.selectedInvestmentPlan : 'AllIn',
-            'selectedExecutionPolicy': (savedSettings.selectedExecutionPolicy) ? savedSettings.selectedExecutionPolicy : 'Close',
-            'initialCapital': (savedSettings.initialCapital || savedSettings.initialCapital === 0) ? Number(savedSettings.initialCapital) : 1000000,
-            'endDate': (savedSettings.endDate) ? moment(savedSettings.endDate, 'YYYY-MM-DD') : endDate,
-            'startDate': (savedSettings.startDate) ? moment(savedSettings.startDate, 'YYYY-MM-DD') : endDate.add(-1, 'years'),
-            'isBacktestRunning': false,
-            'isBackTestRunComplete': false,
-            'newBacktestRunData': {},
-            'backtestProgress': 0,
-            'showBacktestRedirectModal': false,
+            loading: true,
+            strategyId: props.match.params.strategyId,
+            strategy: {},
+            showNewStartegyDiv: false,
+            showCloneStartegyDiv: false,
+            rightDivOpen: (window.innerWidth < 800) ? false : true,
+            extraTabsContent: 'settings',
+            benchmark: [],
+            universe: [],
+            selectedBenchmark: (savedSettings.selectedBenchmark) ? savedSettings.selectedBenchmark : '',
+            selectedUniverse: (savedSettings.selectedUniverse) ? savedSettings.selectedBenchmark : '',
+            selectedRebalance: (savedSettings.selectedRebalance) ? savedSettings.selectedRebalance : 'Daily',
+            selectedCancelPolicy: (savedSettings.selectedCancelPolicy) ? (savedSettings.selectedCancelPolicy) : 'EOD',
+            selectedCommissionType: (savedSettings.selectedCommissionType) ? (savedSettings.selectedCommissionType) : 'PerTrade',
+            selectedCommission: (savedSettings.selectedCommission || savedSettings.selectedCommission === 0) ? Number(savedSettings.selectedCommission) : 0.1,
+            selectedSlipPage: (savedSettings.selectedSlipPage || savedSettings.selectedSlipPage === 0) ? Number(savedSettings.selectedSlipPage) : 0.05,
+            selectedSlipPageType: (savedSettings.selectedSlipPageType) ? savedSettings.selectedSlipPageType : 'Variable',
+            selectedInvestmentPlan: (savedSettings.selectedInvestmentPlan) ? savedSettings.selectedInvestmentPlan : 'AllIn',
+            selectedExecutionPolicy: (savedSettings.selectedExecutionPolicy) ? savedSettings.selectedExecutionPolicy : 'Close',
+            initialCapital: (savedSettings.initialCapital || savedSettings.initialCapital === 0) ? Number(savedSettings.initialCapital) : 1000000,
+            endDate: (savedSettings.endDate) ? moment(savedSettings.endDate, 'YYYY-MM-DD') : endDate,
+            startDate: (savedSettings.startDate) ? moment(savedSettings.startDate, 'YYYY-MM-DD') : endDate.add(-1, 'years'),
+            isBacktestRunning: false,
+            isBackTestRunComplete: false,
+            newBacktestRunData: {},
+            backtestProgress: 0,
+            showBacktestRedirectModal: false,
             settingsTab: 0,
-            logsData: []
+            logsData: [],
+            newStrategyOpen: false,
+            cloneStrategyOpen: false,
+            snackbar: {
+                open: false,
+                message: ''
+            }
         };
+
         this.updateState = (data) => {
             if (this._mounted) {
                 if (data.isBacktestRunning === false) {
@@ -226,7 +235,7 @@ class StartegyDetail extends Component {
                 .then((response) => {
                     if (showResultInfo) {
                         // message.success('Strategy saved successfully');
-                        console.log('Strategy saved successfully');
+                        this.openSnackbar('Strategy saved successfully');
                     }
                     resolve(true);
                 })
@@ -241,7 +250,7 @@ class StartegyDetail extends Component {
                     }
                     if (showResultInfo) {
                         // message.error('Unable to save strategy');
-                        console.log('Unable to save strategy');
+                        this.openSnackbar('Unable to save strategy');
                     }
                 });
         })
@@ -430,6 +439,18 @@ class StartegyDetail extends Component {
             }
         }
 
+    }
+
+    openSnackbar = (message = '') => {
+        this.setState({
+            snackbar: {open: true, message}
+        })
+    }
+
+    closeSnackbar = () => {
+        this.setState({
+            snackbar: {open: false, message: ''}
+        });
     }
 
     checkAndGoToBacktestPageIfNoData(backtestId) {
@@ -805,29 +826,41 @@ class StartegyDetail extends Component {
         this.updateState({settingsTab: value});
     }
 
+    toggleNewStrategyModal = () => {
+        this.updateState({newStrategyOpen: !this.state.newStrategyOpen});
+    }
+
+    toggleClonedStrategyModal = () => {
+        this.updateState({cloneStrategyOpen: !this.state.cloneStrategyOpen});
+    }
+
     render() {
-
-        const antIconLoading = <ActionIcon type="loading" style={{ fontSize: 34 }} spin />;
-
         const getNewStartegyModal = () => {
             return (
-                // <Modal
-                //     title=""
-                //     wrapClassName="vertical-center-modal"
-                //     visible={this.state.showNewStartegyDiv}
-                //     footer={null}
-                //     onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
-                // >
-                //     <NewStartegy
-                //         onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
-                //     />
-                // </Modal>
-                null
+                <DialogComponent
+                        open={this.state.newStrategyOpen}
+                        title=""
+                        onClose={this.toggleNewStrategyModal}
+                >
+                    <NewStartegy
+                        onCancel={() => this.updateState({newStrategyOpen: false})}
+                    />
+                </DialogComponent>
             );
         }
 
         const getCloneStrategyModal = () => {
             return (
+                <DialogComponent
+                        open={this.state.cloneStrategyOpen}
+                        title=""
+                        onClose={this.toggleClonedStrategyModal}
+                >
+                    <NewStartegy
+                        startegyClone={this.state.strategy}
+                        onCancel={() => this.updateState({cloneStrategyOpen: false})}
+                    />
+                </DialogComponent>
                 // <Modal
                 //     title=""
                 //     wrapClassName="vertical-center-modal"
@@ -840,14 +873,11 @@ class StartegyDetail extends Component {
                 //         onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
                 //     />
                 // </Modal>
-                null
             );
         }
 
         const getSettingsDivTabsRight = () => {
             const tabs = [];
-            const Option = Select.Option;
-
             const rebalanceRadioItems = ['Daily', 'Weekly', 'Monthly'];
             const cancelPolicyRadioItems = ['EOD', 'GTC'];
             const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
@@ -1182,6 +1212,7 @@ class StartegyDetail extends Component {
                     <React.Fragment>
                         {getGoToBackTestIcon()}
                         <ActionIcon 
+                            onClick={this.toggleNewStrategyModal}
                             type='add'
                             disabled={true}
                         />
@@ -1221,12 +1252,12 @@ class StartegyDetail extends Component {
                     <React.Fragment>
                         <ActionIcon 
                             type='add'
-                            onClick={() => { this.updateState({ 'showNewStartegyDiv': true }) }}
+                            onClick={this.toggleNewStrategyModal}
                         />
                         {getNewStartegyModal()}
                         <ActionIcon 
                             type='file_copy'
-                            nClick={() => { this.updateState({ 'showCloneStartegyDiv': true }) }}
+                            onClick={this.toggleClonedStrategyModal}
                         />
                         {getCloneStrategyModal()}
                         <ActionIcon 
@@ -1443,6 +1474,12 @@ class StartegyDetail extends Component {
 
         return (
             <AqLayoutDesktop loading={this.state.loading} hideFooter>
+                <SnackbarComponent 
+                    openStatus={this.state.snackbar.open}
+                    message={this.state.snackbar.message}
+                    handleClose={this.closeSnackbar}
+                    position='top'
+                />
                 <div style={{ 'width': '100%', 'height': 'calc(100vh - 50px)' }}>
                     {getStrategyDiv()}
                 </div>

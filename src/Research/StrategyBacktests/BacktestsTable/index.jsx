@@ -31,7 +31,7 @@ const rows = [
 
 class EnhancedTableHead extends React.Component {
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const {order, orderBy, numSelected, rowCount, onAllItemsSelected} = this.props;
 
         return (
             <TableHead>
@@ -40,7 +40,7 @@ class EnhancedTableHead extends React.Component {
                         <Checkbox
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={numSelected === rowCount}
-                            onChange={onSelectAllClick}
+                            onChange={onAllItemsSelected}
                         />
                     </TableCell>
                     {
@@ -186,8 +186,6 @@ class EnhancedTable extends React.Component {
     };
 
     handleClick = (name, id) => {
-        console.log(name);
-        console.log(id);
         this.props.history.push('/research/backtests/'
             + this.props.match.params.strategyId + '/' + id
             + '?type=backtest&strategyName=' + _.get(this.props, 'strategyName', '')
@@ -203,7 +201,7 @@ class EnhancedTable extends React.Component {
     render() {
         const { classes } = this.props;
         const {data = []} = this.props;
-        const {order, orderBy, selected} = this.state;
+        const {order, orderBy} = this.state;
 
         return (
             <Paper className={classes.root}>
@@ -220,6 +218,7 @@ class EnhancedTable extends React.Component {
                             orderBy={orderBy}
                             onSelectAllClick={this.handleSelectAllClick}
                             rowCount={data.length}
+                            onAllItemsSelected={this.props.onAllItemsSelected}
                         />
                         <TableBody>
                             {

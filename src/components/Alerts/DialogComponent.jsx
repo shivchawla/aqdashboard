@@ -31,6 +31,7 @@ class DialogComponent extends React.Component {
     }
 
     onCancel = () => {
+        console.log('On cancel pressed');
         this.props.onCancel && this.props.onCancel();
     }
 

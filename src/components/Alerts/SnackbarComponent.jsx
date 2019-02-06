@@ -27,7 +27,7 @@ export default ({openStatus = true, message = 'Snackbar Data', handleClose = () 
                             color="inherit"
                             onClick={() => handleClose && handleClose()}
                             >
-                            <CloseIcon />
+                                <CloseIcon />
                             </IconButton>,
                         ]
             }             

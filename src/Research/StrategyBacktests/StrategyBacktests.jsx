@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import BacktestsTable from './BacktestsTable';
 import axios from 'axios';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
-import { processBacktests } from './utils';
+import {processBacktests} from './utils';
 import Compare from '../Compare/Compare';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import { CircularProgress } from '@material-ui/core';
@@ -309,6 +309,25 @@ class StrategyBacktests extends Component {
         }
     }
 
+    onAllItemsSelected = () => {
+        let clonedBacktests = _.map(this.state.backtests, _.cloneDeep);
+        let selectedItems = _.filter(clonedBacktests, backtest => backtest.selected === true);
+        if (selectedItems.length === this.state.backtests.length) {
+            clonedBacktests = clonedBacktests.map(item => {
+                item.selected = false;
+                return item;
+            })
+        } else {
+            clonedBacktests = clonedBacktests.map(item => {
+                item.selected = true;
+                return item;
+            })
+        }
+
+        console.log(clonedBacktests);
+        this.setState({backtests: clonedBacktests});
+    }
+
     render() {
         const getCompareModal = () => {
             const selectedBacktests = {};
@@ -355,6 +374,7 @@ class StrategyBacktests extends Component {
                         rowSelection={this.rowSelection}
                         openCompare={this.showcompareModal}
                         toggleDeleteDialog={this.toggleDeleteDialog}
+                        onAllItemsSelected={this.onAllItemsSelected}
                     />
                     {/* <Table 
                         rowSelection={rowSelection}
