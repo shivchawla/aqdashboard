@@ -53,10 +53,6 @@ class AvailableBackTests extends React.Component {
                 .then((response) => {
                     this.updateState({ 'strategies': response.data, 'loadingStrategy': false });
                     this.cancelGetStrategies = undefined;
-                    // if (response.data.length > 0) {
-                    //     this.selectedStrategyName = response.data[0].name;
-                    //     this.getBacktests(response.data[0]._id);
-                    // }
                 })
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
@@ -176,7 +172,7 @@ class AvailableBackTests extends React.Component {
             } else if (!this.state.loadingStrategy) {
                 return (
                     <React.Fragment>
-                        <h1 style={{ 'fontSize': '16px', 'fontWeight': 'bold' }}>Backtests for {this.selectedStrategyName}</h1>
+                        <h1 style={{ 'fontSize': '16px', 'fontWeight': 'bold'}}>Backtests for {this.selectedStrategyName}</h1>
                         <BackTests
                             backtests={this.state.backtests}
                             onBackTestClicked={(backtestId) => this.updateState({ 'selectedBacktestId': backtestId })}
@@ -191,7 +187,6 @@ class AvailableBackTests extends React.Component {
             <div
                 style={{
                     width: '100%',
-                    padding: '0px 30px',
                     boxSizing: 'border-box'
                 }}
             >
@@ -200,6 +195,7 @@ class AvailableBackTests extends React.Component {
                         color="primary"
                         disabled={!this.state.selectedBacktestId}
                         onClick={this.onBackTestClicked}
+                        variant='contained'
                     >
                         Attach
                     </Button>

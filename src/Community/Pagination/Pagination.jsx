@@ -85,8 +85,8 @@ class Pagination extends Component {
                 <ActionIcon 
                     onClick={this.clickedOnFirstPage}
                     type='first_page'
+                    color={(this.props.page <= 1) ? '#9b9b9b' : 'black'}
                     style={{
-                        color: (this.props.page <= 1) ? '#9b9b9b' : 'black', 
                         fontWeight: 'bold',
                         fontSize: '20px', 
                         padding: '5px', 
@@ -96,8 +96,8 @@ class Pagination extends Component {
                 <ActionIcon 
                     onClick={this.clickedOnPrevPage}
                     type='chevron_left'
+                    color={this.props.page <= 1 ? '#9b9b9b' : 'black'}
                     style={{
-                        color: (this.props.page <= 1) ? '#9b9b9b' : 'black', 
                         fontWeight: 'bold',
                         fontSize: '20px', 
                         padding: '5px', 
@@ -117,8 +117,8 @@ class Pagination extends Component {
                 <ActionIcon 
                     onClick={this.clickedOnNextPage} 
                     type="chevron_right"
+                    color={this.props.numberOfPages <= this.props.page ? '#9b9b9b' : 'black'}
                     style={{
-                        color: (this.props.numberOfPages <= this.props.page) ? '#9b9b9b' : 'black', 
                         fontWeight: 'bold',
                         fontSize: '20px', 
                         padding: '5px', 
@@ -128,8 +128,8 @@ class Pagination extends Component {
                 <ActionIcon 
                     onClick={this.clickedOnLastPage}
                     type="last_page"
+                    color={this.props.numberOfPages <= this.props.page ? '#9b9b9b' : 'black'}
                     style={{
-                        color: (this.props.numberOfPages <= this.props.page) ? '#9b9b9b' : 'black', 
                         fontWeight: 'bold',
                         fontSize: '20px', 
                         padding: '5px', 

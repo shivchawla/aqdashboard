@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Chip from '@material-ui/core/Chip';
+import Chip from '../../components/DataDisplay/Chip';
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 import Utils from './../../Utils';
@@ -147,10 +147,10 @@ class Search extends Component {
                             onChange={this.searchChange} 
                     />
                     <Button 
-                            className="card" 
                             onClick={this.clickedOnSearch} 
                             style={{ 'marginLeft': '10px' }} 
                             color="primary"
+                            variant="contained"
                     >
                         SEARCH
                     </Button>

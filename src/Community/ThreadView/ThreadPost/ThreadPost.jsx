@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
+import Chip from '../../../components/DataDisplay/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import Utils from './../../../Utils';
@@ -93,7 +93,8 @@ class ThreadPost extends Component {
                         label={this.props.threadData.tags[i]} 
                         style={{
                             backgroundColor: '#cc6666',
-                            color: '#fff'
+                            color: '#fff',
+                            margin: '0 2px'
                         }}
                     />
                 )
@@ -116,44 +117,24 @@ class ThreadPost extends Component {
         }
 
         const getFollowButton = () => {
-            if (this.props.followLoading) {
-                return (
-                    <div style={{
-                        'display': 'flex',
-                        'alignItems': 'center', 'justifyContent': 'center',
-                        'minWidth': '70px'
-                    }}>
-                        <CircularProgress size={24} />
-                    </div>
-                );
-            } else {
-                if (Utils.isLoggedIn() && this.props.threadData.followers &&
+            const showUnFollow = Utils.isLoggedIn() && this.props.threadData.followers &&
                     this.props.threadData.followers.indexOf(Utils.getUserId()) > -1 &&
-                    !this.props.followActionDisabled) {
-                    return (
-                        <Button 
-                                className="no-border-radius-button" 
-                                small
-                                onClick={this.clickedOnFollow} 
-                                color="primary" 
-                                style={{fontSize: '12px', fontWeight: 'bold' }}
-                        >
-                            UNFOLLOW
-                        </Button>
-                    );
-                } else {
-                    return (
-                        <Button 
-                                className="no-border-radius-button" 
-                                small
-                                onClick={this.clickedOnFollow} 
-                                style={{ 'fontSize': '12px', 'fontWeight': 'bold' }}
-                        >
-                            FOLLOW
-                        </Button>
-                    );
-                }
-            }
+                    !this.props.followActionDisabled;
+
+            return (
+                <Button 
+                        small
+                        onClick={this.clickedOnFollow} 
+                        style={{fontSize: '12px'}}
+                        color={showUnFollow ? 'default' : 'primary'}
+                        variant='outlined'
+                >
+                    {showUnFollow ? 'UN FOLLOW' : 'FOLLOW'}
+                    {
+                        this.props.followLoading && <CircularProgress size={20} />
+                    }
+                </Button>
+            );
         }
 
         const getInitials = () => {

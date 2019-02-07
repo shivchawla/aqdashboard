@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
+import Chip from '../../components/DataDisplay/Chip';
 import Utils from './../../Utils';
 import ThreadReply from './ThreadReply/ThreadReply.jsx';
 import ThreadPost from './ThreadPost/ThreadPost.jsx';
@@ -205,23 +205,14 @@ class ThreadView extends Component {
 
         const attachBackTestModal = () => {
             return (
-                // <Modal
-                //     title="Attach BackTest"
-                //     wrapClassName="vertical-center-modal"
-                //     visible={this.state.attachBackTestModalVisible}
-                //     footer={null}
-                //     onCancel={() => this.updateState({ 'attachBackTestModalVisible': false })}
-                //     className="attach-backtest-model"
-                // >
-                //     <AvailableBackTests style={{ 'height': '100%', 'width': '100%' }} onBackTestClicked={this.onBackTestClicked} />
-                // </Modal>
                 <DialogComponent
                         title="Attach BackTest"
                         open={this.state.attachBackTestModalVisible}
                         onClose={() => this.updateState({ 'attachBackTestModalVisible': false })}
                         style={{
                             width: '90vw',
-                            height: '100vh'
+                            height: '100vh',
+                            boxSizing: 'border-box'
                         }}
                         maxWidth='xl'
                 >
@@ -247,6 +238,7 @@ class ThreadView extends Component {
                         style={{
                             background: '#cc6666',
                             color: '#fff',
+                            height: '32px'
                         }}
                         onDelete={e => { 
                             e.preventDefault(); 
@@ -256,8 +248,12 @@ class ThreadView extends Component {
                 );
             } else {
                 return (
-                    <Button onClick={() => { this.attachBackTest() }}>
-                        ATTACH<Icon>attach</Icon>
+                    <Button 
+                            variant='outlined' 
+                            onClick={() => { this.attachBackTest() }}
+                            size="small"
+                    >
+                        ATTACH<Icon style={{fontSize: '18px'}}>attach_file</Icon>
                     </Button>
                 );
             }
@@ -310,6 +306,7 @@ class ThreadView extends Component {
                                         small
                                         color="primary"
                                         style={{marginRight: '15px' }}
+                                        variant="outlined"
                                 >
                                     EDIT
                                 </Button>
@@ -318,6 +315,7 @@ class ThreadView extends Component {
                                         className="no-border-radius-button" 
                                         small
                                         color="primary"
+                                        variant="contained"
                                 >
                                     SUBMIT
                                 </Button>
@@ -337,6 +335,7 @@ class ThreadView extends Component {
                                         className="no-border-radius-button" 
                                         small
                                         color="primary"
+                                        variant="outlined"
                                 >
                                     PREVIEW
                                 </Button>
@@ -347,6 +346,7 @@ class ThreadView extends Component {
                                         className="no-border-radius-button" 
                                         small
                                         color="primary"
+                                        variant="contained"
                                 >
                                     POST REPLY
                                 </Button>

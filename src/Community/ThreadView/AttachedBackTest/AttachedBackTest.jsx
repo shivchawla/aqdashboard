@@ -304,7 +304,7 @@ class AttachedBackTest extends Component {
                                 boxSizing: 'border-box'
                             }}
                     >
-                        <h1 style={{ 'fontWeight': '700', 'fontSize': '22px' }}>
+                        <h1 style={{ 'fontWeight': '700', 'fontSize': '22px', marginBottom: '12px'}}>
                             Attached Backtest Details
                         </h1>
                         <Grid container>
@@ -385,7 +385,7 @@ class AttachedBackTest extends Component {
                             'background': '#e1e1e1'
                         }}>
                         </div>
-                        <h3 stye={{ 'fontSize': '16px' }}>
+                        <h3 style={{fontSize: '16px', marginBottom: '12px', fontWeight: 500}}>
                             Backtest Metrics
                         </h3>
                         <Grid container>

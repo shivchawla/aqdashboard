@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import Utils from './../../Utils';
-import Chip from '@material-ui/core/Chip';
+import Chip from '../../components/DataDisplay/Chip';
 import Grid from '@material-ui/core/Grid';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
+import SnackbarComponent from '../../components/Alerts/SnackbarComponent';
 import AvailableBackTests from './../ThreadView/AvailableBackTests/AvailableBackTests.jsx';
 import ReactQuill from 'react-quill';
 import ThreadPost from './../ThreadView/ThreadPost/ThreadPost.jsx';
@@ -28,14 +29,18 @@ class NewPost extends Component {
             this.queryParams = new URLSearchParams(props.location.search);
         }
         this.state = {
-            'title': '',
-            'tags': [],
-            'selectedPostType': 'Share your Idea',
-            'markDownText': '',
-            'backtestId': undefined,
-            'showReplyPreview': false,
-            'attachBackTestModalVisible': false,
-            'postLoading': false
+            title: '',
+            tags: [],
+            selectedPostType: 'Share your Idea',
+            markDownText: '',
+            backtestId: undefined,
+            showReplyPreview: false,
+            attachBackTestModalVisible: true,
+            postLoading: false,
+            snackbar: {
+                open: false,
+                message: ''
+            }
         };
         if (this.queryParams) {
             this.state.backtestId = this.queryParams.get('attachedBacktestId');
@@ -59,7 +64,7 @@ class NewPost extends Component {
                     })
                     event.target.value = '';
                 } else {
-                    // message.error('Max 5 tags allowed.');
+                    this.openSnackbar('Max 5 tags allowed.');
                 }
             }
         }
@@ -133,13 +138,25 @@ class NewPost extends Component {
         }
     }
 
+    openSnackbar = (message = '') => {
+        this.setState({
+            snackbar: {open: true, message}
+        })
+    }
+
+    closeSnackbar = () => {
+        this.setState({
+            snackbar: {...this.state.snackbar, open: false}
+        });
+    }
+
     validatePost() {
         if (this.state.title && this.state.title.trim().length > 0 &&
             ((this.state.markDownText && this.state.markDownText.trim().length > 0) ||
                 this.state.backtestId)) {
             return true;
         }
-        // message.error('No preview available for empty post. Please create a valid post and a header.');
+        this.openSnackbar('No preview available for empty post. Please create a valid post and a header.');
         return false;
     }
 
@@ -168,7 +185,8 @@ class NewPost extends Component {
                     }}
                     style={{
                         background: '#cc6666',
-                        color: '#fff'
+                        color: '#fff',
+                        margin: '0 2px'
                     }}
                 />
             );
@@ -182,7 +200,8 @@ class NewPost extends Component {
                         onClose={() => this.updateState({ 'attachBackTestModalVisible': false })}
                         style={{
                             width: '90vw',
-                            height: '100vh'
+                            height: '100vh',
+                            boxSizing: 'border-box'
                         }}
                         maxWidth='xl'
                 >
@@ -216,8 +235,10 @@ class NewPost extends Component {
                 return (
                     <Button 
                             onClick={() => { this.attachBackTest() }}
+                            variant='outlined'
+                            size="small"
                     >
-                        ATTACH<Icon>attach</Icon>
+                        ATTACH<Icon style={{fontSize: '18px'}}>attach_file</Icon>
                     </Button>
                 );
             }
@@ -284,6 +305,7 @@ class NewPost extends Component {
                                         small
                                         color="primary"
                                         style={{ 'marginRight': '15px' }}
+                                        variant='contained'
                                 >
                                     EDIT
                                 </Button>
@@ -292,6 +314,7 @@ class NewPost extends Component {
                                         className="no-border-radius-button" 
                                         small 
                                         color="primary"
+                                        variant='contained'
                                 >
                                     SUBMIT
                                 </Button>
@@ -307,6 +330,7 @@ class NewPost extends Component {
                                         className="no-border-radius-button" 
                                         small
                                         color="primary"
+                                        variant='contained'
                                 >
                                     PREVIEW
                                 </Button>
@@ -317,6 +341,7 @@ class NewPost extends Component {
                                         className="no-border-radius-button" 
                                         small
                                         color="primary"
+                                        variant='contained'
                                 >
                                     CREATE POST
                                 </Button>
@@ -340,7 +365,11 @@ class NewPost extends Component {
                         <Grid
                                 container 
                                 align="middle" 
-                                style={{ 'marginTop': '15px', 'border': '1px solid #e1e1e1' }}
+                                style={{
+                                    marginTop: '15px', 
+                                    border: '1px solid #e1e1e1',
+                                    padding: '4px'
+                                }}
                         >
                             <Grid item sm={12} md={6}>
                                 <input type="text" style={{
@@ -381,6 +410,12 @@ class NewPost extends Component {
 
         return (
             <AqLayoutDesktop>
+                <SnackbarComponent 
+                    openStatus={this.state.snackbar.open}
+                    message={this.state.snackbar.message}
+                    handleClose={this.closeSnackbar}
+                    position='top'
+                />
                 <div 
                         className="thread-view-div" 
                         style={{ 

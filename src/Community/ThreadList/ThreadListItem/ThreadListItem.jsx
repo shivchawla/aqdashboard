@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import Icon from '@material-ui/core/Icon';
-import Chip from '@material-ui/core/Chip';
+import Chip from '../../../components/DataDisplay/Chip';
+// import Chip from '@material-ui/core/Chip';
 import { withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 import Utils from './../../../Utils';
@@ -87,9 +89,9 @@ class ThreadListItem extends Component {
                             style={{
                                 marginLeft: 'auto', 
                                 color: '#cc4444', 
-                                fontWeight: 'bold', 
+                                transform: 'rotate(90deg)',
+                                fontSize: '24px',
                             }}
-                            size={30}
                     >
                         attach_file
                     </Icon>
@@ -131,7 +133,7 @@ class ThreadListItem extends Component {
                         {iconLeft}
                     </Icon>
                     <div style={{ 'marginLeft': '10px' }}>
-                        <h3 style={{ 'margin': '0px' }}>{this.props.threadData.title}</h3>
+                        <PostName>{this.props.threadData.title}</PostName>
                         <p style={{
                             'margin': '0px', 'color': '#3c3c3c',
                             'fontSize': '0.9em', 'fontStyle': 'italic'
@@ -171,9 +173,9 @@ class ThreadListItem extends Component {
                         </p>
                     </div>
                     <div style={{ 'marginLeft': 'auto', 'display': 'flex' }}>
-                        <p>Views: <span style={{ 'fontSize': '1.1em', 'fontWeight': '400' }}>{this.props.threadData.views}</span></p>
-                        <p style={{ 'marginLeft': '10px' }}>Replies: <span style={{ 'fontSize': '1.1em', 'fontWeight': '400' }}>{this.props.threadData.replies.length}</span></p>
-                        <p style={{ 'marginLeft': '10px' }}>Followers: <span style={{ 'fontSize': '1.1em', 'fontWeight': '400' }}>{this.props.threadData.followers.length}</span></p>
+                        <p style={{color: '#515050'}}>Views: <span style={{ 'fontSize': '14px', 'fontWeight': '400' }}>{this.props.threadData.views}</span></p>
+                        <p style={{ 'marginLeft': '10px', color: '#515050'}}>Replies: <span style={{ 'fontSize': '14px', 'fontWeight': '400' }}>{this.props.threadData.replies.length}</span></p>
+                        <p style={{ 'marginLeft': '10px', color: '#515050'}}>Followers: <span style={{ 'fontSize': '14px', 'fontWeight': '400' }}>{this.props.threadData.followers.length}</span></p>
                     </div>
                 </div>
             </div>
@@ -182,3 +184,8 @@ class ThreadListItem extends Component {
 }
 
 export default withRouter(ThreadListItem);
+
+const PostName = styled.h3`
+    font-size: 16px;
+    font-weight: 400;
+`;

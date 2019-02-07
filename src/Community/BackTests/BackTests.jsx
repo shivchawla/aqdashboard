@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
+import {withStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,6 +11,11 @@ import Radio from '@material-ui/core/Radio';
 import moment from 'moment';
 import Utils from './../../Utils';
 
+const styles = theme => ({
+    cellRoot: {
+        padding: '0 10px'
+    }
+})
 
 class BackTests extends React.Component {
 
@@ -28,14 +34,29 @@ class BackTests extends React.Component {
 
     renderHeader = () => {
         const headers = ['Backtest', 'Created Date', 'Status', 'Date Range', 'Total Return', 'Sharpe Ratio'];
+        const {classes} = this.props;
 
         return (
             <TableHead>
-                <TableRow>
-                    <TableCell padding="checkbox"></TableCell>
+                <TableRow style={{backgroundColor: '#fafafa'}}>
+                    <TableCell 
+                            padding="checkbox"
+                            classes={{
+                                root: classes.cellRoot
+                            }}
+                            variant="head"
+                    ></TableCell>
                     {
                         headers.map((header, index) => (
-                            <TableCell key={index}>{header}</TableCell>
+                            <TableCell 
+                                    key={index}
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                                    variant="head"
+                            >
+                                {header}
+                            </TableCell>
                         ))
                     }
                 </TableRow>
@@ -80,6 +101,7 @@ class BackTests extends React.Component {
 
     renderRows = () => {
         const data = this.getBacktestData();
+        const {classes} = this.props;
 
         return (
             <TableBody>
@@ -90,6 +112,10 @@ class BackTests extends React.Component {
                                     align="left"
                                     padding="checkbox"
                                     onClick={e => e.stopPropagation()}
+                                    style={{boxSizing: 'border-box'}}
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
                             >
                                 <Radio 
                                     onChange={e => {
@@ -99,22 +125,56 @@ class BackTests extends React.Component {
                                     checked={dataItem.key === this.state.selectedBacktestId}
                                 />
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell 
+                                    align="left" 
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                            >
                                 {dataItem.name}
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell 
+                                    align="left"
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                            >
                                 {dataItem.createdAt}
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell 
+                                    align="left"
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                            >
                                 {dataItem.status}
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell 
+                                    align="left"
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                            >
                                 {dataItem.dateRange}
                             </TableCell>
-                            <TableCell align="left">
-                                {dataItem.totalreturn}
+                            <TableCell 
+                                    align="left"
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                            >
+                                {
+                                    dataItem.totalreturn
+                                    ?   dataItem.totalreturn + '%'
+                                    :   null
+                                }
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell 
+                                    align="left"
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                            >
                                 {dataItem.sharperatio}
                             </TableCell>
                         </TableRow>
@@ -126,7 +186,14 @@ class BackTests extends React.Component {
 
     render() {
         return (
-            <div style={{overflowY: 'auto', height: '70vh'}}>
+            <div 
+                    style={{
+                        overflowY: 'auto', 
+                        height: '65vh', 
+                        boxSizing: 'border-box',
+                        paddingTop: '10px'
+                    }}
+            >
                 <Table>
                     {this.renderHeader()}
                     {this.renderRows()}
@@ -135,5 +202,5 @@ class BackTests extends React.Component {
         );
     }
 }
-export default withRouter(BackTests);
+export default withStyles(styles)(withRouter(BackTests));
 

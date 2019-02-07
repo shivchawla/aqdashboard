@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import axios from 'axios';
 import Utils from './../Utils';
-// import {Breadcrumb} from 'antd';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import MultiRadioGroup from '../components/Selections/MultiRadioGroup';
@@ -400,6 +399,8 @@ class Community extends Component {
                         items={categoryCheckBoxOptions}
                         onChange={this.categorySelectionChange} 
                         defaultSelected={getCheckBoxDefaultSelection()}
+                        small
+                        style={{display: 'flex'}}
                     />
                 );
             }
@@ -447,9 +448,15 @@ class Community extends Component {
                                 <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>Community</h2>
                                 {/* {getBreadCrumbCommunity()} */}
                             </div>
-                            <Link to='/community/newPost' style={{ 'marginLeft': 'auto' }}>
-                                <Button type="primary">New Post</Button>
-                            </Link>
+                            <Button 
+                                    type="primary" 
+                                    color = "primary"
+                                    variant="contained"
+                                    onClick={() => this.props.history.push('/community/newPost')}
+                                    style={{marginLeft: 'auto' }}
+                            >
+                                New Post
+                            </Button>
                         </div>
                         <div 
                                 className="card"
@@ -480,7 +487,10 @@ class Community extends Component {
                                             searchDefaultValue={this.savedCommunityFilters.searchString} />
                                         {getSearchTextAsNeeded()}
                                         <div style={{ 'height': 'calc(100% - 50px)' }}>
-                                            <CommunityTabs onTabChanged={this.onTabChanged} selectedTabValue={this.state.selectedTabValue} />
+                                            <CommunityTabs 
+                                                    onTabChanged={this.onTabChanged} 
+                                                    selectedTabValue={this.state.selectedTabValue} 
+                                            />
                                             {getCheckBoxGroup()}
                                             <ThreadList loading={this.state.loading} threads={this.state.threads} />
                                         </div>
@@ -512,7 +522,15 @@ class Community extends Component {
                                                     overflowY: 'auto'
                                                 }}
                                         >
-                                            <h2 style={{ 'color': 'teal' }}>ANNOUNCEMENT</h2>
+                                            <h2 
+                                                    style={{ 
+                                                        color: 'teal',
+                                                        fontSize: '22px',
+                                                        fontWeight: '500' 
+                                                    }}
+                                            >
+                                                ANNOUNCEMENT
+                                            </h2>
                                             {getAnnouncementData()}
                                         </div>
                                     </div>
