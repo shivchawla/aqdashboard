@@ -35,12 +35,13 @@ class BacktestCompareHighChart extends React.Component {
 
         plotOptions: {
             series: {
-                showInNavigator: true
-            }
+                showInNavigator: true,
+                compare: 'percent'
+            },
         },
 
         tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>',
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.change}%</b><br/>',
             valueDecimals: 2,
             split: false,
             shared: true,
@@ -48,7 +49,7 @@ class BacktestCompareHighChart extends React.Component {
         },
 
         series: [],
-        colors: ["#0375b4", "#cc6666", "#6e2667", "#FFAA1D", "#007849", "#fc4a1a"]
+        colors: [ "#0375b4", "#cc6666", "#6e2667", "#FFAA1D","#007849","#fc4a1a"]
 
     };
 
@@ -124,25 +125,31 @@ class BacktestCompareHighChart extends React.Component {
             this.chart.destroy();
             this.chart = undefined;
         }
-        if (type === 'Cumulative') {
+        if(type === 'Cumulative'){
             // Set container which the chart should render to.
             this.chart = new Highstocks[this.props.type || "StockChart"](
-                this.props.uniqueKey,
+                this.props.uniqueKey, 
                 this.dataObj
             );
-            if (this.props.chartData && this.props.chartData.cumulative) {
-                for (let backtestName in this.props.chartData.cumulative) {
+            if (this.props.chartData && this.props.chartData.cumulative){
+                for(let backtestName in this.props.chartData.cumulative){
                     const pushSeries = {
                         'name': backtestName,
                         'data': []
+                    };
+                    const cumulativeData = _.get(this.props, `chartData.cumulative[${backtestName}]`, {});
+                    if (cumulativeData !== null) {
+                        Object.keys(_.get(this.props, `chartData.cumulative[${backtestName}]`, {})).sort().forEach(key => {
+                            pushSeries.data.push([
+                                moment(key, "YYYY-MM-DD").valueOf(), 
+                                1 + _.get(this.props, `chartData.cumulative[${backtestName}][${key}]`, 0) / 100 
+                            ]) ;
+                        });
+                        pushSeries.data.sort((a, b) => {
+                            return a[0] - b[0];
+                        });
+                        this.chart.addSeries(pushSeries);
                     }
-                    Object.keys(_.get(this.props, `chartData.cumulative[${backtestName}]`, {})).sort().forEach(key => {
-                        pushSeries.data.push([moment(key, "YYYY-MM-DD").valueOf(), this.props.chartData.cumulative[backtestName][key]]);
-                    });
-                    pushSeries.data.sort((a, b) => {
-                        return a[0] - b[0];
-                    });
-                    this.chart.addSeries(pushSeries);
                 }
             }
         } else {

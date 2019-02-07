@@ -81,52 +81,54 @@ class Compare extends Component {
         }
 
         this.getAllBacktests = () => {
-            for (let key in this.props.selectedBacktests) {
-                this.getBacktestData(key)
-                    .then((response) => {
-                        this.totalBacktestrequests = this.totalBacktestrequests + 1;
-                        let backtestsNow = JSON.parse(JSON.stringify(this.state.backtests));
-                        let dtLocal = JSON.parse(JSON.stringify(response.data));
-                        dtLocal['fullBacktestName'] = this.props.selectedBacktests[dtLocal._id];
-                        backtestsNow.push(dtLocal);
-                        backtestsNow.sort((a, b) => {
-                            return a.fullBacktestName.localeCompare(b.fullBacktestName);
-                        });
-                        if (this.totalBacktestrequests === Object.keys(this.props.selectedBacktests).length) {
-                            const yearNMonth = this.updateYearsMonths(backtestsNow);
-                            const getCodeDiffIdsDefault = this.getCodeDiffIds();
-                            this.updateState({
-                                'backtests': backtestsNow, 'loading': false,
-                                'year': yearNMonth['year'], 'month': yearNMonth['month'],
-                                'codeDiffBacktestIdOne': getCodeDiffIdsDefault['codeDiffBacktestIdOne'],
-                                'codeDiffBacktestIdTwo': getCodeDiffIdsDefault['codeDiffBacktestIdTwo']
-                            });
-                        } else {
-                            this.updateState({ 'backtests': backtestsNow });
-                        }
-                    })
-                    .catch((error) => {
-                        this.totalBacktestrequests = this.totalBacktestrequests + 1;
-                        Utils.checkForInternet(error, this.props.history);
-                        if (error.response) {
-                            if (error.response.status === 400 || error.response.status === 403) {
-                                this.props.history.push('/forbiddenAccess');
-                            }
-                            Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                        }
-                        if (this.totalBacktestrequests === Object.keys(this.props.selectedBacktests).length) {
-                            const yearNMonth = this.updateYearsMonths(this.state.backtests);
-                            const getCodeDiffIdsDefault = this.getCodeDiffIds();
-                            this.updateState({
-                                'loading': false,
-                                'year': yearNMonth['year'], 'month': yearNMonth['month'],
-                                'codeDiffBacktestIdOne': getCodeDiffIdsDefault['codeDiffBacktestIdOne'],
-                                'codeDiffBacktestIdTwo': getCodeDiffIdsDefault['codeDiffBacktestIdTwo']
-                            });
-                        }
-                    });
-            }
-        }
+			for (let key in this.props.selectedBacktests) {
+				this.getBacktestData(key)
+					.then((response) => {
+						this.totalBacktestrequests = this.totalBacktestrequests + 1;
+						let backtestsNow = JSON.parse(JSON.stringify(this.state.backtests));
+						let dtLocal = JSON.parse(JSON.stringify(response.data));
+						dtLocal['fullBacktestName'] = this.props.selectedBacktests[dtLocal._id];
+						backtestsNow.push(dtLocal);
+						backtestsNow.sort((a, b) => {
+							return a.fullBacktestName.localeCompare(b.fullBacktestName);
+						});
+						if (this.totalBacktestrequests === Object.keys(this.props.selectedBacktests).length) {
+							const yearNMonth = this.updateYearsMonths(backtestsNow);
+							const getCodeDiffIdsDefault = this.getCodeDiffIds(backtestsNow);
+							this.updateState({
+								'backtests': backtestsNow,
+								'loading': false,
+								'year': yearNMonth['year'],
+								'month': yearNMonth['month'],
+								'codeDiffBacktestIdOne': getCodeDiffIdsDefault['codeDiffBacktestIdOne'],
+								'codeDiffBacktestIdTwo': getCodeDiffIdsDefault['codeDiffBacktestIdTwo']
+							});
+						} else {
+							this.updateState({ 'backtests': backtestsNow });
+						}
+					})
+					.catch((error) => {
+						this.totalBacktestrequests = this.totalBacktestrequests + 1;
+						Utils.checkForInternet(error, this.props.history);
+						if (error.response) {
+							if (error.response.status === 400 || error.response.status === 403) {
+								this.props.history.push('/forbiddenAccess');
+							}
+							Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+						}
+						if (this.totalBacktestrequests === Object.keys(this.props.selectedBacktests).length) {
+							const yearNMonth = this.updateYearsMonths(this.state.backtests);
+							const getCodeDiffIdsDefault = this.getCodeDiffIds();
+							this.updateState({
+								'loading': false,
+								'year': yearNMonth['year'], 'month': yearNMonth['month'],
+								'codeDiffBacktestIdOne': getCodeDiffIdsDefault['codeDiffBacktestIdOne'],
+								'codeDiffBacktestIdTwo': getCodeDiffIdsDefault['codeDiffBacktestIdTwo']
+							});
+						}
+					});
+			}
+		}
 
         this.summaryTimePeriodChange = (value) => {
             this.updateState({summaryTimePeriod: value});
@@ -189,20 +191,20 @@ class Compare extends Component {
 
     }
 
-    getCodeDiffIds() {
-        const returnObj = {
-            'codeDiffBacktestIdOne': '',
-            'codeDiffBacktestIdTwo': ''
-        }
-        if (this.state.backtests.length > 0) {
-            returnObj['codeDiffBacktestIdOne'] = this.state.backtests[0]._id;
-            returnObj['codeDiffBacktestIdTwo'] = this.state.backtests[0]._id;
-        }
-        if (this.state.backtests.length > 1) {
-            returnObj['codeDiffBacktestIdTwo'] = this.state.backtests[1]._id;
-        }
-        return returnObj;
-    }
+    getCodeDiffIds(backtests = this.state.backtests) {
+		const returnObj = {
+			'codeDiffBacktestIdOne': '',
+			'codeDiffBacktestIdTwo': ''
+		}
+		if (backtests.length > 0) {
+			returnObj['codeDiffBacktestIdOne'] = backtests[0]._id;
+			returnObj['codeDiffBacktestIdTwo'] = backtests[0]._id;
+		}
+		if (backtests.length > 1) {
+			returnObj['codeDiffBacktestIdTwo'] = backtests[1]._id;
+		}
+		return returnObj;
+	}
 
     updateSettingsDiffs() {
         const updatedSettings = this.getLatestSettingsDiff();
