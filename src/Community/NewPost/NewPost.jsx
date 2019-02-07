@@ -35,7 +35,7 @@ class NewPost extends Component {
             markDownText: '',
             backtestId: undefined,
             showReplyPreview: false,
-            attachBackTestModalVisible: true,
+            attachBackTestModalVisible: false,
             postLoading: false,
             snackbar: {
                 open: false,
