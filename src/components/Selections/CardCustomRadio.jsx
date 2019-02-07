@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import { primaryColor } from '../../constants';
 const inactiveColor = '#9C9C9C';
 
 export default class CardCustomRadio extends React.Component {
@@ -15,7 +16,7 @@ export default class CardCustomRadio extends React.Component {
     render() {
         const {checked = false, label='-', small = false, disabled = false} = this.props;
         const background = checked 
-            ? disabled ? '#a2aabe' : 'linear-gradient(to bottom, #2987F9, #386FFF)' 
+            ? disabled ? '#a2aabe' : primaryColor
             : disabled ? '#e9e9e9' : '#CCDBEB';
         const color = checked ? '#fff' : '#7C7C7C';
         const fontSize = small ?  '12px' : '14px';
