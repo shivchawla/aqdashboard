@@ -88,6 +88,8 @@ class StartegyDetail extends Component {
             selectedUniverse: (savedSettings.selectedUniverse) ? savedSettings.selectedBenchmark : '',
             selectedRebalance: (savedSettings.selectedRebalance) ? savedSettings.selectedRebalance : 'Daily',
             selectedCancelPolicy: (savedSettings.selectedCancelPolicy) ? (savedSettings.selectedCancelPolicy) : 'EOD',
+            // selectedResolution: (savedSettings.selectedResolution) ? (savedSettings.selectedResolution) : 'Day',
+            selectedResolution: 'Day',
             selectedCommissionType: (savedSettings.selectedCommissionType) ? (savedSettings.selectedCommissionType) : 'PerTrade',
             selectedCommission: (savedSettings.selectedCommission || savedSettings.selectedCommission === 0) ? Number(savedSettings.selectedCommission) : 0.1,
             selectedSlipPage: (savedSettings.selectedSlipPage || savedSettings.selectedSlipPage === 0) ? Number(savedSettings.selectedSlipPage) : 0.05,
@@ -169,11 +171,45 @@ class StartegyDetail extends Component {
         }
 
         this.onStartDateChange = (date, dateString) => {
-            this.updateState({ 'startDate': date });
+            let requiredEndDate = this.state.endDate, difference = null;
+            const {selectedResolution = 'Day'} = this.state;
+            let shouldChange = false;
+            if (selectedResolution === 'Day') {
+                difference = this.state.endDate.diff(date, 'years', true);
+                shouldChange = difference <= 0 ||  difference >= 5 
+            } else {
+                difference = this.state.endDate.diff(date, 'months', true);
+                shouldChange = difference <= 0 ||  difference >= 3 
+            }
+            if (shouldChange) {
+                if (selectedResolution === 'Day') {
+                    requiredEndDate = moment.min(_.cloneDeep(date).add(5, 'years'), endDate);
+                } else {
+                    requiredEndDate = moment.min(_.cloneDeep(date).add(3, 'months'), endDate);
+                }
+            }
+            this.updateState({startDate: date, endDate: requiredEndDate});
         }
 
         this.onEndDateChange = (date, dateString) => {
-            this.updateState({ 'endDate': date });
+            let requiredStartDate = this.state.startDate, difference = null;
+            const {selectedResolution = 'Day'} = this.state;
+            let shouldChange = false;
+            if (selectedResolution === 'Day') {
+                difference = date.diff(this.state.startDate, 'years', true);
+                shouldChange = difference <= 0 ||  difference >= 5 
+            } else {
+                difference = date.diff(this.state.startDate, 'months', true);
+                shouldChange = difference <= 0 ||  difference >= 3 
+            }
+            if (shouldChange) {
+                if (selectedResolution === 'Day') {
+                    requiredStartDate = moment.max(moment('2007-01-01T00:00:00Z'), _.cloneDeep(date).subtract(5, 'years'));
+                } else {
+                    requiredStartDate = moment.max(moment('2007-01-01T00:00:00Z'), _.cloneDeep(date).subtract(3, 'months'));
+                }
+            }
+            this.updateState({endDate: date, startDate: requiredStartDate});
         }
 
         this.onBenchmarkChange = (e) => {
