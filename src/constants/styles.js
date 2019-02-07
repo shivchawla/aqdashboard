@@ -148,8 +148,8 @@ export const cashStyle = {
 }
 
 //'#00570'; //#159bc0';//''#15c08f'; //'#1565C0'; //'#1de9b6';//'#1e88e5';
-export const primaryColor = '#1565C0';
-export const secondaryColor = '#F44336';
+export const primaryColor = '#008080';
+export const secondaryColor = '#cc6666';
 
 export const pageContainer = {
     marginLeft: '20px',

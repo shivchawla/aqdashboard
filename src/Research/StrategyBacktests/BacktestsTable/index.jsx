@@ -19,6 +19,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {processRowData} from '../utils';
+import {primaryColor} from '../../../constants';
 
 const rows = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Backtest' },
@@ -41,6 +42,7 @@ class EnhancedTableHead extends React.Component {
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={numSelected === rowCount}
                             onChange={onAllItemsSelected}
+                            color='primary'
                         />
                     </TableCell>
                     {
@@ -95,7 +97,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-    const { numSelected, classes, name = ''} = props;
+    const { numSelected, classes, name: strategyName = ''} = props;
 
     return (
         <Toolbar
@@ -106,29 +108,23 @@ let EnhancedTableToolbar = props => {
         >
             <div className={classes.title}>
                 {
-                    numSelected > 0 
-                        ? 
-                        (
-                            <Typography color="inherit" variant="subtitle1">
+                    numSelected > 0
+                        ?   <Typography color="inherit" variant="subtitle1">
                                 {numSelected} selected
                             </Typography>
-                        ) 
-                        : 
-                        (
-                            <Typography variant="h6" id="tableTitle">
-                                All Backtests for {name}
+                        :   <Typography variant="h6" id="tableTitle">
+                                All Backtests for {strategyName}
                             </Typography>
-                        )
                 }
             </div>
             <div className={classes.spacer} />
             <div className={classes.actions}>
                 {
-                    numSelected > 0 && numSelected <= 5
+                    numSelected > 1 && numSelected <= 5
                         ?
                             <Button 
                                     variant='contained' 
-                                    color='secondary'
+                                    color='primary'
                                     onClick={props.openCompare}
                             >
                                 Compare
@@ -143,7 +139,7 @@ let EnhancedTableToolbar = props => {
                             (
                                 <Tooltip title="Delete">
                                     <IconButton aria-label="Delete" onClick={props.toggleDeleteDialog}>
-                                        <DeleteIcon style={{color: 'red'}} />
+                                        <DeleteIcon style={{color: primaryColor}} />
                                     </IconButton>
                                 </Tooltip>
                             ) 
@@ -199,7 +195,7 @@ class EnhancedTable extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes, strategyName = ''} = this.props;
         const {data = []} = this.props;
         const {order, orderBy} = this.state;
 
@@ -209,6 +205,7 @@ class EnhancedTable extends React.Component {
                     numSelected={data.filter(item => item.selected === true).length} 
                     openCompare={this.props.openCompare} 
                     toggleDeleteDialog = {this.props.toggleDeleteDialog}
+                    name={strategyName}
                 />
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
@@ -233,6 +230,9 @@ class EnhancedTable extends React.Component {
                                             tabIndex={-1}
                                             key={dataItem.id}
                                             selected={item.selected}
+                                            style={{
+                                                cursor: 'pointer'
+                                            }}
                                         >
                                             <STableCell 
                                                     align="left" 
@@ -245,6 +245,7 @@ class EnhancedTable extends React.Component {
                                                         e.stopPropagation();
                                                         this.onCheckboxChange(e.target.checked, item)
                                                     }}
+                                                    color='primary'
                                                 />
                                             </STableCell>
                                             <STableCell align="left">

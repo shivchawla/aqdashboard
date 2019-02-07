@@ -901,6 +901,8 @@ class Compare extends Component {
                             <Tabs
                                     onChange={this.onTabChanged}
                                     value={this.state.selectedTab}
+                                    indicatorColor='primary'
+                                    style={{marginBottom: '10px'}}
                             >
                                 <Tab label='SUMMARY' />
                                 <Tab label='CODE' />

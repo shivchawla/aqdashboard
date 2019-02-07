@@ -1,6 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
-
 import Highstocks from 'highcharts/highstock';
 import Highcharts from 'highcharts';
 import moment from 'moment';
@@ -136,7 +136,7 @@ class BacktestCompareHighChart extends React.Component {
                         'name': backtestName,
                         'data': []
                     }
-                    Object.keys(this.props.chartData.cumulative[backtestName]).sort().forEach(key => {
+                    Object.keys(_.get(this.props, `chartData.cumulative[${backtestName}]`, {})).sort().forEach(key => {
                         pushSeries.data.push([moment(key, "YYYY-MM-DD").valueOf(), this.props.chartData.cumulative[backtestName][key]]);
                     });
                     pushSeries.data.sort((a, b) => {

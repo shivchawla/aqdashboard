@@ -71,7 +71,7 @@ const RadioComponent = ({label, checked, onChange, fontSize = 14, disabled=false
 
     return (
         <div style={radioContainerStyle}>
-            <Radio checked={checked} onChange={onChange} disabled={disabled} />
+            <Radio checked={checked} onChange={onChange} disabled={disabled} color='primary' />
             <RadioLabel 
                     fontSize={fontSize} 
                     onClick={!disabled ? onChange : null}

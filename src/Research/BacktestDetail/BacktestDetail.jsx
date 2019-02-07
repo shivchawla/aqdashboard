@@ -1268,6 +1268,7 @@ class BacktestDetail extends Component {
                     <Tabs
                         onChange={this.handleTabChange}
                         value={this.state.selectedTab}
+                        indicatorColor='primary'
                     >
                         <Tab label='Performance' />
                         <Tab label='Code' />
@@ -1336,14 +1337,16 @@ class BacktestDetail extends Component {
                                 (!this.state.isBacktestRunning) ? (
                                     <Grid item xs={4}>
                                         <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                                            <Link to={'/community/newPost?attachedBacktestId=' + this.props.match.params.backtestId}>
-                                                <Button
-                                                    color="primary"
-                                                    style={{ 'justifySelf': 'flex-end' }}
-                                                >
-                                                    SHARE BACKTEST
-                                                </Button>
-                                            </Link>
+                                            <Button
+                                                color="primary"
+                                                style={{ 'justifySelf': 'flex-end' }}
+                                                variant='contained'
+                                                onClick={() => {
+                                                    this.props.history.push('/community/newPost?attachedBacktestId=' + this.props.match.params.backtestId)
+                                                }}
+                                            >
+                                                SHARE BACKTEST
+                                            </Button>
                                         </div>
                                     </Grid>
                                 ) : null

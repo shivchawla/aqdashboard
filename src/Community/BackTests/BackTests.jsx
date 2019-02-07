@@ -123,6 +123,7 @@ class BackTests extends React.Component {
                                         this.onRadioChange(dataItem)
                                     }}
                                     checked={dataItem.key === this.state.selectedBacktestId}
+                                    color='primary'
                                 />
                             </TableCell>
                             <TableCell 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Route from 'react-router/Route';
 import Switch from 'react-router-dom/Switch';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import MomentUtils from '@date-io/moment';
 import Research from './Research/Research';
 import SampleTable from './samples/TableSample';
@@ -16,27 +17,37 @@ import Home from './HomeFrame';
 import Tutorial from './TutorialFrame';
 import './App.css';
 
+const theme = createMuiTheme({
+	palette: {
+		primary: {
+			main: '#008080'
+		},
+	}
+});
+
 class App extends Component {
   render() {
     return (
-      	<MuiPickersUtilsProvider utils={MomentUtils}>
-			<div className="App">
-				<Switch>
-					<Route exact={true} path='/research' component={Research} />
-					<Route exact={true} path='/table' component={SampleTable} />
-					<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
-					<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
-					<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
-					<Route exact={true} path='/community' component={Community}/>
-					<Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
-					<Route exact={true} path='/community/newPost' component={NewPost} />
-					<Route exact={true} path='/help' component={Help}/>
-					<Route exact={true} path='/tutorial' component={Tutorial}/>
-					<Route exact={true} path='/home' component={Home}/>
-					<Route exact={true} path='/' component={Home}/>
-				</Switch>
-			</div>
-		</MuiPickersUtilsProvider>
+		<MuiThemeProvider theme={theme}>
+			<MuiPickersUtilsProvider utils={MomentUtils}>
+				<div className="App">
+					<Switch>
+						<Route exact={true} path='/research' component={Research} />
+						<Route exact={true} path='/table' component={SampleTable} />
+						<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
+						<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
+						<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
+						<Route exact={true} path='/community' component={Community}/>
+						<Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
+						<Route exact={true} path='/community/newPost' component={NewPost} />
+						<Route exact={true} path='/help' component={Help}/>
+						<Route exact={true} path='/tutorial' component={Tutorial}/>
+						<Route exact={true} path='/home' component={Home}/>
+						<Route exact={true} path='/' component={Home}/>
+					</Switch>
+				</div>
+			</MuiPickersUtilsProvider>
+		</MuiThemeProvider>
     );
   }
 }

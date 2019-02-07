@@ -496,6 +496,7 @@ class AttachedBackTest extends Component {
                             <Tabs
                                 value={this.state.selectedTab}
                                 onChange={this.onTabChanged}
+                                indicatorColor='primary'
                             >
                                 <Tab label='Performance' />
                                 <Tab label='Code' />

@@ -29,7 +29,7 @@ import RunningBackTest from './RunningBackTest/RunningBackTest.jsx';
 import AqLayoutDesktop from '../../components/Layout/AqDesktopLayout';
 import {benchmarks} from '../../constants/benchmarks';
 import {universe} from '../../constants/universe';
-import { primaryColor, verticalBox, horizontalBox } from '../../constants';
+import { primaryColor, verticalBox, horizontalBox, secondaryColor } from '../../constants';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -1166,6 +1166,7 @@ class StartegyDetail extends Component {
                                 onChange={this.onSettingsTabChanged}
                                 value={this.state.settingsTab}
                                 variant="fullWidth"
+                                indicatorColor='primary'
                         >
                             <Tab label='BASIC'/>
                             <Tab label='ADVANCED'/>
@@ -1223,14 +1224,17 @@ class StartegyDetail extends Component {
                             onClick={this.toggleNewStrategyModal}
                             type='add'
                             disabled={true}
+                            color={secondaryColor}
                         />
                         <ActionIcon 
                             type='file_copy'
                             disabled={true}
+                            color={secondaryColor}
                         />
                         <ActionIcon 
                             type='save'
                             disabled={true}
+                            color={secondaryColor}
                         />
                         <div style={{
                             'height': '30px',
@@ -1240,9 +1244,14 @@ class StartegyDetail extends Component {
                         </div>
                         <ActionIcon 
                             type='bar_chart'
+                            color={secondaryColor}
                             onClick={() => this.props.history.push('/research/backtests/' + this.state.strategyId)}
                         />
-                        <ActionIcon type='play_arrow' disabled/>
+                        <ActionIcon 
+                            type='play_arrow' 
+                            disabled
+                            color={secondaryColor}
+                        />
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
@@ -1251,6 +1260,7 @@ class StartegyDetail extends Component {
                         </div>
                         <ActionIcon 
                             type='menu'
+                            color={secondaryColor}
                             onClick={() => { this.updateState({ 'rightDivOpen': !this.state.rightDivOpen }) }}
                         />
                     </React.Fragment>
@@ -1261,16 +1271,19 @@ class StartegyDetail extends Component {
                         <ActionIcon 
                             type='add'
                             onClick={this.toggleNewStrategyModal}
+                            color={secondaryColor}
                         />
                         {getNewStartegyModal()}
                         <ActionIcon 
                             type='file_copy'
                             onClick={this.toggleClonedStrategyModal}
+                            color={secondaryColor}
                         />
                         {getCloneStrategyModal()}
                         <ActionIcon 
                             type='save'
                             onClick={() => this.clickedOnSave()}
+                            color={secondaryColor}
                         />
                         <div style={{
                             'height': '30px',
@@ -1280,9 +1293,14 @@ class StartegyDetail extends Component {
                         </div>
                         <ActionIcon 
                             type='bar_chart'
+                            color={secondaryColor}
                             onClick={() => {this.props.history.push('/research/backtests/' + this.state.strategyId)}}
                         />
-                        <ActionIcon type='play_arrow' onClick={this.clickedOnRunBacktest}/>
+                        <ActionIcon 
+                            type='play_arrow' 
+                            onClick={this.clickedOnRunBacktest}
+                            color={secondaryColor}
+                        />
                         <div style={{
                             'height': '30px',
                             'width': '1px', 'background': 'teal',
@@ -1291,6 +1309,7 @@ class StartegyDetail extends Component {
                         </div>
                         <ActionIcon 
                             type='menu'
+                            color={secondaryColor}
                             onClick={() => { this.updateState({ 'rightDivOpen': !this.state.rightDivOpen }) }}
                         />
                     </React.Fragment>

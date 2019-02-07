@@ -357,45 +357,14 @@ class StrategyBacktests extends Component {
 
         const getBacktestsDiv = () => {
             return (
-                <div>
-                    <Grid container>
-                        {/* <Grid item md={6} sm={12}>
-                            <h2>All Backtests for {this.state.strategy.name}</h2>
-                        </Grid>
-                        <Grid item md={6} sm={12}>
-                            <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                                {getTableButtons()}
-                            </div>
-                        </Grid> */}
-                    </Grid>
-                    <BacktestsTable
-                        data={this.state.backtests}
-                        strategyName={_.get(this.state, 'strategy.name', '')}
-                        rowSelection={this.rowSelection}
-                        openCompare={this.showcompareModal}
-                        toggleDeleteDialog={this.toggleDeleteDialog}
-                        onAllItemsSelected={this.onAllItemsSelected}
-                    />
-                    {/* <Table 
-                        rowSelection={rowSelection}
-                        dataSource={data} 
-                        pagination={false} 
-                        style={{ 'border': '1px solid #e1e1e1' }}
-                        onRow={(record) => {
-                            return {
-                                onClick: () => {
-                                    this.props.history.push('/research/backtests/'
-                                        + this.props.match.params.strategyId + '/' + record.key
-                                        + '?type=backtest&strategyName=' + this.state.strategy.name
-                                        + '&backtestName=' + record.name);
-                                }
-                            };
-                        }
-                        }
-                    >
-                        {columns}
-                    </Table> */}
-                </div>
+                <BacktestsTable
+                    data={this.state.backtests}
+                    strategyName={_.get(this.state, 'strategy.name', '')}
+                    rowSelection={this.rowSelection}
+                    openCompare={this.showcompareModal}
+                    toggleDeleteDialog={this.toggleDeleteDialog}
+                    onAllItemsSelected={this.onAllItemsSelected}
+                />
             );
         }
 

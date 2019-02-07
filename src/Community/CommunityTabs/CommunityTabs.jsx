@@ -15,6 +15,7 @@ class CommunityTabs extends Component {
                 <Tabs 
                         onChange={this.props.onTabChanged}
                         value={selectedTabIndex}
+                        indicatorColor='primary'
                 >
                     <Tab label='Popular' />
                     <Tab label='Newest' />
