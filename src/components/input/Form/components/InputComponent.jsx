@@ -13,12 +13,9 @@ const styles = theme => ({
       flexWrap: 'wrap',
     },
     formControl: {
-    //   margin: theme.spacing.unit,
-    //   marginTop: 16,
         marginBottom: '6px'
     },
     inputLabel: {
-        // marginLeft: '10px',
         marginTop: '5px'
     },
 });
@@ -42,11 +39,11 @@ class InputComponent extends React.Component {
             handleChange,
             handleBlur,
             style={},
-            type='text'
+            type='text',
+            multiline = false,
+            rowsMax=1
         } = this.props;
         const { classes } = this.props;
-        console.log('Name', name);
-        console.log('Error ', error);
 
         return (
             <FormControl 
@@ -62,6 +59,8 @@ class InputComponent extends React.Component {
                     name={name}
                     onBlur={handleBlur}
                     type={type}
+                    multiline={multiline}
+                    rowsMax={rowsMax}
                 />
                 <FormHelperText style={{color: metricColor.negative}}>
                     {error && error}

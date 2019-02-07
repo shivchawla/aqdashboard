@@ -841,6 +841,10 @@ class StartegyDetail extends Component {
                         open={this.state.newStrategyOpen}
                         title=""
                         onClose={this.toggleNewStrategyModal}
+                        maxWidth='xl'
+                        style={{
+                            width: '400px'
+                        }}
                 >
                     <NewStartegy
                         onCancel={() => this.updateState({newStrategyOpen: false})}
@@ -855,6 +859,10 @@ class StartegyDetail extends Component {
                         open={this.state.cloneStrategyOpen}
                         title=""
                         onClose={this.toggleClonedStrategyModal}
+                        maxWidth='xl'
+                        style={{
+                            width: '400px'
+                        }}
                 >
                     <NewStartegy
                         startegyClone={this.state.strategy}
@@ -1362,10 +1370,16 @@ class StartegyDetail extends Component {
                                     zIndex: 10
                                 }}
                         >
-                            <Grid item sm={topBandColWidthLeftSm} md={topBandColWidthLeftMd} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                            <Grid 
+                                    item 
+                                    sm={topBandColWidthLeftSm} 
+                                    md={topBandColWidthLeftMd} 
+                                    style={{ 'display': 'flex', 'alignItems': 'center' }}
+                            >
                                 <ActionIcon 
                                     onClick={goBack}
                                     type='arrow_back'
+                                    disabled={this.state.isBacktestRunning}
                                 />
                                 <TextField
                                     label=""

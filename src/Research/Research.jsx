@@ -27,23 +27,25 @@ class Research extends Component {
     constructor(props) {
         super();
         this.state = {
-            'loading': true,
-            'selectedStrategies': [],
-            'selectedLiveTests': [],
-            'allLiveTestsSelected': false,
-            'strategies': [],
-            'allSelected': false,
-            'stopForwardTestLoading': false,
-            'deleteStrategiesLoading': false,
-            'searchBoxOpen': false,
-            'oldSearchString': '',
-            'showNewStartegyDiv': false
+            loading: true,
+            selectedStrategies: [],
+            selectedLiveTests: [],
+            allLiveTestsSelected: false,
+            strategies: [],
+            allSelected: false,
+            stopForwardTestLoading: false,
+            deleteStrategiesLoading: false,
+            searchBoxOpen: false,
+            oldSearchString: '',
+            showNewStartegyDiv: false,
+            showDeleteDialog: false
         };
         this.updateState = (data) => {
             if (this._mounted) {
                 this.setState(data);
             }
         }
+
         this.getAllStrategies = (searchString) => {
             let urlString = Utils.getBaseUrl() + '/strategy';
             if (searchString && searchString.trim().length > 0) {
@@ -205,10 +207,11 @@ class Research extends Component {
                     }
                 }
                 this.updateState({
-                    'deleteStrategiesLoading': false,
-                    'selectedStrategies': [],
-                    'strategies': strategies,
-                    'allSelected': false
+                    deleteStrategiesLoading: false,
+                    selectedStrategies: [],
+                    strategies: strategies,
+                    allSelected: false,
+                    showDeleteDialog: false
                 });
             }
         }
@@ -239,23 +242,30 @@ class Research extends Component {
             }
         }
 
-
         this.showDeleteConfirm = () => {
-            // Modal.confirm({
-            //     title: "Are you sure you want to delete?",
-            //     content: this.state.selectedStrategies.length + ' strategies will be deleted.',
-            //     okText: 'Yes',
-            //     okType: 'danger',
-            //     cancelText: 'No',
-            //     onOk: () => {
-            //         this.deleteAllSelectedStrategies();
-            //     },
-            //     onCancel: () => {
-            //     },
-            // });
-            console.log('Show Delete Confirm');
+            const content = this.state.selectedStrategies.length + ' strategies will be deleted.';
+            return (
+                <DialogComponent
+                        title='Are you sure you want to delete?'
+                        open={this.state.showDeleteDialog}
+                        onCancel={this.toggleDeleteDialog}
+                        onOk={this.deleteAllSelectedStrategies}
+                        action
+                >
+                    {
+                        this.state.deleteStrategiesLoading
+                            ?   <div style={{...horizontalBox, justifyContent: 'center'}}>
+                                    <CircularProgress size={22} />
+                                </div>
+                            :   <span>{content}</span>
+                    }
+                </DialogComponent>
+            );
         }
 
+        this.toggleDeleteDialog = () => {
+            this.setState({showDeleteDialog: !this.state.showDeleteDialog});
+        }
 
         this.showStopConfirm = () => {
             // Modal.confirm({
@@ -290,7 +300,6 @@ class Research extends Component {
                 this.getAllStrategies(value);
             }
         }
-
     }
 
     componentDidMount() {
@@ -342,11 +351,7 @@ class Research extends Component {
                     <Button 
                         variant='contained' 
                         color='secondary' 
-                        onClick={
-                            () => {
-                                this.showDeleteConfirm();
-                            }
-                        }
+                        onClick={this.toggleDeleteDialog}
                         size='small'
                     >
                         <Icon>delete</Icon>
@@ -537,6 +542,10 @@ class Research extends Component {
                     title=""
                     open={this.state.showNewStartegyDiv}
                     onClose={() => this.updateState({ 'showNewStartegyDiv': false })}
+                    maxWidth='xl'
+                    style={{
+                        width: '400px'
+                    }}
                 >
                     <NewStartegy
                         onCancel={() => this.updateState({ 'showNewStartegyDiv': false })}
@@ -629,8 +638,9 @@ class Research extends Component {
                   />
                 )}
             </div> */}
+                        {this.showDeleteConfirm()}
                         {getSearchTextAsNeeded()}
-                        {getLiveTestsDiv()}
+                        {/* {getLiveTestsDiv()} */}
                         <div style={{
                             border: '1px solid #e1e1e1',
                             width: '100%',

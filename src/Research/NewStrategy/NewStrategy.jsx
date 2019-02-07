@@ -54,8 +54,8 @@ class NewStartegy extends Component {
                 'headers': Utils.getAuthTokenHeader()
             })
             .then((response) => {
-                console.log(response);
-                // this.props.history.push('/research/strategy/' + response.data._id);
+                this.updateState({ 'loading': false });
+                this.props.history.push('/research/strategy/' + response.data._id);
             })
             .catch((error) => {
                 console.log('Error ', error);
@@ -84,7 +84,7 @@ class NewStartegy extends Component {
     }) => {
         const commonProps = {handleChange, handleBlur, width: '100%'};
         const formData = {values, errors, touched};
-
+        
         return (
             <Form style={{width: '100%'}} autoComplete='off'>
                 <div 
@@ -95,14 +95,16 @@ class NewStartegy extends Component {
                 >
                     <InputComponent 
                         label='Strategy Name'
-                        {...getFormProps('strategyName', formData)}
+                        {...getFormProps('startegyName', formData)}
                         {...commonProps}
                     />
                     <InputComponent 
                         label='Strategy Description'
-                        {...getFormProps('strategyDescription', formData)}
+                        {...getFormProps('shortDescription', formData)}
                         {...commonProps}
                         style={{marginTop: '5px'}}
+                        multiline={true}
+                        rowsMax={8}
                     />
                     <Button 
                             type="submit"
@@ -125,13 +127,20 @@ class NewStartegy extends Component {
     }
 
     render() {
+        const defaultValues = this.props.startegyClone
+            ?   {
+                    startegyName: _.get(this.state, 'strategy.name', ''), 
+                    shortDescription: _.get(this.state, 'strategy.description', '')
+                }
+            :   {};
         return (
             <div className="new-strategy-div" style={{ 'padding': '20px' }}>
                 <h2>CREATE STRATEGY</h2>
                 <Formik 
+                    initialValues={defaultValues}
                     onSubmit={this.handleSubmit}
                     render={this.renderForm}
-                    validate={validateSchema(getValidationSchema)}
+                    validate={validateSchema(getValidationSchema, defaultValues)}
                 />
             </div>
         );

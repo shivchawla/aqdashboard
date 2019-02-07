@@ -12,6 +12,7 @@ import Community from './Community/Community';
 import ThreadView from './Community/ThreadView/ThreadView';
 import NewPost from './Community/NewPost/NewPost';
 import Help from './HelpFrame';
+import Home from './HomeFrame';
 import Tutorial from './TutorialFrame';
 import './App.css';
 
@@ -31,6 +32,8 @@ class App extends Component {
 							<Route exact={true} path='/community/newPost' component={NewPost} />
 							<Route exact={true} path='/help' component={Help}/>
 							<Route exact={true} path='/tutorial' component={Tutorial}/>
+							<Route exact={true} path='/home' component={Home}/>
+							<Route exact={true} path='/' component={Home}/>
 						</Switch>
 					</div>
 				</MuiPickersUtilsProvider>
