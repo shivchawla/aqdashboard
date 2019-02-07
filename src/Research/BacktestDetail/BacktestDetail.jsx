@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { withRouter, Link } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import Moment from 'react-moment';
 import moment from 'moment';
 import AceEditor from 'react-ace';
@@ -213,6 +213,7 @@ class BacktestDetail extends Component {
     gotLabelDataFromSocket = false;
     socketOpenConnectionTimeout = 1000;
     numberOfTimeSocketConnectionCalled = 1;
+    progressCounter = 0;
 
     constructor(props) {
         super();
@@ -240,6 +241,7 @@ class BacktestDetail extends Component {
             isBackTestRunComplete: false,
             newBacktestRunData: {},
             backtestProgress: 0,
+            progressCounter: 0,
             defaultSelectedPortfolio: 0,
             selectedTab: 0
         };
@@ -249,6 +251,7 @@ class BacktestDetail extends Component {
                 this.setState(data);
             }
         }
+
         this.getStrategy = () => {
             axios(Utils.getBaseUrl() + '/strategy/' + _.get(props, 'match.params.strategyId', null), {
                 cancelToken: new axios.CancelToken((c) => {
@@ -257,27 +260,27 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-                .then((response) => {
-                    this.updateState({ 'strategy': response.data });
-                    // console.log(response.data);
-                    this.getBackTest();
-                    this.cancelGetStrategy = undefined;
-                })
-                .catch((error) => {
+            .then((response) => {
+                this.updateState({ 'strategy': response.data });
+                this.getBackTest();
+                this.cancelGetStrategy = undefined;
+            })
+            .catch((error) => {
+                Utils.checkForInternet(error, this.props.history);
+                if (error.response) {
                     Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        Utils.checkForInternet(error, this.props.history);
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    if (error.response.status === 400 || error.response.status === 403) {
+                        this.props.history.push('/forbiddenAccess');
                     }
-                    this.updateState({
-                        'loading': false
-                    });
-                    this.cancelGetStrategy = undefined;
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                }
+                this.updateState({
+                    'loading': false
                 });
+                this.cancelGetStrategy = undefined;
+            });
         }
+
         this.getBackTest = () => {
             axios(Utils.getBaseUrl() + '/backtest/' + _.get(props, 'match.params.backtestId', null), {
                 cancelToken: new axios.CancelToken((c) => {
@@ -286,28 +289,28 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-                .then((response) => {
-                    this.updateBacktestDataFromGetCall(response.data);
-                    // console.log(response.data);
-                    this.cancelGetBacktest = undefined;
-                    this.getLogs();
-                })
-                .catch((error) => {
-                    Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+            .then((response) => {
+                this.updateBacktestDataFromGetCall(response.data);
+                this.cancelGetBacktest = undefined;
+                this.getLogs();
+            })
+            .catch((error) => {
+                Utils.checkForInternet(error, this.props.history);
+                if (error.response) {
+                    if (error.response.status === 400 || error.response.status === 403) {
+                        this.props.history.push('/forbiddenAccess');
                     }
-                    this.cancelGetBacktest = undefined;
-                })
-                .finally(() => {
-                    this.updateState({
-                        'loading': false
-                    });
-                })
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                }
+                this.cancelGetBacktest = undefined;
+            })
+            .finally(() => {
+                this.updateState({
+                    'loading': false
+                });
+            })
         }
+
         this.getLogs = () => {
             this.updateState({
                 logsLoading: true
@@ -319,34 +322,34 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-                .then((response) => {
-                    if (response.data && response.data.output && response.data.output.logs &&
-                        response.data.output.logs != null) {
-                        this.updateState({ 'logs': response.data.output.logs });
+            .then((response) => {
+                if (response.data && response.data.output && response.data.output.logs &&
+                    response.data.output.logs != null) {
+                    this.updateState({ 'logs': response.data.output.logs });
+                }
+                this.cancelGetLogs = undefined;
+                this.getTransactionHistory();
+            })
+            .catch((error) => {
+                Utils.checkForInternet(error, this.props.history);
+                if (error.response) {
+                    if (error.response.status === 400 || error.response.status === 403) {
+                        this.props.history.push('/forbiddenAccess');
                     }
-                    // console.log(response.data);
-                    this.cancelGetLogs = undefined;
-                    this.getTransactionHistory();
-                })
-                .catch((error) => {
-                    Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                    }
-                    this.cancelGetLogs = undefined;
-                })
-                .finally(() => {
-                    this.updateState({
-                        loading: false,
-                        logsLoading: false
-                    });
-                })
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                }
+                this.cancelGetLogs = undefined;
+            })
+            .finally(() => {
+                this.updateState({
+                    loading: false,
+                    logsLoading: false
+                });
+            })
         }
+
         this.getTransactionHistory = () => {
-            this.setState({ transactionLoading: true });
+            this.setState({transactionLoading: true});
             axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=transactionHistory', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
@@ -354,117 +357,117 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-                .then((response) => {
-                    if (response.data && response.data.output && response.data.output.transactionHistory &&
-                        response.data.output.transactionHistory != null) {
-                        const transactionHistoryData = {};
-                        const transactionParentData = {};
-                        for (let i = 0; i < response.data.output.transactionHistory.length; i++) {
-                            const dtL1 = response.data.output.transactionHistory[i];
-                            if (dtL1.values) {
-                                for (let j = 0; j < dtL1.values.length; j++) {
-                                    if (dtL1.values[j].transactions) {
-                                        const dtL2 = dtL1.values[j].transactions;
-                                        for (let k = 0; k < dtL2.length; k++) {
-                                            const dtL3 = dtL2[k];
-                                            let finalPushObj = {
-                                                'datetime': moment(dtL3.datetime).valueOf(),
-                                                'date': '-',
-                                                'symbol': '-',
-                                                'direction': 'BUY',
-                                                'quantity': dtL3.fillquantity,
-                                                'price': Utils.formatMoneyValueMaxTwoDecimals(dtL3.fillprice.toFixed(2)),
-                                                'orderfee': Utils.formatMoneyValueMaxTwoDecimals(dtL3.orderfee.toFixed(2)),
-                                                'key': i + '_' + j + '_' + k
-                                            };
-                                            try {
-                                                if (parseInt(dtL3.fillquantity, 10) < 0) {
-                                                    finalPushObj['direction'] = 'SELL';
-                                                }
-                                            } catch (err) { }
-                                            try {
-                                                if (dtL3.securitysymbol) {
-                                                    finalPushObj['symbol'] = dtL3.securitysymbol.ticker;
-                                                }
-                                            } catch (err) { }
-                                            try {
-                                                if (dtL3.datetime) {
-                                                    finalPushObj['date'] = moment(dtL3.datetime).format('DD MMM YYYY');
-                                                }
-                                            } catch (err) { }
-
-                                            if (transactionHistoryData[finalPushObj['date']]) {
-                                                transactionHistoryData[finalPushObj['date']].push(finalPushObj);
-                                            } else {
-                                                transactionHistoryData[finalPushObj['date']] = [finalPushObj];
+            .then((response) => {
+                if (response.data && response.data.output && response.data.output.transactionHistory &&
+                    response.data.output.transactionHistory != null) {
+                    const transactionHistoryData = {};
+                    const transactionParentData = {};
+                    for (let i = 0; i < response.data.output.transactionHistory.length; i++) {
+                        const dtL1 = response.data.output.transactionHistory[i];
+                        if (dtL1.values) {
+                            for (let j = 0; j < dtL1.values.length; j++) {
+                                if (dtL1.values[j].transactions) {
+                                    const dtL2 = dtL1.values[j].transactions;
+                                    for (let k = 0; k < dtL2.length; k++) {
+                                        const dtL3 = dtL2[k];
+                                        let finalPushObj = {
+                                            'datetime': moment(dtL3.datetime).valueOf(),
+                                            'date': '-',
+                                            'symbol': '-',
+                                            'direction': 'BUY',
+                                            'quantity': dtL3.fillquantity,
+                                            'price': Utils.formatMoneyValueMaxTwoDecimals(dtL3.fillprice.toFixed(2)),
+                                            'orderfee': Utils.formatMoneyValueMaxTwoDecimals(dtL3.orderfee.toFixed(2)),
+                                            'key': i + '_' + j + '_' + k
+                                        };
+                                        try {
+                                            if (parseInt(dtL3.fillquantity, 10) < 0) {
+                                                finalPushObj['direction'] = 'SELL';
                                             }
-
-                                            let dataObj = {
-
-                                            };
-                                            if (transactionParentData[finalPushObj.date]) {
-                                                dataObj = transactionParentData[finalPushObj.date];
-                                            } else {
-                                                dataObj = {
-                                                    'datetime': moment(finalPushObj['datetime']).valueOf(),
-                                                    'date': finalPushObj['date'],
-                                                    'posTrades': 0,
-                                                    'negTrades': 0,
-                                                    'posDollarValue': 0,
-                                                    'negDollarValue': 0
-                                                }
+                                        } catch (err) { }
+                                        try {
+                                            if (dtL3.securitysymbol) {
+                                                finalPushObj['symbol'] = dtL3.securitysymbol.ticker;
                                             }
-                                            if (finalPushObj.quantity < 0) {
-                                                dataObj.negTrades = dataObj.negTrades + 1;
-                                                dataObj.negDollarValue = dataObj.negDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
-                                            } else {
-                                                dataObj.posDollarValue = dataObj.posDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
-                                                dataObj.posTrades = dataObj.posTrades + 1;
+                                        } catch (err) { }
+                                        try {
+                                            if (dtL3.datetime) {
+                                                finalPushObj['date'] = moment(dtL3.datetime).format('DD MMM YYYY');
                                             }
-                                            transactionParentData[finalPushObj.date] = dataObj;
+                                        } catch (err) { }
+
+                                        if (transactionHistoryData[finalPushObj['date']]) {
+                                            transactionHistoryData[finalPushObj['date']].push(finalPushObj);
+                                        } else {
+                                            transactionHistoryData[finalPushObj['date']] = [finalPushObj];
                                         }
+
+                                        let dataObj = {
+
+                                        };
+                                        if (transactionParentData[finalPushObj.date]) {
+                                            dataObj = transactionParentData[finalPushObj.date];
+                                        } else {
+                                            dataObj = {
+                                                'datetime': moment(finalPushObj['datetime']).valueOf(),
+                                                'date': finalPushObj['date'],
+                                                'posTrades': 0,
+                                                'negTrades': 0,
+                                                'posDollarValue': 0,
+                                                'negDollarValue': 0
+                                            }
+                                        }
+                                        if (finalPushObj.quantity < 0) {
+                                            dataObj.negTrades = dataObj.negTrades + 1;
+                                            dataObj.negDollarValue = dataObj.negDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
+                                        } else {
+                                            dataObj.posDollarValue = dataObj.posDollarValue + (Number(finalPushObj['quantity']) * Number(dtL3.fillprice));
+                                            dataObj.posTrades = dataObj.posTrades + 1;
+                                        }
+                                        transactionParentData[finalPushObj.date] = dataObj;
                                     }
                                 }
                             }
                         }
-                        const finalTransactionParentData = [];
-                        for (let key in transactionParentData) {
-                            const abcLocal = transactionParentData[key];
-                            abcLocal['negDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['negDollarValue']);
-                            abcLocal['posDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['posDollarValue']);
-                            finalTransactionParentData.push(abcLocal);
-                        }
-                        finalTransactionParentData.sort((a, b) => {
-                            return b.datetime - a.datetime;
-                        });
-                        this.updateState({
-                            'transactionHistory': transactionHistoryData,
-                            'transactionHistoryParentData': finalTransactionParentData
-                        });
                     }
-                    // console.log(response.data);
-                    this.cancelGetTransactionHistory = undefined;
-                    this.getPortfolioHistory();
-                })
-                .catch((error) => {
-                    Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    const finalTransactionParentData = [];
+                    for (let key in transactionParentData) {
+                        const abcLocal = transactionParentData[key];
+                        abcLocal['negDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['negDollarValue']);
+                        abcLocal['posDollarValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['posDollarValue']);
+                        finalTransactionParentData.push(abcLocal);
                     }
-                    this.cancelGetTransactionHistory = undefined;
-                })
-                .finally(() => {
-                    this.updateState({
-                        loading: false,
-                        transactionLoading: false
+                    finalTransactionParentData.sort((a, b) => {
+                        return b.datetime - a.datetime;
                     });
-                })
+                    this.updateState({
+                        'transactionHistory': transactionHistoryData,
+                        'transactionHistoryParentData': finalTransactionParentData
+                    });
+                }
+                this.cancelGetTransactionHistory = undefined;
+                this.getPortfolioHistory();
+            })
+            .catch((error) => {
+                Utils.checkForInternet(error, this.props.history);
+                if (error.response) {
+                    if (error.response.status === 400 || error.response.status === 403) {
+                        this.props.history.push('/forbiddenAccess');
+                    }
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                }
+                this.cancelGetTransactionHistory = undefined;
+            })
+            .finally(() => {
+                this.updateState({
+                    loading: false,
+                    transactionLoading: false
+                });
+            })
         }
+        
         this.getPortfolioHistory = () => {
-            this.updateState({ portfolioHistoryLoading: true });
+            this.updateState({portfolioHistoryLoading: true});
             axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=portfolioHistory', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
@@ -472,103 +475,102 @@ class BacktestDetail extends Component {
                 }),
                 'headers': Utils.getAuthTokenHeader()
             })
-                .then((response) => {
-                    if (response.data && response.data.output && response.data.output.portfolioHistory &&
-                        response.data.output.portfolioHistory != null) {
-                        let finalPortfolioHistory = {};
-                        const portfolioParentData = {};
-                        for (let i = 0; i < response.data.output.portfolioHistory.length; i++) {
-                            const dtL1 = response.data.output.portfolioHistory[i];
-                            if (dtL1.values) {
-                                for (let j = 0; j < dtL1.values.length; j++) {
-                                    const dtL2 = dtL1.values[j].portfolio;
-                                    if (dtL2 && dtL2.portfolio && dtL2.portfolio.positions) {
-                                        for (let key in dtL2.portfolio.positions) {
-                                            const dtL3 = dtL2.portfolio.positions[key];
-                                            const dtPush = {
-                                                'date': '',
-                                                'datetime': moment(dtL1.values[j].date).valueOf(),
-                                                'symbol': dtL3.securitysymbol.ticker,
-                                                'avgPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.averageprice.toFixed(2)),
-                                                'quantity': dtL3.quantity,
-                                                'lastPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.lastprice.toFixed(2)),
-                                                'marketValue': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * dtL3.lastprice).toFixed(2)),
-                                                'unrealizedPnL': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * (dtL3.lastprice - dtL3.averageprice)).toFixed(2)),
-                                                'key': i + '_' + j + '_' + dtL3.securitysymbol.ticker
-                                            }
-                                            try {
-                                                dtPush.date = moment(dtL1.values[j].date).format('DD MMM YYYY');
-                                            } catch (err) { }
-                                            if (!finalPortfolioHistory[dtPush.date]) {
-                                                finalPortfolioHistory[dtPush.date] = [dtPush];
-                                            } else {
-                                                finalPortfolioHistory[dtPush.date].push(dtPush);
-                                            }
-
-                                            let dataObj = {
-
-                                            };
-                                            if (portfolioParentData[dtPush.date]) {
-                                                dataObj = portfolioParentData[dtPush.date];
-                                            } else {
-                                                dataObj = {
-                                                    'datetime': moment(dtPush['datetime']).valueOf(),
-                                                    'date': dtPush['date'],
-                                                    'noOfPositions': 0,
-                                                    'totalMarketValue': 0,
-                                                    'totalUnrealisedPnL': 0
-                                                }
-                                            }
-                                            dataObj.noOfPositions = dataObj.noOfPositions + 1;
-                                            dataObj.totalMarketValue = dataObj.totalMarketValue + (dtL3.quantity * dtL3.lastprice);
-                                            dataObj.totalUnrealisedPnL = dataObj.totalUnrealisedPnL + (dtL3.quantity * (dtL3.lastprice - dtL3.averageprice));
-                                            portfolioParentData[dtPush.date] = dataObj;
+            .then((response) => {
+                if (response.data && response.data.output && response.data.output.portfolioHistory &&
+                    response.data.output.portfolioHistory != null) {
+                    let finalPortfolioHistory = {};
+                    const portfolioParentData = {};
+                    for (let i = 0; i < response.data.output.portfolioHistory.length; i++) {
+                        const dtL1 = response.data.output.portfolioHistory[i];
+                        if (dtL1.values) {
+                            for (let j = 0; j < dtL1.values.length; j++) {
+                                const dtL2 = dtL1.values[j].portfolio;
+                                if (dtL2 && dtL2.portfolio && dtL2.portfolio.positions) {
+                                    for (let key in dtL2.portfolio.positions) {
+                                        const dtL3 = dtL2.portfolio.positions[key];
+                                        const dtPush = {
+                                            'date': '',
+                                            'datetime': moment(dtL1.values[j].date).valueOf(),
+                                            'symbol': dtL3.securitysymbol.ticker,
+                                            'avgPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.averageprice.toFixed(2)),
+                                            'quantity': dtL3.quantity,
+                                            'lastPrice': Utils.formatMoneyValueMaxTwoDecimals(dtL3.lastprice.toFixed(2)),
+                                            'marketValue': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * dtL3.lastprice).toFixed(2)),
+                                            'unrealizedPnL': Utils.formatMoneyValueMaxTwoDecimals((dtL3.quantity * (dtL3.lastprice - dtL3.averageprice)).toFixed(2)),
+                                            'key': i + '_' + j + '_' + dtL3.securitysymbol.ticker
                                         }
+                                        try {
+                                            dtPush.date = moment(dtL1.values[j].date).format('DD MMM YYYY');
+                                        } catch (err) { }
+                                        if (!finalPortfolioHistory[dtPush.date]) {
+                                            finalPortfolioHistory[dtPush.date] = [dtPush];
+                                        } else {
+                                            finalPortfolioHistory[dtPush.date].push(dtPush);
+                                        }
+
+                                        let dataObj = {
+
+                                        };
+                                        if (portfolioParentData[dtPush.date]) {
+                                            dataObj = portfolioParentData[dtPush.date];
+                                        } else {
+                                            dataObj = {
+                                                'datetime': moment(dtPush['datetime']).valueOf(),
+                                                'date': dtPush['date'],
+                                                'noOfPositions': 0,
+                                                'totalMarketValue': 0,
+                                                'totalUnrealisedPnL': 0
+                                            }
+                                        }
+                                        dataObj.noOfPositions = dataObj.noOfPositions + 1;
+                                        dataObj.totalMarketValue = dataObj.totalMarketValue + (dtL3.quantity * dtL3.lastprice);
+                                        dataObj.totalUnrealisedPnL = dataObj.totalUnrealisedPnL + (dtL3.quantity * (dtL3.lastprice - dtL3.averageprice));
+                                        portfolioParentData[dtPush.date] = dataObj;
                                     }
                                 }
                             }
                         }
-                        let latestPortfolioParent = [];
-                        const finalPortfolioParentData = [];
-                        for (let key in portfolioParentData) {
-                            const abcLocal = portfolioParentData[key];
-                            abcLocal['totalMarketValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalMarketValue']);
-                            abcLocal['totalUnrealisedPnL'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalUnrealisedPnL']);
-                            finalPortfolioParentData.push(abcLocal);
-                        }
-                        finalPortfolioParentData.sort((a, b) => {
-                            return b.datetime - a.datetime;
-                        });
-                        if (finalPortfolioParentData.length > 0) {
-                            latestPortfolioParent.push(finalPortfolioParentData[0]);
-                        }
-                        this.updateState({
-                            'portfolioHistory': finalPortfolioHistory,
-                            'latestPortfolio': latestPortfolioParent,
-                            'portfolioParentData': finalPortfolioParentData,
-                        });
-                    } else {
-                        this.updateState({ 'loading': false });
                     }
-                    // console.log(response.data);
-                    this.cancelGetPortfolioHistory = undefined;
-                })
-                .catch((error) => {
-                    Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    let latestPortfolioParent = [];
+                    const finalPortfolioParentData = [];
+                    for (let key in portfolioParentData) {
+                        const abcLocal = portfolioParentData[key];
+                        abcLocal['totalMarketValue'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalMarketValue']);
+                        abcLocal['totalUnrealisedPnL'] = Utils.formatMoneyValueMaxTwoDecimals(abcLocal['totalUnrealisedPnL']);
+                        finalPortfolioParentData.push(abcLocal);
                     }
-                    this.cancelGetPortfolioHistory = undefined;
-                })
-                .finally(() => {
-                    this.updateState({
-                        loading: false,
-                        portfolioHistoryLoading: false
+                    finalPortfolioParentData.sort((a, b) => {
+                        return b.datetime - a.datetime;
                     });
+                    if (finalPortfolioParentData.length > 0) {
+                        latestPortfolioParent.push(finalPortfolioParentData[0]);
+                    }
+                    this.updateState({
+                        'portfolioHistory': finalPortfolioHistory,
+                        'latestPortfolio': latestPortfolioParent,
+                        'portfolioParentData': finalPortfolioParentData,
+                    });
+                } else {
+                    this.updateState({ 'loading': false });
+                }
+                this.cancelGetPortfolioHistory = undefined;
+            })
+            .catch((error) => {
+                Utils.checkForInternet(error, this.props.history);
+                if (error.response) {
+                    if (error.response.status === 400 || error.response.status === 403) {
+                        this.props.history.push('/forbiddenAccess');
+                    }
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                }
+                this.cancelGetPortfolioHistory = undefined;
+            })
+            .finally(() => {
+                this.updateState({
+                    loading: false,
+                    portfolioHistoryLoading: false
                 });
+            });
         }
 
         this.onCustomHighChartCreated = (chart) => {
@@ -594,19 +596,16 @@ class BacktestDetail extends Component {
 
     }
 
-    setupWebSocketConnections(backtestId) {
+    setupWebSocketConnections = (backtestId) => {
         Utils.openSocketConnection();
         Utils.webSocket.onopen = () => {
             this.handleSocketToGetLiveData(backtestId);
         }
         Utils.webSocket.onclose = () => {
-            Utils.webSocket = undefined;
-            // if (this.numberOfTimeSocketConnectionCalled < 5) {
             setTimeout(() => {
                 this.numberOfTimeSocketConnectionCalled++;
                 Utils.openSocketConnection();
             }, Math.min(this.socketOpenConnectionTimeout * this.numberOfTimeSocketConnectionCalled, 5000));
-            // }
         }
         Utils.webSocket.onerror = (data) => {
             this.checkAndGoToBacktestPageIfNoData(backtestId);
@@ -615,14 +614,21 @@ class BacktestDetail extends Component {
             this.atleastOneMessageReceived = true;
             if (msg.data) {
                 const data = JSON.parse(msg.data);
-
                 //Temporary Fix: Route to detail if "Exception" happens before any WS message
-                if (data.status == "exception" || data.status == "completion") {
+                console.log(data);
+                if (data.status == "exception" || data.status === "complete") {
                     const backtestRedirectUrl = `/research/backtests/${this.state.strategy._id}/${backtestId}`;
-                    this.props.history.push(backtestRedirectUrl)
+                    this.props.history.push(backtestRedirectUrl);
                 }
 
                 if (data.data) {
+                    this.progressCounter += data.data.filter(item => {
+                        item = JSON.parse(item);
+                        const outputType = _.get(item, 'outputtype', null);
+                        return outputType === 'performance';
+                    }).length;
+                    console.log('Progress Counter ', this.pro);
+                    this.updateState({ 'backtestProgress': Math.round((this.progressCounter /  this.totalDataLength) * 100)});
                     for (let i = 0; i < data.data.length; i++) {
                         let dataLocal = data.data[i];
                         try {
@@ -652,7 +658,6 @@ class BacktestDetail extends Component {
                         } else if (dataLocal.outputtype === 'log') {
                             if (dataLocal.message === 'Ending Backtest') {
                                 this.gotBacktestCompleteLog = true;
-                                this.updateBackTestComplete();
                             }
                         }
                     }
@@ -668,9 +673,6 @@ class BacktestDetail extends Component {
                 clearTimeout(this.timeOutcheck);
                 this.timeOutcheck = undefined;
             }
-            // this.timeOutcheck = setTimeout(() => {
-            //   this.checkAndGoToBacktestPageIfNoData(backtestId);
-            // }, this.maxWaitTimeForMessages);
         }
     }
 
@@ -695,32 +697,41 @@ class BacktestDetail extends Component {
         }
     }
 
-    addNewSeriesToGraph(seriesName, yAxisIndex) {
+    addNewSeriesToGraph(seriesName, yAxisIndex, percentage = false) {
+        const percentageConfig = {
+            tooltip: {
+                pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>'
+            }
+        };
+        const extraConfig = percentage ? percentageConfig : {};
+
         const series = {
             'name': seriesName,
             'data': [],
-            'yAxis': yAxisIndex
+            'yAxis': yAxisIndex,
+            ...extraConfig
         };
         this.runningBackTestChart.addSeries(series, false, false);
         this.highStockSeriesPosition[seriesName] = Object.keys(this.highStockSeriesPosition).length;
     }
 
-
     updateGraphWithCategories(categories) {
-        if (this.runningBackTestChart) {
-            const series1 = {
-                'name': 'dummy_series_1234',
-                'data': []
-            };
-            for (let i = 0; i < categories.length; i++) {
-                series1.data.push([(categories[i] + 0), null]);
+        try {
+            if (this.runningBackTestChart) {
+                const series1 = {
+                    'name': 'dummy_series_1234',
+                    'data': []
+                };
+                for (let i = 0; i < categories.length; i++) {
+                    series1.data.push([(categories[i] + 0), null]);
+                }
+                this.runningBackTestChart.addSeries(series1, false, false);
+                this.runningBackTestChart.xAxis[0].setExtremes(null, null, false, false);
+                this.runningBackTestChart.xAxis[1].setExtremes(null, null, false, false);
+                this.highStockSeriesPosition['dummy_series_1234'] = 0;
+                this.runningBackTestChart.redraw(true);
             }
-            this.runningBackTestChart.addSeries(series1, false, false);
-            this.runningBackTestChart.xAxis[0].setExtremes(null, null, false, false);
-            this.runningBackTestChart.xAxis[1].setExtremes(null, null, false, false);
-            this.highStockSeriesPosition['dummy_series_1234'] = 0;
-            this.runningBackTestChart.redraw(true);
-        }
+        } catch(err) {}
     }
 
     recursiveUpdateGraphData() {
@@ -733,19 +744,25 @@ class BacktestDetail extends Component {
                     const dt = arry[i];
                     const dtValue = moment(dt.date, 'YYYY-MM-DD').valueOf();
                     if (this.highStockSeriesPosition['Strategy'] === undefined) {
-                        this.addNewSeriesToGraph('Strategy', 0);
+                        this.addNewSeriesToGraph('Strategy', 0, true);
                     }
                     if (this.highStockSeriesPosition['NIFTY_50'] === undefined) {
-                        this.addNewSeriesToGraph('NIFTY_50', 0);
+                        this.addNewSeriesToGraph('NIFTY_50', 0, true);
                     }
-                    this.runningBackTestChart.series[this.highStockSeriesPosition['NIFTY_50']].addPoint([dtValue, dt.totalreturn_benchmark], false, false);
-                    this.runningBackTestChart.series[this.highStockSeriesPosition['Strategy']].addPoint([dtValue, dt.totalreturn], false, false);
+                    if (_.get(this.runningBackTestChart, `series[${this.highStockSeriesPosition['NIFTY_50']}]`, null) !== null) {
+                        this.runningBackTestChart.series[this.highStockSeriesPosition['NIFTY_50']].addPoint([dtValue, dt.totalreturn_benchmark], false, false);
+                    }
+                    if (_.get(this.runningBackTestChart, `series[${this.highStockSeriesPosition['Strategy']}]`, null) !== null) {
+                        this.runningBackTestChart.series[this.highStockSeriesPosition['Strategy']].addPoint([dtValue, dt.totalreturn], false, false);
+                    }
                     if (dt.variables) {
                         for (let key2 in dt.variables) {
                             if (this.highStockSeriesPosition[key2] === undefined) {
                                 this.addNewSeriesToGraph(key2, 1);
                             }
-                            this.runningBackTestChart.series[this.highStockSeriesPosition[key2]].addPoint([dtValue, dt.variables[key2]], false, false);
+                            if (_.get(this.runningBackTestChart, `series[${this.highStockSeriesPosition[key2]}]`, null) !== null) {
+                                this.runningBackTestChart.series[this.highStockSeriesPosition[key2]].addPoint([dtValue, dt.variables[key2]], false, false);
+                            }
                         }
                     }
                     lastDataPoint = dt;
@@ -761,14 +778,17 @@ class BacktestDetail extends Component {
                     backTestData.output.summary = lastDataPoint;
                     this.updateState({ 'backTestData': backTestData });
                 }
-                this.runningBackTestChart.xAxis[0].setExtremes(null, null, false, false);
-                this.runningBackTestChart.xAxis[1].setExtremes(null, null, false, false);
-                this.runningBackTestChart.redraw(true);
-                let progNum = Math.floor((this.graphsDataUpdatedTillNow / this.totalDataLength) * 100);
-                if (progNum > 100) {
-                    progNum = 100;
+                if (_.get(this.runningBackTestChart, `xAxis[0]`, null) !== null) {
+                    this.runningBackTestChart.xAxis[0].setExtremes(null, null, false, false);
                 }
-                this.updateState({ 'backtestProgress': progNum });
+                
+                if (_.get(this.runningBackTestChart, `xAxis[1]`, null) !== null) {
+                    this.runningBackTestChart.xAxis[1].setExtremes(null, null, false, false);
+                }
+                
+                try {
+                    this.runningBackTestChart.redraw(true);
+                } catch(err) {}
             }
         }
         if (this.graphData.length > 0 || !this.gotBacktestCompleteLog) {
@@ -776,7 +796,7 @@ class BacktestDetail extends Component {
                 this.recursiveUpdateGraphData();
             }, 100);
         } else {
-            this.updateBackTestComplete();
+            // this.updateBackTestComplete();
         }
     }
 
