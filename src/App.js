@@ -15,6 +15,10 @@ import NewPost from './Community/NewPost/NewPost';
 import Help from './HelpFrame';
 import Home from './HomeFrame';
 import Tutorial from './TutorialFrame';
+import ForbiddenAccess from './ErrorPages/ForbiddenAccess';
+import NoIternetAccess from './ErrorPages/NoIternetAccess';
+import BadRequest from './ErrorPages/BadRequest';
+import PageNotFound from './ErrorPages/PageNotFound';
 import './App.css';
 
 const theme = createMuiTheme({
@@ -44,6 +48,10 @@ class App extends Component {
 						<Route exact={true} path='/tutorial' component={Tutorial}/>
 						<Route exact={true} path='/home' component={Home}/>
 						<Route exact={true} path='/' component={Home}/>
+						<Route exact={true} path='/forbiddenAccess' component={ForbiddenAccess} />
+            <Route exact={true} path='/errorPage' component={NoIternetAccess} />
+            <Route exact={true} path='/badRequest' component={BadRequest} />
+						<Route component={PageNotFound} />
 					</Switch>
 				</div>
 			</MuiPickersUtilsProvider>
