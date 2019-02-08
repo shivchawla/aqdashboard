@@ -515,7 +515,7 @@ class Compare extends Component {
                     });
                 } else if (this.state.summaryTimePeriod === 1) {
 
-                    var rolling = this.state.backtests[i].output.performance.detail.analytics.rolling;
+                    var rolling = _.get(this.state, `backtests[${i}].output.performance.detail.analytics.rolling`);
 
                     result.push({
                         'backtest': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
