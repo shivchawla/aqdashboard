@@ -19,6 +19,8 @@ import ForbiddenAccess from './ErrorPages/ForbiddenAccess';
 import NoIternetAccess from './ErrorPages/NoIternetAccess';
 import BadRequest from './ErrorPages/BadRequest';
 import PageNotFound from './ErrorPages/PageNotFound';
+import Stepper from './samples/Stepper';
+import FlowChartAlgo from './Research/FlowChartAlgo';
 import './App.css';
 
 const theme = createMuiTheme({
@@ -51,6 +53,8 @@ class App extends Component {
 						<Route exact={true} path='/forbiddenAccess' component={ForbiddenAccess} />
             <Route exact={true} path='/errorPage' component={NoIternetAccess} />
             <Route exact={true} path='/badRequest' component={BadRequest} />
+						<Route exact={true} path='/stepper' component={Stepper} />
+						<Route exact={true} path='/algo' component={FlowChartAlgo} />
 						<Route component={PageNotFound} />
 					</Switch>
 				</div>
