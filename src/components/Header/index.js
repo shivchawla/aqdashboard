@@ -127,7 +127,10 @@ const HeaderLinks = ({activeIndex = 0, history, isLoggedIn = null, renderQuantRe
                 ))
             }
             {renderQuantResearchMenu()}
-            <NavLink onClick={handleMenuClick}>
+            <NavLink 
+                    onClick={handleMenuClick}
+                    active={activeIndex === 2}
+            >
                 Quant Research
             </NavLink>
             {
