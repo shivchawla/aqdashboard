@@ -350,7 +350,7 @@ class Research extends Component {
                 return (
                     <Button 
                         variant='contained' 
-                        color='secondary' 
+                        color='primary' 
                         onClick={this.toggleDeleteDialog}
                         size='small'
                     >
@@ -360,7 +360,7 @@ class Research extends Component {
                 );
             } else {
                 return (
-                    <Button variant='contained' color='secondary' disabled>
+                    <Button variant='contained' color='primary' disabled>
                         <Icon>delete</Icon>
                         Delete Selected
                     </Button>
@@ -393,7 +393,7 @@ class Research extends Component {
                 );
             } else if (showStopButton) {
                 return (
-                    <Button variant='contained' color='secondary' onClick={
+                    <Button variant='contained' color='primary' onClick={
                         () => {
                             this.showStopConfirm();
                         }
@@ -404,7 +404,7 @@ class Research extends Component {
                 );
             } else {
                 return (
-                    <Button variant='contained' color='secondary' disabled>
+                    <Button variant='contained' color='primary' disabled>
                         {/* <Icon type="close-square" /> */}
                         <Icon>cancel</Icon>Stop selected
           </Button>
@@ -502,6 +502,7 @@ class Research extends Component {
                                         checked={this.state.allLiveTestsSelected} 
                                         label='All Tests'
                                         labelStyle={{fontSize: '18px'}}
+                                        color='primary'
                                     />
                                 </Grid>
                                 <Grid item xs={6} >
@@ -659,6 +660,7 @@ class Research extends Component {
                                             labelStyle={{
                                                 fontSize: '18px'
                                             }}
+                                            color='primary'
                                     />
                                 </Grid>
                                 <Grid item xs={6} >
@@ -766,9 +768,10 @@ const LiveTestListItem = ({item, liveTestCheckBoxChange, selectedLiveTests, getL
                         (item.active) 
                         ?   <Checkbox style={{'fontSize': '18px'}} 
                                 onChange={(e) => {liveTestCheckBoxChange(e.target.checked, item._id)}}
-                                checked={(selectedLiveTests.indexOf(item._id) >= 0) ? true : false} 
+                                checked={(selectedLiveTests.indexOf(item._id) >= 0) ? true : false}
+                                color='primary' 
                             />
-                        :   <Checkbox style={{'fontSize': '18px'}} disabled />
+                        :   <Checkbox style={{'fontSize': '18px'}} disabled color='primary' />
                     }
                 </div>
                 <Grid container alignItems="center">
@@ -829,6 +832,7 @@ const StrategyListItem = ({
                     onChange={(e) => {strategyCheckBoxChange(e.target.checked, item._id)}}
                     checked={(selectedStrategies.indexOf(item._id) >= 0) ? true : false}
                     style={{marginTop: '-10px'}}
+                    color='primary'
                 />
                 <Grid container>
                     <Grid item sm={6} xs={12}>
