@@ -22,7 +22,7 @@ class AqDesktopLayout extends React.Component {
         return (
             <ContainerGrid container>
                 <Grid item xs={12}>
-                    <Header activeIndex={2} />
+                    <Header activeIndex={1} />
                     <div className="main-loader">
                         <Loading
                             show={loading}
