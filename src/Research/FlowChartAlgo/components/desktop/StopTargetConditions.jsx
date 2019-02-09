@@ -31,7 +31,7 @@ export default class ExitCondition extends React.Component {
     addExitCondition = () => {
         const {algo} = this.props;
         const conditions = _.map(_.get(algo, 'exitConditions', []), _.cloneDeep);
-        if (conditions.length > 5) {
+        if (conditions.length > 1) {
             return;
         }
         conditions.push({
@@ -72,29 +72,24 @@ export default class ExitCondition extends React.Component {
         const conditions = _.get(algo, 'exitConditions', []);
 
         return (
-            <Grid container spacing={24}>
-                <Grid 
-                        item 
-                        xs={12} 
-                        style={{
-                            ...horizontalBox,
-                            justifyContent: 'flex-start'
-                        }}
-                >
-                    <ActionIcon type='add_circle' onClick={this.addExitCondition} />
-                    <h3>Add Exit Condition</h3>
+            <Grid 
+                    container 
+                    spacing={24}
+            >
+                <Grid item xs={12}>
+                    {
+                        conditions.map((condition, index) => {
+                            return (
+                                <ExitConditionRow 
+                                    condition={condition}
+                                    index={index}
+                                    key={index}
+                                    deleteCondition={this.deleteCondition}
+                                />
+                            );
+                        })
+                    }
                 </Grid>
-                {
-                    conditions.map((condition, index) => {
-                        return (
-                            <ExitConditionRow 
-                                condition={condition}
-                                index={index}
-                                key={index}
-                            />
-                        );
-                    })
-                }
             </Grid>
         );
     }
@@ -130,11 +125,20 @@ class ExitConditionRowImpl extends React.Component {
     }
 
     render() {
-        const {condition, index, classes} = this.props;
+        const {condition, index, classes, deleteCondition} = this.props;
 
         return (
-            <React.Fragment key={index}>
-                <Grid item xs={5}>
+            <Grid 
+                    container 
+                    key={index}
+                    style={{
+                        backgroundColor: '#eceff1',
+                        margin: '5px 0',
+                        boxSizing: 'border-box'
+                    }}
+                    spacing={24}
+            >
+                <Grid item xs={6}>
                     <TextField
                         id={`filled-dense-${index}`}
                         ref={el => this.textField = el}
@@ -150,7 +154,7 @@ class ExitConditionRowImpl extends React.Component {
                         onClick={this.openPopover}
                     />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={6}>
                     <TextField
                         id="filled-dense"
                         label="SHORT"
@@ -164,13 +168,7 @@ class ExitConditionRowImpl extends React.Component {
                         type="number"
                     />
                 </Grid>
-                <Grid item xs={2}>
-                    <ActionIcon 
-                        type='delete' 
-                        onClick={() => this.deleteCondition(index)} 
-                    />
-                </Grid>
-            </React.Fragment>
+            </Grid>
         );
     }
 }

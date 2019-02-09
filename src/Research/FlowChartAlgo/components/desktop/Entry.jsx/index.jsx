@@ -17,7 +17,7 @@ export default class Entry extends React.Component {
         return false;
     }
 
-    onComparatorChage = (value, index) => {
+    onComparatorChange = (value, index) => {
         const {algo} = this.props;
         const entryConditions = _.map(_.get(algo, 'entry', []), _.cloneDeep);
         entryConditions[index]['comparator'] = value;
@@ -42,7 +42,7 @@ export default class Entry extends React.Component {
     onSecondValueChange = (value, index) => {
         const {algo} = this.props;
         const entryConditions = _.map(_.get(algo, 'entry', []), _.cloneDeep);
-        entryConditions[index]['secondaValue'] = value;
+        entryConditions[index]['secondValue'] = value;
         const modifiedScript = {
             ...algo,
             entry: entryConditions
@@ -68,16 +68,15 @@ export default class Entry extends React.Component {
             return;
         }
         entryConditions.push({
-            condition: conditionalOperators[0], 
+            condition: conditionalOperators[0].value, 
             firstValue: 0, 
-            comparator: comparators[0], 
-            secondaValue: 0
+            comparator: comparators[0].value, 
+            secondValue: 0
         });
         const modifiedScript = {
             ...algo,
             entry: entryConditions
         };
-        console.log(modifiedScript);
         this.props.updateAlgo(modifiedScript);
     }
 
@@ -92,8 +91,9 @@ export default class Entry extends React.Component {
                         if (index === 0) {
                             return (
                                 <FirstRow 
-                                    condition={condition} 
-                                    onComparatorChage={this.onComparatorChage}
+                                    index={index}
+                                    condition={condition}
+                                    onComparatorChange={this.onComparatorChange}
                                     onFirstValueChange={this.onFirstValueChange}
                                     onSecondValueChange={this.onSecondValueChange}
                                     onConditionChange={this.onConditionChange}
@@ -102,8 +102,9 @@ export default class Entry extends React.Component {
                         } else {
                             return (
                                 <OtherRow 
+                                    index={index}
                                     condition={condition} 
-                                    onComparatorChage={this.onComparatorChage}
+                                    onComparatorChange={this.onComparatorChange}
                                     onFirstValueChange={this.onFirstValueChange}
                                     onSecondValueChange={this.onSecondValueChange}
                                     onConditionChange={this.onConditionChange}

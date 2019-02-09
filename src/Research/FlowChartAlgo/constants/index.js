@@ -18,16 +18,16 @@ export const intervals = [
 ];
 
 export const comparators = [
-    {label: 'Higher Than', value: 'ht'},
-    {label: 'Lower Than', value: 'lt'},
-    {label: 'Crosses Above', value: 'ca'},
-    {label: 'Crosses Below', value: 'cb'},
-    {label: 'Equal To', value: 'eq'},
+    {label: 'Higher Than', value: 'ht', codeOperator: '>'},
+    {label: 'Lower Than', value: 'lt', codeOperator: '<'},
+    {label: 'Crosses Above', value: 'ca', codeOperator: 'ca'},
+    {label: 'Crosses Below', value: 'cb', codeOperator: 'cb'},
+    {label: 'Equal To', value: 'eq', codeOperator: '='},
 ];
 
 export const conditionalOperators = [
-    {label: 'AND', value: 'and'},
-    {label: 'OR', value: 'OR'}
+    {label: 'AND', value: 'and', codeOperator: '&'},
+    {label: 'OR', value: 'or', codeOperator: '||'}
 ];
 
 // This wil change 
@@ -41,7 +41,44 @@ export const algo = {
         quantity: 10
     },
     entry: [
-        {condition: null, firstValue: 0, comparator: comparators[0], secondaValue: 0}
+        {condition: null, firstValue: 0, comparator: comparators[0].value, secondValue: 0}
     ],
-    exitConditions: []
+    exitConditions: [{buyValue: 0, sellValue: 0}]
 };
+
+export const indicators = {
+    sma: {
+        label: 'SMA',
+        options: [
+            {key: 'period', label: 'Period', value: 0}
+        ]
+    },
+    ema: {
+        label: 'EMA',
+        options: [
+            {key: 'period', label: 'Period', value: 0}
+        ]
+    },
+    macd: {
+        label: 'MACD',
+        options: [
+            {key: 'fastPeriod', label: 'Fast Period', value: 0},
+            {key: 'slowPeriod', label: 'Slow Period', value: 0},
+            {key: 'slowPeriod', label: 'Slow Period', value: 0}
+        ]
+    },
+    rsi: {
+        label: 'Relative Strength Index',
+        options: [
+            {key: 'period', label: 'Period', value: 0},
+            {key: 'close', label: 'Close', value: 0}
+        ]
+    },
+    obv: {
+        label: 'On Balance Volume',
+        options: [
+            {key: 'volume', label: 'Volume', value: 0},
+            {key: 'close', label: 'Close', value: 0}
+        ]
+    }
+}

@@ -1,12 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Script from './components/desktop/Script';
 import Position from './components/desktop/Position';
-import ExitConditions from './components/desktop/ExitConditions';
+import StopTargetConditions from './components/desktop/StopTargetConditions';
 import Entry from './components/desktop/Entry.jsx';
-import {verticalBox, horizontalBox} from '../../constants';
 import {algo} from './constants';
+import {parseObjectToCode} from './utils/parser';
 
 export default class FlowChartAlgo extends React.Component {
     constructor(props) {
@@ -18,6 +17,8 @@ export default class FlowChartAlgo extends React.Component {
 
     updateAlgo = modifiedAlgo => {
         this.setState({algo: modifiedAlgo});
+        const parsedObjectCode = parseObjectToCode(modifiedAlgo);
+        console.log(parsedObjectCode);
     }
 
     render() {
@@ -35,10 +36,10 @@ export default class FlowChartAlgo extends React.Component {
                     <Position {...commonProps} />
                 </Grid>
                 <Grid item xs={12}>
-                    <ExitConditions {...commonProps} />
+                    <Entry {...commonProps} />
                 </Grid>
                 <Grid item xs={12}>
-                    <Entry {...commonProps} />
+                    <StopTargetConditions {...commonProps} />
                 </Grid>
             </Grid>
         );

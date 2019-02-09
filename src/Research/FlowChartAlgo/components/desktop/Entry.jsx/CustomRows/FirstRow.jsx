@@ -52,13 +52,30 @@ export default class FirstRow extends React.Component {
     }
 
     render() {
-        const {firstValue = 0, lastValue = 0, comparator = comparators[0].value} = this.props;
+        const {
+            onComparatorChange,
+            onFirstValueChange,
+            onSecondValueChange,
+            index = 0
+        } = this.props;
+        const conditionProp = _.get(this.props, 'condition', {});
+        const comparator = _.get(conditionProp, 'comparator', comparators[0].value);
+        const firstValue = _.get(conditionProp, 'firstValue', 0);
+        const secondValue = _.get(conditionProp, 'secondValue', 0);
+
         const {fristValueAnchorEl, secondValueAnchorEl} = this.state;
         const firstValueOpen = Boolean(fristValueAnchorEl);
         const secondValueOpen = Boolean(secondValueAnchorEl);
 
         return (
-            <Grid container alignItems="center">
+            <Grid 
+                    container 
+                    alignItems="center"
+                    style={{
+                        backgroundColor: '#eceff1',
+                        margin: '5px 0'
+                    }}
+            >
                 <Grid item xs={4}>
                     <Popover
                             open={firstValueOpen}
@@ -73,7 +90,12 @@ export default class FirstRow extends React.Component {
                                 horizontal: 'center',
                             }}
                     >
-                        <SMAContent />
+                        <SMAContent 
+                            value={firstValue}
+                            onChange={onFirstValueChange}
+                            index={index}
+                            closePopOver={this.firstClosePopover}
+                        />
                     </Popover>
                     <TextField
                         id="standard-name"
@@ -87,7 +109,7 @@ export default class FirstRow extends React.Component {
                     <Select
                             value={comparator}
                             label='Comparator'
-                            onChange={this.onComparatorChange}
+                            onChange={e => onComparatorChange(e.target.value, index)}
                             style={{width: '100%'}}
                     >
                         {
@@ -115,12 +137,17 @@ export default class FirstRow extends React.Component {
                                 horizontal: 'center',
                             }}
                     >
-                        <SMAContent />
+                        <SMAContent 
+                            value={secondValue}
+                            onChange={onSecondValueChange}
+                            index={index}
+                            closePopOver={this.secondClosePopover}
+                        />
                     </Popover>
                     <TextField
                         id="standard-name"
                         label="SMA"
-                        value={lastValue}
+                        value={secondValue}
                         margin='dense'
                         onClick={this.secondOpenPopover}
                     />
@@ -131,6 +158,8 @@ export default class FirstRow extends React.Component {
 }
 
 const SMAContent = props => {
+    const {value, onChange, index = null, closePopOver} = props;
+
     return (
         <Grid container style={{padding: '20px'}}>
             <Grid item xs={12}>
@@ -139,16 +168,15 @@ const SMAContent = props => {
             <Grid item xs={12}>
                 <TextField
                     label="Period"
-                    value={props.value}
-                    onChange={props.onChange}
+                    value={value}
+                    onChange={e => onChange(e.target.value, index)}
                     margin="dense"
-                    type="number"
                     style={{width: '100%'}}
+                    type="number"
                 />
             </Grid>
             <Grid item xs={12} style={{...horizontalBox, justifyContent: 'space-between'}}>
-                <Button>DONE</Button>
-                <Button>CANCEL</Button>
+                <Button onClick={closePopOver}>OK</Button>
             </Grid>
         </Grid>
     );

@@ -37,7 +37,15 @@ export default class Position extends React.Component {
         const selectedQuantity = _.get(algo, 'position.quantity', 10);
 
         return (
-            <Grid container spacing={24} alignItems='center'>
+            <Grid 
+                    container 
+                    spacing={24} 
+                    alignItems='center'
+                    style={{
+                        backgroundColor: '#eceff1',
+                        margin: '5px 0'
+                    }}
+            >
                 <Grid item xs={6}>
                     <Select 
                             value={selectedType} 

@@ -85,7 +85,14 @@ class Script extends React.Component {
         const selectedInterval = _.get(algo, 'script.interval', intervals[0].value);
         
         return (
-            <Grid container spacing={24}>
+            <Grid 
+                    container 
+                    spacing={24}
+                    style={{
+                        backgroundColor: '#eceff1',
+                        margin: '5px 0'
+                    }}
+            >
                 <Grid 
                         item xs={6} 
                         style={{
