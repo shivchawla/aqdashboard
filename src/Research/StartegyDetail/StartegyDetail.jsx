@@ -31,6 +31,7 @@ import AqLayoutDesktop from '../../components/Layout/AqDesktopLayout';
 import {benchmarks} from '../../constants/benchmarks';
 import {universe} from '../../constants/universe';
 import { primaryColor, verticalBox, horizontalBox, secondaryColor } from '../../constants';
+import { Button } from '@material-ui/core';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -113,7 +114,9 @@ class StartegyDetail extends Component {
                 open: false,
                 message: ''
             },
-            codeViewSelected: false
+            codeViewSelected: false,
+            codeEditorReadOnly: true,
+            editCodeDialogOpen: false
         };
 
         this.updateState = (data) => {
@@ -135,7 +138,10 @@ class StartegyDetail extends Component {
             })
                 .then((response) => {
                     this.cancelGetStrategy = undefined;
-                    this.updateState({ 'strategy': response.data, 'loading': false });
+                    this.updateState({ 
+                        'strategy': {...response.data, type: 'gui'}, 
+                        'loading': false 
+                    }); // This should be changed
                 })
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
@@ -489,6 +495,10 @@ class StartegyDetail extends Component {
         this.setState({
             snackbar: {open: false, message: ''}
         });
+    }
+
+    toggleEditMode = value => {
+        this.setState({codeViewSelected: value === 1});
     }
 
     checkAndGoToBacktestPageIfNoData(backtestId) {
@@ -870,6 +880,23 @@ class StartegyDetail extends Component {
 
     toggleClonedStrategyModal = () => {
         this.updateState({cloneStrategyOpen: !this.state.cloneStrategyOpen});
+    }
+
+    toggleEditCodeDialog = () => {
+        this.setState({editCodeDialogOpen: !this.state.editCodeDialogOpen});
+    }
+
+    openEditCodeDialog = () => {
+        this.setState({editCodeDialogOpen: true});
+    }
+
+    closeEditCodeDialog = () => {
+        this.setState({editCodeDialogOpen: false});
+    }
+
+    makeCodeEditTrue = () => {
+        this.setState({codeEditorReadOnly: false, editCodeDialogOpen: false});
+        // this.saveStartegy()
     }
 
     render() {
@@ -1378,7 +1405,8 @@ class StartegyDetail extends Component {
                             width="100%"
                             height="100%"
                             editorProps={{ $blockScrolling: "Infinity" }}
-                        />
+                            readOnly={this.state.codeEditorReadOnly}
+                        />    
                     );
                 } else {
                     return (
@@ -1456,6 +1484,15 @@ class StartegyDetail extends Component {
                                     variant="outlined"
                                     disabled={this.state.isBacktestRunning} 
                                 />
+                                {
+                                    this.state.strategy.type === 'gui' &&
+                                    <RadioGroup 
+                                        items={['GUI', 'CODE']}
+                                        defaultSelected={this.state.codeViewSelected ? 1 : 0}
+                                        onChange={this.toggleEditMode}
+                                        CustomRadio={CardRadio}
+                                    />
+                                }
                             </Grid>
                             <Grid item sm={topBandColWidthMiddleSm} md={topBandColWidthMiddleMd} style={{
                                 'display': 'flex', 'alignItems': 'center',
@@ -1501,7 +1538,32 @@ class StartegyDetail extends Component {
                             'height': 'calc(100% - 50px)', 'display': 'flex',
                             'padding': '5px'
                         }}>
-                            <div style={{ 'height': '100%', 'flex': '1', 'minWidth': '0px' }}>
+                            <div 
+                                    style={{ 
+                                        'height': '100%', 
+                                        'flex': '1', 
+                                        'minWidth': '0px',
+                                        position: 'relative'
+                                    }}
+                            >
+                                {
+                                    !this.state.isBacktestRunning &&
+                                    this.state.codeViewSelected &&
+                                    this.state.strategy.type === 'gui' &&
+                                    <Button
+                                            style={{
+                                                position: 'absolute',
+                                                right: '10px',
+                                                top: '10px',
+                                                zIndex: 100
+                                            }}
+                                            color="primary"
+                                            variant="contained"
+                                            onClick={this.toggleEditCodeDialog}
+                                    >
+                                        EDIT CODE
+                                    </Button>
+                                }
                                 {getLeftBodyContent()}
                             </div>
                             <div style={{ 'display': 'flex', 'background': 'white', 'marginLeft': '5px' }}
@@ -1551,6 +1613,15 @@ class StartegyDetail extends Component {
 
         return (
             <AqLayoutDesktop loading={this.state.loading} hideFooter>
+                <DialogComponent 
+                        title="Edit Code"
+                        open={this.state.editCodeDialogOpen}
+                        action={true}
+                        onOk={this.makeCodeEditTrue}
+                        onCancel={this.closeEditCodeDialog}
+                >
+                    <h3>Are you sure you want to edit the code</h3>
+                </DialogComponent>
                 <SnackbarComponent 
                     openStatus={this.state.snackbar.open}
                     message={this.state.snackbar.message}
