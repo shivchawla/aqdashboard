@@ -95,7 +95,7 @@ class Script extends React.Component {
                     }}
             >
                 <Grid 
-                        item xs={6} 
+                        item xs={12} 
                         style={{
                             ...verticalBox,
                              alignItems: 'flex-start',
@@ -128,7 +128,7 @@ class Script extends React.Component {
                 </Grid>
                 <Grid 
                         item 
-                        xs={6}
+                        xs={12}
                         style={{
                             padding: '6px'
                         }}

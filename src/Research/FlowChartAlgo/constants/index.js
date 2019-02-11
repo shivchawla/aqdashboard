@@ -48,9 +48,9 @@ export const indicators = {
     macd: {
         label: 'Moving Average Convergence Divergence ',
         options: [
-            {key: 'fastPeriod', label: 'Fast Period', value: 10, options: [10, 20, 30, 40, 50]},
-            {key: 'slowPeriod', label: 'Slow Period', value: 10, options: [10, 20, 30, 40, 50]},
-            {key: 'weirdPeriod', label: 'Weird Period', value: 10, options: [10, 20, 30, 40, 50]}
+            {key: 'fastPeriod', label: 'Fast', value: 10, options: [10, 20, 30, 40, 50]},
+            {key: 'slowPeriod', label: 'Slow', value: 10, options: [10, 20, 30, 40, 50]},
+            {key: 'weirdPeriod', label: 'Weird', value: 10, options: [10, 20, 30, 40, 50]}
         ]
     },
     rsi: {
@@ -86,11 +86,13 @@ export const defaultFirstRowEntryCondition = {
     condition: null, 
     firstValue: {
         key: 'sma',
+        label: 'Simple Moving Average',
         options: [{key: 'period', value: 10, label: 'Period'}]
     },
     comparator: comparators[0].value, 
     secondValue: {
         key: 'sma',
+        label: 'Simple Moving Average',
         options: [{key: 'period', value: 10, label: 'Period'}]
     }
 };
@@ -99,11 +101,13 @@ export const defaultSecondRowEntryCondition = {
     condition: conditionalOperators[0].value, 
     firstValue: {
         key: 'sma',
+        label: 'Simple Moving Average',
         options: [{key: 'period', value: 10, label: 'Period'}]
     },
     comparator: comparators[0].value, 
     secondValue: {
         key: 'sma',
+        label: 'Simple Moving Average',
         options: [{key: 'period', value: 10, label: 'Period'}]
     }
 }

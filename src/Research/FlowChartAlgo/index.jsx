@@ -46,90 +46,33 @@ export default class FlowChartAlgo extends React.Component {
                         container 
                         style={{
                             padding: '10px', 
-                            boxSizing: 'border-box'
+                            boxSizing: 'border-box',
+                            minHeight: '100vh'
                         }}
+                        alignItems="flex-start"
+                        spacing={24}
                 >
                     <Grid 
                             item 
-                            xs={9}
+                            xs={4}
                             style={{
-                                padding: '1% 3%',
-                                backgroundColor: '#f5faff',
-                                borderRadius: '4px'
+                                ...verticalBox,
+                                alignItems: 'flex-start'
                             }}
                     >
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={commonStyle}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Script</SectionHeader>
-                            </DotContainer>
-                            <Script {...commonProps} />
-                        </Grid>
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={{
-                                    ...commonStyle,
-                                    ...verticalBox,
-                                    alignItems: 'flex-start'
-                                }}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Position</SectionHeader>
-                            </DotContainer>
-                            <Position {...commonProps} />
-                        </Grid>
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={commonStyle}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Entry</SectionHeader>
-                            </DotContainer>
-                            <Entry {...commonProps} />
-                        </Grid>
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={commonStyle}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Exit</SectionHeader>
-                            </DotContainer>
-                            <Exit {...commonProps} />
-                        </Grid>
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={commonStyle}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Stop/Target</SectionHeader>
-                            </DotContainer>
-                            <StopTargetConditions {...commonProps} />
-                        </Grid>
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={commonStyle}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Algo Name</SectionHeader>
-                            </DotContainer>
-                            <Name {...commonProps} />
-                        </Grid>
+                        <Script {...commonProps} />
+                        <Position {...commonProps} />
+                        <StopTargetConditions {...commonProps} />
                     </Grid>
-                    <Grid item xs={3}></Grid>
+                    <Grid 
+                            item 
+                            xs={4}
+                    >
+                        <Entry {...commonProps} />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Exit {...commonProps} />
+                    </Grid>
                 </Grid>
             </AqLayoutDesktop>
         );
