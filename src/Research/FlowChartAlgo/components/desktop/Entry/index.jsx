@@ -1,12 +1,14 @@
 import React from 'react';
+import styled from 'styled-components';
 import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import Button from '@material-ui/core/Button';
 import {horizontalBox} from '../../../../../constants';
-import ActionIcon from '../../../../../components/Buttons/ActionIcon';
 import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
 import EditDialog from './EditDialog';
-import {comparators, conditionalOperators} from '../../../constants';
+import {defaultSecondRowEntryCondition} from '../../../constants';
 
 export default class Entry extends React.Component {
     constructor(props) {
@@ -76,12 +78,7 @@ export default class Entry extends React.Component {
         if (entryConditions.length >= 5) {
             return;
         }
-        entryConditions.push({
-            condition: conditionalOperators[0].value, 
-            firstValue: 0, 
-            comparator: comparators[0].value, 
-            secondValue: 0
-        });
+        entryConditions.push(defaultSecondRowEntryCondition);
         const modifiedScript = {
             ...algo,
             entry: entryConditions
@@ -102,9 +99,23 @@ export default class Entry extends React.Component {
     render() {
         const {algo} = this.props;
         const conditions = _.get(algo, 'entry', []);
+        const rowProps = {
+            onComparatorChange: this.onComparatorChange,
+            onFirstValueChange: this.onFirstValueChange,
+            onSecondValueChange: this.onSecondValueChange,
+            onConditionChange: this.onConditionChange,
+            toggleEditDialog: this.updateSelectedCondition
+        };
 
         return (
-            <Grid container>
+            <Grid 
+                    container 
+                    style={{
+                        marginTop: '10px',
+                        padding: '20px',
+                        boxSizing: 'border-box'
+                    }}
+            >
                 <EditDialog 
                     open={this.state.editDialogOpen}
                     onClose={this.toggleEditDialog}
@@ -112,47 +123,52 @@ export default class Entry extends React.Component {
                     updateAlgo={this.props.updateAlgo}
                     selectedIndex={this.state.selectedCondition}
                 />
-                {
-                    conditions.map((condition, index) => {
-                        if (index === 0) {
-                            return (
-                                <FirstRow 
-                                    index={index}
-                                    condition={condition}
-                                    onComparatorChange={this.onComparatorChange}
-                                    onFirstValueChange={this.onFirstValueChange}
-                                    onSecondValueChange={this.onSecondValueChange}
-                                    onConditionChange={this.onConditionChange}
-                                    toggleEditDialog={this.updateSelectedCondition}
-                                />
-                            );
-                        } else {
-                            return (
-                                <OtherRow 
-                                    index={index}
-                                    condition={condition} 
-                                    onComparatorChange={this.onComparatorChange}
-                                    onFirstValueChange={this.onFirstValueChange}
-                                    onSecondValueChange={this.onSecondValueChange}
-                                    onConditionChange={this.onConditionChange}
-                                    toggleEditDialog={this.updateSelectedCondition}
-                                />
-                            );
-                        }
-                    })
-                }
+                <Grid item xs={12} style={{marginBottom: '10px'}}>
+                    <SectionHeader>Entry Conditions</SectionHeader>
+                </Grid>
+                <Grid item xs={12}>
+                    {
+                        conditions.map((condition, index) => {
+                            if (index === 0) {
+                                return (
+                                    <FirstRow 
+                                        index={index}
+                                        condition={condition}
+                                        {...rowProps}
+                                    />
+                                );
+                            } else {
+                                return (
+                                    <OtherRow 
+                                        index={index}
+                                        condition={condition} 
+                                        {...rowProps}
+                                    />
+                                );
+                            }
+                        })
+                    }
+                </Grid>
                 <Grid 
                         item 
                         xs={12} 
                         style={{
                             ...horizontalBox,
-                            justifyContent: 'flex-start'
+                            justifyContent: 'flex-end'
                         }}
                 >
-                    <ActionIcon type='add_circle' onClick={this.addCondition} />
-                    <h3>Add Exit Condition</h3>
+                    <Button
+                            onClick={this.addCondition}
+                    >
+                        Add Condition
+                        <Icon style={{marginLeft: '5px'}}>add_circle</Icon>
+                    </Button>
                 </Grid>
             </Grid>
         );
     }
 }
+
+const SectionHeader = styled.h3`
+    font-size: 16px;
+`;

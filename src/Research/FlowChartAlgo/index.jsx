@@ -3,7 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Script from './components/desktop/Script';
 import Position from './components/desktop/Position';
 import StopTargetConditions from './components/desktop/StopTargetConditions';
-import Entry from './components/desktop/Entry.jsx';
+import Entry from './components/desktop/Entry';
+import Exit from './components/desktop/Exit';
 import {algo} from './constants';
 import {parseObjectToCode} from './utils/parser';
 
@@ -36,6 +37,9 @@ export default class FlowChartAlgo extends React.Component {
                 </Grid>
                 <Grid item xs={12}>
                     <Entry {...commonProps} />
+                </Grid>
+                <Grid item xs={12}>
+                    <Exit {...commonProps} />
                 </Grid>
                 <Grid item xs={12}>
                     <StopTargetConditions {...commonProps} />

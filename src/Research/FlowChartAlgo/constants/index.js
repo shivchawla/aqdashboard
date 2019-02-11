@@ -82,6 +82,32 @@ export const getIndicatorValue = (itemKey, key, valueIndex) => {
     }
 }
 
+export const defaultFirstRowEntryCondition = {
+    condition: null, 
+    firstValue: {
+        key: 'sma',
+        options: [{key: 'period', value: 10, label: 'Period'}]
+    },
+    comparator: comparators[0].value, 
+    secondValue: {
+        key: 'sma',
+        options: [{key: 'period', value: 10, label: 'Period'}]
+    }
+};
+
+export const defaultSecondRowEntryCondition = {
+    condition: conditionalOperators[0].value, 
+    firstValue: {
+        key: 'sma',
+        options: [{key: 'period', value: 10, label: 'Period'}]
+    },
+    comparator: comparators[0].value, 
+    secondValue: {
+        key: 'sma',
+        options: [{key: 'period', value: 10, label: 'Period'}]
+    }
+}
+
 // This wil change 
 export const algo = {
     script: {
@@ -92,19 +118,7 @@ export const algo = {
         type: buy,
         quantity: 10
     },
-    entry: [
-        {
-            condition: null, 
-            firstValue: {
-                key: 'sma',
-                options: [{key: 'period', value: 10, label: 'Period'}]
-            },
-            comparator: comparators[0].value, 
-            secondValue: {
-                key: 'sma',
-                options: [{key: 'period', value: 10, label: 'Period'}]
-            }
-        }
-    ],
+    entry: [defaultFirstRowEntryCondition],
+    exit: [],
     exitConditions: [{buyValue: 0, sellValue: 0}]
 };

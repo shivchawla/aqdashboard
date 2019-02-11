@@ -1,13 +1,20 @@
+/**
+ * This file should be renamed to OtherRow.
+ * If any other file exists with the same name, that should be deleted
+ */
+
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
-import {comparators} from '../../../../constants';
+import {comparators, conditionalOperators} from '../../../../constants';
 import {horizontalBox, verticalBox} from '../../../../../../constants';
 
-export default class FirstRow extends React.Component {
+export default class OtherRow extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (!_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState)) {
             return true;
@@ -16,36 +23,14 @@ export default class FirstRow extends React.Component {
         return false;
     }
 
-    firstOpenPopover = event => {
-        this.setState({
-            fristValueAnchorEl: event.currentTarget
-        });
-    }
-
-    secondOpenPopover = event => {
-        this.setState({
-            secondValueAnchorEl: event.currentTarget
-        });
-    }
-
-    firstClosePopover = () => {
-        this.setState({
-            fristValueAnchorEl: null
-        });
-    }
-
-    secondClosePopover = () => {
-        this.setState({
-            secondValueAnchorEl: null
-        });
-    }
-
     render() {
         const {
             index = 0,
-            toggleEditDialog
+            toggleEditDialog,
+            onConditionChange
         } = this.props;
         const conditionProp = _.get(this.props, 'condition', {});
+        const condition = _.get(conditionProp, 'condition', conditionalOperators[0].value);
         const comparator = _.get(conditionProp, 'comparator', comparators[0].value);
         const comparatorObjIndex = _.findIndex(comparators, comparatorItem => comparatorItem.value === comparator);
         const comparatorObj = comparatorObjIndex > -1
@@ -70,16 +55,40 @@ export default class FirstRow extends React.Component {
                         margin: '5px 0',
                         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
                         padding: '10px',
-                        boxSizing: 'border-box'
+                        boxSizing: 'border-box',
+                        marginBottom: '15px'
                     }}
             >
                 <Grid 
                         item 
                         xs={4}
-                        style={{...verticalBox, alignItems: 'flex-start'}}
+                        style={{...horizontalBox, justifyContent: 'flex-start'}}
                 >
-                    <ValueHeader>{selectedFirstValue}</ValueHeader>
-                    <OptionItems options={firstValueOptions} />
+                    <Select
+                            value={condition}
+                            label='Condition'
+                            onChange={e => onConditionChange(e.target.value, index)}
+                    >
+                        {
+                            conditionalOperators.map((comparator, index) => (
+                                <MenuItem
+                                        value={comparator.value}
+                                >
+                                    {comparator.label}
+                                </MenuItem>
+                            ))
+                        }
+                    </Select>
+                    <div 
+                            style={{
+                                ...verticalBox, 
+                                alignItems: 'flex-start',
+                                marginLeft: '15px'
+                            }}
+                    >
+                        <ValueHeader>{selectedFirstValue}</ValueHeader>
+                        <OptionItems options={firstValueOptions} />                    
+                    </div>
                 </Grid>
                 <Grid item xs={4}>
                     <Chip 
