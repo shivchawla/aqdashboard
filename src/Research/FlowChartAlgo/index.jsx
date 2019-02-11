@@ -52,7 +52,7 @@ export default class FlowChartAlgo extends React.Component {
                         xs={12}
                         style={{
                             padding: '1% 3%',
-                            backgroundColor: '#f5faff',
+                            // backgroundColor: '#f5faff',
                             borderRadius: '4px'
                         }}
                         alignItems="flex-start"
@@ -91,7 +91,7 @@ export default class FlowChartAlgo extends React.Component {
                     >
                         <DotContainer>
                             <Dot />
-                            <SectionHeader>Entry</SectionHeader>
+                            <SectionHeader>Entry Conditions</SectionHeader>
                         </DotContainer>
                         <Entry {...commonProps} />
                     </Grid>
@@ -102,7 +102,7 @@ export default class FlowChartAlgo extends React.Component {
                     >
                         <DotContainer>
                             <Dot />
-                            <SectionHeader>Exit</SectionHeader>
+                            <SectionHeader>Exit Conditions</SectionHeader>
                         </DotContainer>
                         <Exit {...commonProps} />
                     </Grid>

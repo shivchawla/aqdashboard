@@ -145,8 +145,9 @@ export default class Exit extends React.Component {
                         item xs={12} 
                         style={{
                             ...horizontalBox, 
-                            justifyContent: 'flex-start',
-                            marginBottom: '5px'
+                            justifyContent: 'flex-end',
+                            marginBottom: '5px',
+                            marginTop: '-34px'
                         }}
                 >
                     <Button

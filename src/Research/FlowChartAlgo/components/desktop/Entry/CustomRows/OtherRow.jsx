@@ -5,12 +5,14 @@
 
 import React from 'react';
 import _ from 'lodash';
-import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 import IndicatorLabel from '../../common/IndicatorLabel';
 import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
+import {ValueHeader, OptionValue, OptionLabel, Comparator} from '../../common/RowTexts';
 import {comparators, conditionalOperators} from '../../../../constants';
-import {horizontalBox, verticalBox, primaryColor} from '../../../../../../constants';
+import {horizontalBox, verticalBox} from '../../../../../../constants';
 
 export default class OtherRow extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -86,15 +88,20 @@ export default class OtherRow extends React.Component {
                         marginBottom: '15px'
                     }}
             >
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                     <div style={{...verticalBox, alignItems: 'flex=start'}}>
                         <ValueHeader>{selectedFirstValue}</ValueHeader>
                         <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
                     </div>
                     <OptionItems options={firstValueOptions} />
                 </Grid>
-                <Grid item xs={2}>
-                    <Comparator>{comparatorObj.codeOperator}</Comparator>
+                <Grid item xs={3}>
+                    <Chip 
+                        label={comparatorObj.label}
+                        avatar={<Avatar>{comparatorObj.codeOperator}</Avatar>}
+                        // color="primary"
+                        variant='outlined'
+                    />
                 </Grid>
                 <Grid item xs={5}>
                     <div 
@@ -184,27 +191,3 @@ const OptionItem = ({label, value}) => {
         </div>
     );
 }
-
-const ValueHeader = styled.h3`
-    font-size: 16px;
-    font-weight: 500;
-    color: #222;
-`;
-
-const OptionValue = styled.h3`
-    font-size: 14px;
-    font-weight: 500;
-    color: #222;
-`;
-
-const OptionLabel = styled.h3`
-    font-size: 12px;
-    font-weight: 500;
-    color: #9D9D9D;
-`;
-
-const Comparator = styled.h3`
-    font-size: 30px;
-    color: ${primaryColor};
-    font-weight: 500;
-`;

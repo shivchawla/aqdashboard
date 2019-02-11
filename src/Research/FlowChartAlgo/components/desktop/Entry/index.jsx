@@ -143,8 +143,9 @@ export default class Entry extends React.Component {
                         xs={12} 
                         style={{
                             ...horizontalBox,
-                            justifyContent: 'flex-start',
-                            marginBottom: '5px'
+                            justifyContent: 'flex-end',
+                            marginBottom: '5px',
+                            marginTop: '-34px'
                         }}
                 >
                     {/* <SectionHeader>Entry Conditions</SectionHeader> */}
