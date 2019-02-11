@@ -19,7 +19,8 @@ export default class FirstRow extends React.Component {
     render() {
         const {
             index = 0,
-            toggleEditDialog
+            toggleEditDialog,
+            deleteCondition
         } = this.props;
         const conditionProp = _.get(this.props, 'condition', {});
         const comparator = _.get(conditionProp, 'comparator', comparators[0].value);
@@ -77,10 +78,17 @@ export default class FirstRow extends React.Component {
                         <ValueHeader>{selectedSecondValue}</ValueHeader>          
                         <OptionItems options={secondValueOptions} />             
                     </div>
-                    <ActionIcon 
-                        type='edit' 
-                        onClick={() => toggleEditDialog(index)} 
-                    />
+                    <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
+                        <ActionIcon 
+                            type='edit' 
+                            onClick={() => toggleEditDialog(index)} 
+                        />
+                        <ActionIcon 
+                            type='cancel'
+                            onClick={() => deleteCondition(index)}
+                            color='#ff5d5d'
+                        />
+                    </div>
                 </Grid>
             </Grid>
         

@@ -8,7 +8,6 @@ import {horizontalBox} from '../../../../../constants';
 import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
 import EditDialog from './EditDialog';
-import SectionHeader from '../common/SectionHeader';
 import {defaultFirstRowEntryCondition, defaultSecondRowEntryCondition} from '../../../constants';
 import {primaryColor} from '../../../../../constants';
 
@@ -91,6 +90,20 @@ export default class Exit extends React.Component {
         this.props.updateAlgo(modifiedScript);
     }
 
+    deleteCondition = (index = 0) => {
+        const {algo} = this.props;
+        const exitConditions = _.map(_.get(algo, 'exit', []), _.cloneDeep);
+        if (exitConditions.length === 0) {
+            return;
+        }
+        exitConditions.splice(index, 1);
+        const modifiedScript = {
+            ...algo,
+            exit: exitConditions
+        };
+        this.props.updateAlgo(modifiedScript);
+    }
+
     updateSelectedCondition = index => {
         this.setState({selectedCondition: index}, () => {
             this.toggleEditDialog();
@@ -109,7 +122,8 @@ export default class Exit extends React.Component {
             onFirstValueChange: this.onFirstValueChange,
             onSecondValueChange: this.onSecondValueChange,
             onConditionChange: this.onConditionChange,
-            toggleEditDialog: this.updateSelectedCondition
+            toggleEditDialog: this.updateSelectedCondition,
+            deleteCondition: this.deleteCondition
         };
 
         return (
@@ -135,7 +149,6 @@ export default class Exit extends React.Component {
                             marginBottom: '5px'
                         }}
                 >
-                    {/* <SectionHeader>Exit Conditions</SectionHeader> */}
                     <Button
                             onClick={this.addCondition}
                             style={{

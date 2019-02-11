@@ -86,6 +86,21 @@ export default class Entry extends React.Component {
         this.props.updateAlgo(modifiedScript);
     }
 
+    deleteCondition = (index = 0) => {
+        const {algo} = this.props;
+        const entryConditions = _.map(_.get(algo, 'entry', []), _.cloneDeep);
+
+        if (entryConditions.lengt === 0 || index === 0) {
+            return;
+        }
+        entryConditions.splice(index, 1);
+        const modifiedScript = {
+            ...algo,
+            entry: entryConditions
+        };
+        this.props.updateAlgo(modifiedScript);
+    }
+
     updateSelectedCondition = index => {
         this.setState({selectedCondition: index}, () => {
             this.toggleEditDialog();
@@ -104,7 +119,8 @@ export default class Entry extends React.Component {
             onFirstValueChange: this.onFirstValueChange,
             onSecondValueChange: this.onSecondValueChange,
             onConditionChange: this.onConditionChange,
-            toggleEditDialog: this.updateSelectedCondition
+            toggleEditDialog: this.updateSelectedCondition,
+            deleteCondition: this.deleteCondition
         };
 
         return (

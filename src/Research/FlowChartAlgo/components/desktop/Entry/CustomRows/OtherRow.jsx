@@ -51,7 +51,8 @@ export default class OtherRow extends React.Component {
         const {
             index = 0,
             toggleEditDialog,
-            onConditionChange
+            onConditionChange,
+            deleteCondition
         } = this.props;
         const conditionProp = _.get(this.props, 'condition', {});
         const condition = _.get(conditionProp, 'condition', conditionalOperators[0].value);
@@ -133,10 +134,22 @@ export default class OtherRow extends React.Component {
                         <ValueHeader>{selectedSecondValue}</ValueHeader>          
                         <OptionItems options={secondValueOptions} />             
                     </div>
-                    <ActionIcon 
-                        type='edit' 
-                        onClick={() => toggleEditDialog(index)} 
-                    />
+                    <div 
+                            style={{
+                                ...horizontalBox, 
+                                justifyContent: 'flex-end'
+                            }}
+                    >
+                        <ActionIcon 
+                            type='edit' 
+                            onClick={() => toggleEditDialog(index)} 
+                        />
+                        <ActionIcon 
+                            type='cancel'
+                            onClick={() => deleteCondition(index)}
+                            color='#ff5d5d'
+                        />
+                    </div>
                 </Grid>
             </Grid>
         
