@@ -21,6 +21,7 @@ import {withRouter} from 'react-router-dom';
 import NewStartegy from './../NewStrategy/NewStrategy.jsx';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import SnackbarComponent from '../../components/Alerts/SnackbarComponent';
+import FlowChartAlgo from '../FlowChartAlgo';
 import AceEditor from 'react-ace';
 import 'brace/theme/tomorrow_night_bright';
 import 'brace/mode/julia';
@@ -111,7 +112,8 @@ class StartegyDetail extends Component {
             snackbar: {
                 open: false,
                 message: ''
-            }
+            },
+            codeViewSelected: false
         };
 
         this.updateState = (data) => {
@@ -1365,18 +1367,24 @@ class StartegyDetail extends Component {
                     </div>
                 );
             } else {
-                return (
-                    <AceEditor
-                        mode="julia"
-                        theme="tomorrow_night_bright"
-                        name="UNIQUE_ID_OF_DIV"
-                        value={this.state.strategy.code}
-                        onChange={this.onCodeChange}
-                        width="100%"
-                        height="100%"
-                        editorProps={{ $blockScrolling: "Infinity" }}
-                    />
-                );
+                if (this.state.codeViewSelected) {
+                    return (
+                        <AceEditor
+                            mode="julia"
+                            theme="tomorrow_night_bright"
+                            name="UNIQUE_ID_OF_DIV"
+                            value={this.state.strategy.code}
+                            onChange={this.onCodeChange}
+                            width="100%"
+                            height="100%"
+                            editorProps={{ $blockScrolling: "Infinity" }}
+                        />
+                    );
+                } else {
+                    return (
+                        <FlowChartAlgo />
+                    );
+                }
             }
         }
 
