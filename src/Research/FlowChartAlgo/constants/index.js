@@ -116,9 +116,10 @@ export const algo = {
     },
     position: {
         type: buy,
-        quantity: 10
+        quantity: null
     },
     entry: [defaultFirstRowEntryCondition],
     exit: [],
-    exitConditions: [{buyValue: 0, sellValue: 0}]
+    exitConditions: [{buyValue: null, sellValue: null}],
+    name: 'My Strategy'
 };

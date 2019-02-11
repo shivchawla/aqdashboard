@@ -5,8 +5,6 @@ import Select from 'react-select';
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import styles from './styles';
 
@@ -41,11 +39,10 @@ class AutoComplete extends React.Component {
             }),
             control: base => ({
               ...base,
-              borderRadius: '4px',
+              // borderRadius: '4px',
               borderColor: '#EBEBEB',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
               textAlign: 'start',
-              padding: '7px 0px',
               paddingLeft: '4px',
             }),
             indicatorsContainer: base => ({
@@ -113,24 +110,6 @@ function NoOptionsMessage(props) {
     return <div ref={inputRef} {...props} />;
   }
   
-  function Control(props) {
-    return (
-      <TextField
-        fullWidth
-        InputProps={{
-          inputComponent,
-          inputProps: {
-            className: props.selectProps.classes.input,
-            inputRef: props.innerRef,
-            children: props.children,
-            ...props.innerProps,
-          },
-        }}
-        {...props.selectProps.textFieldProps}
-      />
-    );
-  }
-  
   function Option(props) {
     return (
       <MenuItem
@@ -159,26 +138,7 @@ function NoOptionsMessage(props) {
       </Typography>
     );
   }
-  
-  function SingleValue(props) {
-    return (
-      <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
-        {props.children}
-      </Typography>
-    );
-  }
-  
-  function ValueContainer(props) {
-    return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
-  }
-  
-  function Menu(props) {
-    return (
-      <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
-        {props.children}
-      </Paper>
-    );
-  }
+
   
   const components = {
     // Control,

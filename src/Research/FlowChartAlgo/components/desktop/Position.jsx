@@ -1,11 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import {verticalBox, horizontalBox} from '../../../../constants';
 import {buy, sell} from '../../constants';
 import {updateScript} from '../../utils';
 
@@ -39,41 +37,41 @@ export default class Position extends React.Component {
         return (
             <Grid 
                     container 
-                    spacing={24} 
                     alignItems='center'
                     style={{
-                        backgroundColor: '#eceff1',
-                        margin: '5px 0'
+                        boxSizing: 'border-box',
                     }}
             >
-                <Grid item xs={6}>
-                    <Select 
-                            value={selectedType} 
-                            label='Interval'
-                            onChange={this.onIntervalChange}
-                            style={{width: '100%'}}
-                    >
-                        <MenuItem 
-                                value={buy}
-                        >
-                            BUY
-                        </MenuItem>
-                        <MenuItem 
-                                value={sell}
-                        >
-                            SELL
-                        </MenuItem>
-                    </Select>
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        value={selectedQuantity}
-                        onChange={this.onQuantityChange}
-                        margin="dense"
-                        style={{width: '100%'}}
-                        placeholder="Quantity"
-                        type="number"
-                    />
+                <Grid item xs={12}>
+                    <Grid container>
+                        <Grid item xs={6} style={{padding: '6px'}}>
+                            <Select 
+                                    value={selectedType} 
+                                    label='Interval'
+                                    onChange={this.onIntervalChange}
+                                    style={{width: '100%'}}
+                            >
+                                <MenuItem value={buy}>
+                                    BUY
+                                </MenuItem>
+                                <MenuItem 
+                                        value={sell}
+                                >
+                                    SELL
+                                </MenuItem>
+                            </Select>
+                        </Grid>
+                        <Grid item xs={6} style={{padding: '6px', marginTop: '-5px'}}>
+                            <TextField
+                                value={selectedQuantity}
+                                onChange={this.onQuantityChange}
+                                margin="dense"
+                                style={{width: '100%'}}
+                                type="number"
+                                placeholder="Quantity"
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         );

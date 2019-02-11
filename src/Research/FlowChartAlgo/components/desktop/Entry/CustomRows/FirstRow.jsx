@@ -69,7 +69,8 @@ export default class FirstRow extends React.Component {
                         background: '#fff',
                         margin: '5px 0',
                         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-                        padding: '10px',
+                        padding: '5px 10px',
+                        borderRadius: '4px',
                         boxSizing: 'border-box',
                         marginBottom: '15px'
                     }}

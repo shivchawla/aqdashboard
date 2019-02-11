@@ -1,13 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
 import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
-import {horizontalBox} from '../../../../../constants';
+import {horizontalBox, primaryColor} from '../../../../../constants';
 import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
 import EditDialog from './EditDialog';
+import SectionHeader from '../common/SectionHeader';
 import {defaultSecondRowEntryCondition} from '../../../constants';
 
 export default class Entry extends React.Component {
@@ -111,8 +111,7 @@ export default class Entry extends React.Component {
             <Grid 
                     container 
                     style={{
-                        marginTop: '10px',
-                        padding: '20px',
+                        // padding: '0 20px',
                         boxSizing: 'border-box'
                     }}
             >
@@ -123,8 +122,28 @@ export default class Entry extends React.Component {
                     updateAlgo={this.props.updateAlgo}
                     selectedIndex={this.state.selectedCondition}
                 />
-                <Grid item xs={12} style={{marginBottom: '10px'}}>
-                    <SectionHeader>Entry Conditions</SectionHeader>
+                <Grid 
+                        item 
+                        xs={12} 
+                        style={{
+                            ...horizontalBox,
+                            justifyContent: 'flex-start',
+                            marginBottom: '5px'
+                        }}
+                >
+                    {/* <SectionHeader>Entry Conditions</SectionHeader> */}
+                    <Button
+                            onClick={this.addCondition}
+                            style={{
+                                borderLeft: `2px solid ${primaryColor}`,
+                                borderRadius: 0,
+                                backgroundColor: '#00000012'
+                            }}
+                            size="small"
+                    >
+                        Add Condition
+                        <Icon style={{marginLeft: '5px', color: primaryColor}}>add_circle</Icon>
+                    </Button>
                 </Grid>
                 <Grid item xs={12}>
                     {
@@ -149,26 +168,7 @@ export default class Entry extends React.Component {
                         })
                     }
                 </Grid>
-                <Grid 
-                        item 
-                        xs={12} 
-                        style={{
-                            ...horizontalBox,
-                            justifyContent: 'flex-end'
-                        }}
-                >
-                    <Button
-                            onClick={this.addCondition}
-                    >
-                        Add Condition
-                        <Icon style={{marginLeft: '5px'}}>add_circle</Icon>
-                    </Button>
-                </Grid>
             </Grid>
         );
     }
 }
-
-const SectionHeader = styled.h3`
-    font-size: 16px;
-`;

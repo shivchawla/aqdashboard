@@ -1,11 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 import _ from 'lodash';
 import classNames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
-import {horizontalBox} from '../../../../constants';
-import ActionIcon from '../../../../components/Buttons/ActionIcon';
+import SectionHeader from './common/SectionHeader';
 
 const styles = theme => ({
     textField: {
@@ -85,6 +85,7 @@ export default class ExitCondition extends React.Component {
                                     index={index}
                                     key={index}
                                     deleteCondition={this.deleteCondition}
+                                    modifyCondition={this.modifyCondition}
                                 />
                             );
                         })
@@ -125,30 +126,31 @@ class ExitConditionRowImpl extends React.Component {
     }
 
     render() {
-        const {condition, index, classes, deleteCondition} = this.props;
+        const {condition, index, classes, modifyCondition} = this.props;
 
         return (
             <Grid 
                     container 
                     key={index}
                     style={{
-                        backgroundColor: '#eceff1',
-                        margin: '5px 0',
-                        boxSizing: 'border-box'
+                        boxSizing: 'border-box',
+                        // padding: '0 20px',
                     }}
                     spacing={24}
             >
-                <Grid item xs={6}>
+                {/* <Grid item xs={12}>
+                    <SectionHeader>Stop/Target</SectionHeader>
+                </Grid> */}
+                <Grid item xs={6} style={{marginLeft: '-8px'}}>
                     <TextField
                         id={`filled-dense-${index}`}
                         ref={el => this.textField = el}
-                        label="LONG"
                         className={classNames(classes.textField, classes.dense)}
                         margin="dense"
-                        variant="filled"
                         value={condition.buyValue}
+                        placeholder="Exit"
                         onChange={e => {
-                            this.modifyCondition(index, 'buyValue', e.target.value);
+                            modifyCondition(index, 'buyValue', e.target.value);
                         }}
                         type="number"
                         onClick={this.openPopover}
@@ -157,13 +159,12 @@ class ExitConditionRowImpl extends React.Component {
                 <Grid item xs={6}>
                     <TextField
                         id="filled-dense"
-                        label="SHORT"
                         className={classNames(classes.textField, classes.dense)}
                         margin="dense"
-                        variant="filled"
+                        placeholder="Target"
                         value={condition.sellValue}
                         onChange={e => {
-                            this.modifyCondition(index, 'sellValue', e.target.value);
+                            modifyCondition(index, 'sellValue', e.target.value);
                         }}
                         type="number"
                     />

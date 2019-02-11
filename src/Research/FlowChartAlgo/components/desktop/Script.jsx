@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import {withRouter} from 'react-router-dom';
 import AutoComplete from '../../../../components/input/AutoComplete';
+import SectionHeader from './common/SectionHeader';
 import Utils from '../../../../Utils';
 import {intervals} from '../../constants';
 import {updateScript} from '../../utils';
@@ -89,8 +90,8 @@ class Script extends React.Component {
                     container 
                     spacing={24}
                     style={{
-                        backgroundColor: '#eceff1',
-                        margin: '5px 0'
+                        padding: '10px 5px',
+                        boxSizing: 'border-box',
                     }}
             >
                 <Grid 
@@ -98,7 +99,8 @@ class Script extends React.Component {
                         style={{
                             ...verticalBox,
                              alignItems: 'flex-start',
-                             width: '100%'
+                             width: '100%',
+                             padding: '6px'
                         }}
                 >
                     <AutoComplete 
@@ -124,7 +126,13 @@ class Script extends React.Component {
                         }
                     </div>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid 
+                        item 
+                        xs={6}
+                        style={{
+                            padding: '6px'
+                        }}
+                >
                     <Select 
                             value={selectedInterval} 
                             placeholder='Interval'

@@ -121,7 +121,7 @@ export default class EditDialog extends React.Component {
                     }}
                     maxWidth='xl'
             >
-                <Grid container>
+                <Grid container alignItems="flex-start">
                     <Grid 
                             item 
                             xs={4}

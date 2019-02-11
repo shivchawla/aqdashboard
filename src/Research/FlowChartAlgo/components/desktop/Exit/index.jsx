@@ -8,7 +8,9 @@ import {horizontalBox} from '../../../../../constants';
 import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
 import EditDialog from './EditDialog';
+import SectionHeader from '../common/SectionHeader';
 import {defaultFirstRowEntryCondition, defaultSecondRowEntryCondition} from '../../../constants';
+import {primaryColor} from '../../../../../constants';
 
 export default class Exit extends React.Component {
     constructor(props) {
@@ -114,8 +116,7 @@ export default class Exit extends React.Component {
             <Grid 
                     container 
                     style={{
-                        marginTop: '10px',
-                        padding: '20px',
+                        // padding: '0 20px',
                         boxSizing: 'border-box'
                     }}
             >
@@ -126,8 +127,27 @@ export default class Exit extends React.Component {
                     updateAlgo={this.props.updateAlgo}
                     selectedIndex={this.state.selectedCondition}
                 />
-                <Grid item xs={12} style={{marginBottom: '10px'}}>
-                    <SectionHeader>Exit Conditions</SectionHeader>
+                <Grid 
+                        item xs={12} 
+                        style={{
+                            ...horizontalBox, 
+                            justifyContent: 'flex-start',
+                            marginBottom: '5px'
+                        }}
+                >
+                    {/* <SectionHeader>Exit Conditions</SectionHeader> */}
+                    <Button
+                            onClick={this.addCondition}
+                            style={{
+                                borderLeft: `2px solid ${primaryColor}`,
+                                borderRadius: 0,
+                                backgroundColor: '#00000012'
+                            }}
+                            size="small"
+                    >
+                        Add Condition
+                        <Icon style={{marginLeft: '5px', color: primaryColor}}>add_circle</Icon>
+                    </Button>
                 </Grid>
                 <Grid item xs={12}>
                     {
@@ -152,26 +172,7 @@ export default class Exit extends React.Component {
                         })
                     }
                 </Grid>
-                <Grid 
-                        item 
-                        xs={12} 
-                        style={{
-                            ...horizontalBox,
-                            justifyContent: 'flex-end'
-                        }}
-                >
-                    <Button
-                            onClick={this.addCondition}
-                    >
-                        Add Condition
-                        <Icon style={{marginLeft: '5px'}}>add_circle</Icon>
-                    </Button>
-                </Grid>
             </Grid>
         );
     }
 }
-
-const SectionHeader = styled.h3`
-    font-size: 16px;
-`;
