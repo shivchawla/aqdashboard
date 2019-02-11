@@ -7,12 +7,10 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import IndicatorLabel from '../../common/IndicatorLabel';
 import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
 import {comparators, conditionalOperators} from '../../../../constants';
-import {horizontalBox, verticalBox} from '../../../../../../constants';
+import {horizontalBox, verticalBox, primaryColor} from '../../../../../../constants';
 
 export default class OtherRow extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -68,6 +66,9 @@ export default class OtherRow extends React.Component {
         const selectedFirstValue = _.get(firstValue, 'key', '').toUpperCase();
         const selectedSecondValue = _.get(secondValue, 'key', '').toUpperCase();
 
+        const selectedFirstValueLabel = _.get(firstValue, 'label', '');
+        const selectedSecondValueLabel = _.get(secondValue, 'label', '');
+
         const firstValueOptions = _.get(firstValue, 'options', []);
         const secondValueOptions = _.get(secondValue, 'options', []);
 
@@ -85,71 +86,63 @@ export default class OtherRow extends React.Component {
                         marginBottom: '15px'
                     }}
             >
-                <Grid 
-                        item 
-                        xs={4}
-                        style={{...horizontalBox, justifyContent: 'flex-start'}}
-                >
-                    <Select
-                            value={condition}
-                            label='Condition'
-                            onChange={e => onConditionChange(e.target.value, index)}
-                    >
-                        {
-                            conditionalOperators.map((comparator, index) => (
-                                <MenuItem
-                                        value={comparator.value}
-                                >
-                                    {comparator.label}
-                                </MenuItem>
-                            ))
-                        }
-                    </Select>
-                    <div 
-                            style={{
-                                ...verticalBox, 
-                                alignItems: 'flex-start',
-                                marginLeft: '15px'
-                            }}
-                    >
+                <Grid item xs={5}>
+                    <div style={{...verticalBox, alignItems: 'flex=start'}}>
                         <ValueHeader>{selectedFirstValue}</ValueHeader>
-                        <OptionItems options={firstValueOptions} />                    
+                        <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
                     </div>
+                    <OptionItems options={firstValueOptions} />
                 </Grid>
-                <Grid item xs={4}>
-                    <Chip 
-                        label={comparatorObj.label}
-                        color="primary"
-                    />
+                <Grid item xs={2}>
+                    <Comparator>{comparatorObj.codeOperator}</Comparator>
                 </Grid>
-                <Grid 
-                        item 
-                        xs={4}
-                        style={{
-                            ...horizontalBox,
-                            justifyContent: 'space-between'
-                        }}
-                >
-                    <div style={{...verticalBox, alignItems: 'flex-start'}}>
-                        <ValueHeader>{selectedSecondValue}</ValueHeader>          
-                        <OptionItems options={secondValueOptions} />             
-                    </div>
+                <Grid item xs={5}>
                     <div 
                             style={{
                                 ...horizontalBox, 
-                                justifyContent: 'flex-end'
+                                justifyContent: 'space-between',
+                                width: '100%'
                             }}
                     >
-                        <ActionIcon 
-                            type='edit' 
-                            onClick={() => toggleEditDialog(index)} 
-                        />
-                        <ActionIcon 
-                            type='cancel'
-                            onClick={() => deleteCondition(index)}
-                            color='#ff5d5d'
-                        />
+                        <div 
+                                style={{
+                                    ...verticalBox, 
+                                    alignItems: 'flex-start',
+                                    width: '100%'
+                                }}
+                        >
+                            <div 
+                                    style={{
+                                        ...horizontalBox, 
+                                        justifyContent: 'space-between', 
+                                        width: '100%',
+                                        position: 'relative'
+                                    }}
+                            >
+                                <ValueHeader>{selectedSecondValue}</ValueHeader>   
+                                <div 
+                                        style={{
+                                            ...horizontalBox, 
+                                            justifyContent: 'flex-end',
+                                            position: 'absolute',
+                                            right: 0
+                                        }}
+                                >
+                                    <ActionIcon 
+                                        type='edit' 
+                                        onClick={() => toggleEditDialog(index)} 
+                                    />
+                                    <ActionIcon 
+                                        type='cancel'
+                                        onClick={() => deleteCondition(index)}
+                                        color='#ff5d5d'
+                                    />
+                                </div>                         
+                            </div>
+                            <IndicatorLabel>{selectedSecondValueLabel}</IndicatorLabel>
+                        </div>
                     </div>
+                    <OptionItems options={secondValueOptions} />
                 </Grid>
             </Grid>
         
@@ -192,12 +185,6 @@ const OptionItem = ({label, value}) => {
     );
 }
 
-const SMAHEader = styled.h3`
-    font-size: 16px;
-    font-weight: 500;
-    color: #222;
-`;
-
 const ValueHeader = styled.h3`
     font-size: 16px;
     font-weight: 500;
@@ -207,11 +194,17 @@ const ValueHeader = styled.h3`
 const OptionValue = styled.h3`
     font-size: 14px;
     font-weight: 500;
-    color: #737373;
+    color: #222;
 `;
 
 const OptionLabel = styled.h3`
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: #9D9D9D;
+`;
+
+const Comparator = styled.h3`
+    font-size: 30px;
+    color: ${primaryColor};
+    font-weight: 500;
 `;

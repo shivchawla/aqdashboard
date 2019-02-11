@@ -32,6 +32,7 @@ export default class EditDialog extends React.Component {
             label: option.label
         }));
         exit[selectedIndex][type] = {
+            label: indicators[key].label,
             key,
             options
         }

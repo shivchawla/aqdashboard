@@ -44,7 +44,7 @@ export default class Position extends React.Component {
             >
                 <Grid item xs={12}>
                     <Grid container>
-                        <Grid item xs={6} style={{padding: '6px'}}>
+                        <Grid item xs={3} style={{padding: '6px'}}>
                             <Select 
                                     value={selectedType} 
                                     label='Interval'
@@ -61,7 +61,7 @@ export default class Position extends React.Component {
                                 </MenuItem>
                             </Select>
                         </Grid>
-                        <Grid item xs={6} style={{padding: '6px', marginTop: '-5px'}}>
+                        <Grid item xs={9} style={{padding: '6px', marginTop: '-5px'}}>
                             <TextField
                                 value={selectedQuantity}
                                 onChange={this.onQuantityChange}

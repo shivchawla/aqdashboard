@@ -141,7 +141,7 @@ class ExitConditionRowImpl extends React.Component {
                 {/* <Grid item xs={12}>
                     <SectionHeader>Stop/Target</SectionHeader>
                 </Grid> */}
-                <Grid item xs={6} style={{marginLeft: '-8px'}}>
+                <Grid item xs={12} style={{marginLeft: '-8px'}}>
                     <TextField
                         id={`filled-dense-${index}`}
                         ref={el => this.textField = el}
@@ -156,7 +156,7 @@ class ExitConditionRowImpl extends React.Component {
                         onClick={this.openPopover}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <TextField
                         id="filled-dense"
                         className={classNames(classes.textField, classes.dense)}

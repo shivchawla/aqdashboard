@@ -55,6 +55,8 @@ export default class FlowChartAlgo extends React.Component {
                             backgroundColor: '#f5faff',
                             borderRadius: '4px'
                         }}
+                        alignItems="flex-start"
+                        spacing={24}
                 >
                     {/* <Grid 
                             item 
