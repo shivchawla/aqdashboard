@@ -57,6 +57,7 @@ export default class RadioGroup extends React.Component {
                                 fontSize={this.props.fontSize || '14px'}
                                 disabled={disabled}
                                 small={small}
+                                hideLabel={true}
                             />
                         );
                     })

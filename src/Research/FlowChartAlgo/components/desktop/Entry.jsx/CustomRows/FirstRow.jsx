@@ -2,23 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-import Popover from '@material-ui/core/Popover';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
 import {comparators} from '../../../../constants';
-import {horizontalBox} from '../../../../../../constants';
+import {horizontalBox, verticalBox} from '../../../../../../constants';
 
 export default class FirstRow extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            fristValueAnchorEl: null,
-            secondValueAnchorEl: null
-        }
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         if (!_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState)) {
             return true;
@@ -53,132 +42,106 @@ export default class FirstRow extends React.Component {
 
     render() {
         const {
-            onComparatorChange,
-            onFirstValueChange,
-            onSecondValueChange,
-            index = 0
+            index = 0,
+            toggleEditDialog
         } = this.props;
         const conditionProp = _.get(this.props, 'condition', {});
         const comparator = _.get(conditionProp, 'comparator', comparators[0].value);
-        const firstValue = _.get(conditionProp, 'firstValue', 0);
-        const secondValue = _.get(conditionProp, 'secondValue', 0);
+        const comparatorObjIndex = _.findIndex(comparators, comparatorItem => comparatorItem.value === comparator);
+        const comparatorObj = comparatorObjIndex > -1
+                ? comparators[comparatorObjIndex]
+                : comparators[0];
 
-        const {fristValueAnchorEl, secondValueAnchorEl} = this.state;
-        const firstValueOpen = Boolean(fristValueAnchorEl);
-        const secondValueOpen = Boolean(secondValueAnchorEl);
+        const firstValue = _.get(conditionProp, 'firstValue', {});
+        const secondValue = _.get(conditionProp, 'secondValue', {});
+
+        const selectedFirstValue = _.get(firstValue, 'key', '').toUpperCase();
+        const selectedSecondValue = _.get(secondValue, 'key', '').toUpperCase();
+
+        const firstValueOptions = _.get(firstValue, 'options', []);
+        const secondValueOptions = _.get(secondValue, 'options', []);
 
         return (
             <Grid 
                     container 
                     alignItems="center"
                     style={{
-                        backgroundColor: '#eceff1',
-                        margin: '5px 0'
+                        backgroundColor: '#f9f9f9',
+                        margin: '5px 0',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+                        padding: '10px',
+                        boxSizing: 'border-box'
                     }}
             >
+                <Grid 
+                        item 
+                        xs={4}
+                        style={{...verticalBox, alignItems: 'flex-start'}}
+                >
+                    <ValueHeader>{selectedFirstValue}</ValueHeader>
+                    <OptionItems options={firstValueOptions} />
+                </Grid>
                 <Grid item xs={4}>
-                    <Popover
-                            open={firstValueOpen}
-                            anchorEl={fristValueAnchorEl}
-                            onClose={this.firstClosePopover}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                    >
-                        <SMAContent 
-                            value={firstValue}
-                            onChange={onFirstValueChange}
-                            index={index}
-                            closePopOver={this.firstClosePopover}
-                        />
-                    </Popover>
-                    <TextField
-                        id="standard-name"
-                        label="SMA"
-                        value={firstValue}
-                        margin='dense'
-                        onClick={this.firstOpenPopover}
+                    <Chip 
+                        label={comparatorObj.label}
+                        color="primary"
                     />
                 </Grid>
-                <Grid item xs={4}>
-                    <Select
-                            value={comparator}
-                            label='Comparator'
-                            onChange={e => onComparatorChange(e.target.value, index)}
-                            style={{width: '100%'}}
-                    >
-                        {
-                            comparators.map((comparator, index) => (
-                                <MenuItem
-                                        value={comparator.value}
-                                >
-                                    {comparator.label}
-                                </MenuItem>
-                            ))
-                        }
-                    </Select>
-                </Grid>
-                <Grid item xs={4}>
-                    <Popover
-                            open={secondValueOpen}
-                            anchorEl={secondValueAnchorEl}
-                            onClose={this.secondClosePopover}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                    >
-                        <SMAContent 
-                            value={secondValue}
-                            onChange={onSecondValueChange}
-                            index={index}
-                            closePopOver={this.secondClosePopover}
-                        />
-                    </Popover>
-                    <TextField
-                        id="standard-name"
-                        label="SMA"
-                        value={secondValue}
-                        margin='dense'
-                        onClick={this.secondOpenPopover}
+                <Grid 
+                        item 
+                        xs={4}
+                        style={{
+                            ...horizontalBox,
+                            justifyContent: 'space-between'
+                        }}
+                >
+                    <div style={{...verticalBox, alignItems: 'flex-start'}}>
+                        <ValueHeader>{selectedSecondValue}</ValueHeader>          
+                        <OptionItems options={secondValueOptions} />             
+                    </div>
+                    <ActionIcon 
+                        type='edit' 
+                        onClick={() => toggleEditDialog(index)} 
                     />
                 </Grid>
             </Grid>
+        
         );
     }
 }
 
-const SMAContent = props => {
-    const {value, onChange, index = null, closePopOver} = props;
-
+const OptionItems = ({options}) => {
     return (
-        <Grid container style={{padding: '20px'}}>
-            <Grid item xs={12}>
-                <SMAHEader>SMA</SMAHEader>
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Period"
-                    value={value}
-                    onChange={e => onChange(e.target.value, index)}
-                    margin="dense"
-                    style={{width: '100%'}}
-                    type="number"
-                />
-            </Grid>
-            <Grid item xs={12} style={{...horizontalBox, justifyContent: 'space-between'}}>
-                <Button onClick={closePopOver}>OK</Button>
-            </Grid>
-        </Grid>
+        <div 
+                style={{
+                    ...horizontalBox, 
+                    justifyContent: 'flex-start',
+                }}
+        >
+            {
+                options.map((optionItem, index) => 
+                    <OptionItem 
+                        key={index} 
+                        {...optionItem} 
+                    />
+                )
+            }
+        </div>
+    );
+}
+
+const OptionItem = ({label, value}) => {
+    return (
+        <div 
+                style={{
+                    ...verticalBox, 
+                    alignItems: 'flex-start',
+                    marginRight: '15px'
+                }}
+        >
+            <OptionValue>{value}</OptionValue>
+            <OptionLabel>{label}</OptionLabel>
+        </div>
     );
 }
 
@@ -186,4 +149,22 @@ const SMAHEader = styled.h3`
     font-size: 16px;
     font-weight: 500;
     color: #222;
+`;
+
+const ValueHeader = styled.h3`
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+`;
+
+const OptionValue = styled.h3`
+    font-size: 14px;
+    font-weight: 500;
+    color: #737373;
+`;
+
+const OptionLabel = styled.h3`
+    font-size: 14px;
+    font-weight: 500;
+    color: #9D9D9D;
 `;

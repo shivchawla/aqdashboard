@@ -5,9 +5,18 @@ import {horizontalBox} from '../../../../../constants';
 import ActionIcon from '../../../../../components/Buttons/ActionIcon';
 import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
+import EditDialog from './EditDialog';
 import {comparators, conditionalOperators} from '../../../constants';
 
 export default class Entry extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            editDialogOpen: false,
+            selectedCondition: 0
+        };
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (!_.isEqual(_.get(this.props, 'algo.entry', {}), _.get(nextProps, 'algo.entry', {})) 
                 || !_.isEqual(this.state, nextState)) {
@@ -80,12 +89,29 @@ export default class Entry extends React.Component {
         this.props.updateAlgo(modifiedScript);
     }
 
+    updateSelectedCondition = index => {
+        this.setState({selectedCondition: index}, () => {
+            this.toggleEditDialog();
+        })
+    }
+
+    toggleEditDialog = () => {
+        this.setState({editDialogOpen: !this.state.editDialogOpen});
+    }
+
     render() {
         const {algo} = this.props;
         const conditions = _.get(algo, 'entry', []);
 
         return (
             <Grid container>
+                <EditDialog 
+                    open={this.state.editDialogOpen}
+                    onClose={this.toggleEditDialog}
+                    algo={algo}
+                    updateAlgo={this.props.updateAlgo}
+                    selectedIndex={this.state.selectedCondition}
+                />
                 {
                     conditions.map((condition, index) => {
                         if (index === 0) {
@@ -97,6 +123,7 @@ export default class Entry extends React.Component {
                                     onFirstValueChange={this.onFirstValueChange}
                                     onSecondValueChange={this.onSecondValueChange}
                                     onConditionChange={this.onConditionChange}
+                                    toggleEditDialog={this.updateSelectedCondition}
                                 />
                             );
                         } else {
@@ -108,6 +135,7 @@ export default class Entry extends React.Component {
                                     onFirstValueChange={this.onFirstValueChange}
                                     onSecondValueChange={this.onSecondValueChange}
                                     onConditionChange={this.onConditionChange}
+                                    toggleEditDialog={this.updateSelectedCondition}
                                 />
                             );
                         }

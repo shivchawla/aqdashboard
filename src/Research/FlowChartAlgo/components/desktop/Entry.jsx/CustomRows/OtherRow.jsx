@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
 import {comparators, conditionalOperators} from '../../../../constants';
 import {horizontalBox} from '../../../../../../constants';
 
@@ -57,7 +58,8 @@ export default class SecondRow extends React.Component {
             onComparatorChange,
             onFirstValueChange,
             onSecondValueChange,
-            index = 0
+            index = 0,
+            toggleEditDialog
         } = this.props;
         const conditionProp = _.get(this.props, 'condition', {});
         const comparator = _.get(conditionProp, 'comparator', comparators[0].value);
@@ -164,6 +166,10 @@ export default class SecondRow extends React.Component {
                         value={secondValue}
                         margin='dense'
                         onClick={this.secondOpenPopover}
+                    />
+                    <ActionIcon 
+                        type='edit' 
+                        onClick={() => toggleEditDialog(index)} 
                     />
                 </Grid>
             </Grid>

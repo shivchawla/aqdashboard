@@ -18,7 +18,6 @@ export default class FlowChartAlgo extends React.Component {
     updateAlgo = modifiedAlgo => {
         this.setState({algo: modifiedAlgo});
         const parsedObjectCode = parseObjectToCode(modifiedAlgo);
-        console.log(parsedObjectCode);
     }
 
     render() {

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const buy = 'BUY';
 export const sell = 'SELL';
 
@@ -30,6 +32,56 @@ export const conditionalOperators = [
     {label: 'OR', value: 'or', codeOperator: '||'}
 ];
 
+export const indicators = {
+    sma: {
+        label: 'Simle Moving Average',
+        options: [
+            {key: 'period', label: 'Period', value: 10, options: [10, 20, 30, 40, 50]}
+        ]
+    },
+    ema: {
+        label: 'Exponential Moving Average',
+        options: [
+            {key: 'period', label: 'Period', value: 10, options: [10, 20, 30, 40, 50]}
+        ]
+    },
+    macd: {
+        label: 'Moving Average Convergence Divergence ',
+        options: [
+            {key: 'fastPeriod', label: 'Fast Period', value: 10, options: [10, 20, 30, 40, 50]},
+            {key: 'slowPeriod', label: 'Slow Period', value: 10, options: [10, 20, 30, 40, 50]},
+            {key: 'weirdPeriod', label: 'Weird Period', value: 10, options: [10, 20, 30, 40, 50]}
+        ]
+    },
+    rsi: {
+        label: 'Relative Strength Index',
+        options: [
+            {key: 'period', label: 'Period', value: 10, options: [10, 20, 30, 40, 50]},
+            {key: 'close', label: 'Close', value: 10, options: [10, 20, 30, 40, 50]}
+        ]
+    },
+    obv: {
+        label: 'On Balance Volume',
+        options: [
+            {key: 'volume', label: 'Volume', value: 10, options: [10, 20, 30, 40, 50]},
+            {key: 'close', label: 'Close', value: 10, options: [10, 20, 30, 40, 50]}
+        ]
+    }
+}
+
+export const getIndicatorValue = (itemKey, key, valueIndex) => {
+    const options = _.get(indicators, `${itemKey}.options`, []);
+    const selectedOptionIndex = _.findIndex(options, option => option.key === key);
+
+    if (selectedOptionIndex > -1) {
+        const value = options[selectedOptionIndex].options[valueIndex];
+
+        return value;
+    } else {
+        return null;
+    }
+}
+
 // This wil change 
 export const algo = {
     script: {
@@ -41,44 +93,18 @@ export const algo = {
         quantity: 10
     },
     entry: [
-        {condition: null, firstValue: 0, comparator: comparators[0].value, secondValue: 0}
+        {
+            condition: null, 
+            firstValue: {
+                key: 'sma',
+                options: [{key: 'period', value: 10, label: 'Period'}]
+            },
+            comparator: comparators[0].value, 
+            secondValue: {
+                key: 'sma',
+                options: [{key: 'period', value: 10, label: 'Period'}]
+            }
+        }
     ],
     exitConditions: [{buyValue: 0, sellValue: 0}]
 };
-
-export const indicators = {
-    sma: {
-        label: 'SMA',
-        options: [
-            {key: 'period', label: 'Period', value: 0}
-        ]
-    },
-    ema: {
-        label: 'EMA',
-        options: [
-            {key: 'period', label: 'Period', value: 0}
-        ]
-    },
-    macd: {
-        label: 'MACD',
-        options: [
-            {key: 'fastPeriod', label: 'Fast Period', value: 0},
-            {key: 'slowPeriod', label: 'Slow Period', value: 0},
-            {key: 'slowPeriod', label: 'Slow Period', value: 0}
-        ]
-    },
-    rsi: {
-        label: 'Relative Strength Index',
-        options: [
-            {key: 'period', label: 'Period', value: 0},
-            {key: 'close', label: 'Close', value: 0}
-        ]
-    },
-    obv: {
-        label: 'On Balance Volume',
-        options: [
-            {key: 'volume', label: 'Volume', value: 0},
-            {key: 'close', label: 'Close', value: 0}
-        ]
-    }
-}

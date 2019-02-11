@@ -13,7 +13,6 @@ export const getInitializeMethodString = (codeObj) => {
     const script = _.get(codeObj, 'script', {});
     const instruments = _.get(script, 'instruments', []);
     const setUniverseString = setUniverse(instruments);
-    console.log(setUniverseString);
 
     const methodString = `function initialize(state)
     ${setUniverseString}
@@ -41,7 +40,6 @@ export const getLongEntryMethodString = (codeObj) => {
     return ${parsedString}
 end
     `;
-    console.log(methodString);
 
     return methodString;
 }
