@@ -76,11 +76,11 @@ export const getIndicatorValue = (itemKey, key, valueIndex) => {
     const selectedOptionIndex = _.findIndex(options, option => option.key === key);
 
     if (selectedOptionIndex > -1) {
-        const value = options[selectedOptionIndex].options[valueIndex];
+        const value = options[selectedOptionIndex].options[valueIndex] || valueIndex;
 
         return value;
     } else {
-        return null;
+        return valueIndex;
     }
 }
 

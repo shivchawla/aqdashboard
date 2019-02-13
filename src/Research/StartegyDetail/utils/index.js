@@ -59,7 +59,7 @@ export const constructLogic = (conditions = []) => {
         }
     });
     logic = logic.join(' ');
-    console.log(logic);
+
     return logic;
 }
 

@@ -2,7 +2,6 @@ import _ from 'lodash';
 import {comparators, conditionalOperators} from '../constants';
 
 export const parseObjectToCode = codeObj => {
-    console.log(codeObj);
     const type = _.get(codeObj, 'position.type', 'BUY');
     return `# © AIMSQUANT PVT. LTD.
 

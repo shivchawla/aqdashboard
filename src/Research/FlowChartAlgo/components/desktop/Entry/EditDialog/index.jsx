@@ -62,11 +62,11 @@ export default class EditDialog extends React.Component {
     checkIfCustomValue = (options, targetValue) => {
         const targetValueIndex = _.findIndex(options, option => option === targetValue);
 
-        return targetValueIndex > -1;
+        return targetValueIndex === -1;
     }
 
-    onOptionsRadioChanged = (itemKey, key, value, type = 'firstValue') => {
-        const selectedValue = getIndicatorValue(itemKey, key, value);
+    onOptionsRadioChanged = (itemKey, key, value, type = 'firstValue', custom = false) => {
+        const selectedValue = custom ? value : getIndicatorValue(itemKey, key, value);
         const selectedIndex = _.get(this.props, 'selectedIndex', 0);
         const algo = _.get(this.props, 'algo', {});
         const entry = _.map(algo.entry, _.cloneDeep);
@@ -155,9 +155,9 @@ export default class EditDialog extends React.Component {
                                         key={index}
                                         items={this.processRadioGroupOptions(optionItem.options)}
                                         hideLabel={true}
-                                        checkIfCustom={target => this.checkIfCustomValue(target, firstOptions)}
+                                        checkIfCustom={target => this.checkIfCustomValue(optionItem.options, target)}
                                         showSlider={true}
-                                        onChange={value => {this.onOptionsRadioChanged(firstValueSelectedOption, optionItem.key, value, 'firstValue')}}
+                                        onChange={(value, custom = false) => {this.onOptionsRadioChanged(firstValueSelectedOption, optionItem.key, value, 'firstValue', custom)}}
                                     />
                                 ))
                             }                        
@@ -204,10 +204,10 @@ export default class EditDialog extends React.Component {
                                         key={index}
                                         items={this.processRadioGroupOptions(optionItem.options)}
                                         hideLabel={true}
-                                        checkIfCustom={target => this.checkIfCustomValue(target, secondOptions)}
+                                        checkIfCustom={target => this.checkIfCustomValue(optionItem.options, target)}
                                         label={optionItem.label}
                                         showSlider={true}
-                                        onChange={value => {this.onOptionsRadioChanged(secondValueSelectedOption, optionItem.key, value, 'secondValue')}}
+                                        onChange={(value, custom = false) => {this.onOptionsRadioChanged(secondValueSelectedOption, optionItem.key, value, 'secondValue', custom)}}
                                     />
                                 ))
                             }                        
