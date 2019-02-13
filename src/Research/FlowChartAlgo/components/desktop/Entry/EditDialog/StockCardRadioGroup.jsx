@@ -64,14 +64,14 @@ class StockCardRadioGroup extends React.Component {
 
     handleTextChange = (e) => {
         const value = e.target.value;
-        if (Number(value) >=0 && Number(value) <= 30) {
+        // if (Number(value) >=0 && Number(value) <= 30) {
             this.setState({sliderValue: value});
             const requiredValue = value.length === 0 ? null : Number(value);
             clearTimeout(sliderInputTimeout);
             sliderInputTimeout = setTimeout(() => {
                 this.props.onChange && this.props.onChange(requiredValue, false);
             }, 300);
-        } else {}
+        // } else {}
     }
 
     render() {
