@@ -1814,12 +1814,14 @@ class StartegyDetail extends Component {
                             </Grid>
                         </Grid>
                         <div style={{
-                            'height': 'calc(100% - 50px)', 'display': 'flex',
+                            'height': 'calc(100% - 63px)', 'display': 'flex',
                             'padding': '5px'
                         }}>
                             <div 
                                     style={{ 
-                                        'height': '100%', 
+                                        height: '100%', 
+                                        overflow: 'hidden',
+                                        overflowY: 'scroll',
                                         'flex': '1', 
                                         'minWidth': '0px',
                                         position: 'relative'
@@ -1921,7 +1923,7 @@ class StartegyDetail extends Component {
                     handleClose={this.closeSnackbar}
                     position='top'
                 />
-                <div style={{ 'width': '100%', 'height': 'calc(100vh - 50px)' }}>
+                <div style={{ 'width': '100%', 'height': 'calc(100vh - 65px)' }}>
                     {getStrategyDiv()}
                 </div>
             </AqLayoutDesktop>
