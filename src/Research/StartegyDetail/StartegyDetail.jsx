@@ -1814,8 +1814,10 @@ class StartegyDetail extends Component {
                             </Grid>
                         </Grid>
                         <div style={{
-                            'height': 'calc(100% - 63px)', 'display': 'flex',
-                            'padding': '5px'
+                            height: 'calc(100% - 63px)', 
+                            display: 'flex',
+                            padding: '5px',
+                            boxSizing: 'border-box'
                         }}>
                             <div 
                                     style={{ 
