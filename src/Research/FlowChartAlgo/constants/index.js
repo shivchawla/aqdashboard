@@ -36,7 +36,7 @@ export const conditionalOperators = [
 
 export const indicators = {
     sma: {
-        label: 'Simle Moving Average',
+        label: 'Simple Moving Average',
         options: [
             {key: 'horizon', label: 'Horizon', value: 10, options: [10, 20, 30, 40, 50]}
         ]
