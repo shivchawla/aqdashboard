@@ -5,7 +5,6 @@ import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import MomentUtils from '@date-io/moment';
 import Research from './Research/Research';
-import SampleTable from './samples/TableSample';
 import StrategyDetail from './Research/StartegyDetail/StartegyDetail';
 import StrategyBacktests from './Research/StrategyBacktests/StrategyBacktests';
 import BacktestDetail from './Research/BacktestDetail/BacktestDetail';
@@ -39,7 +38,6 @@ class App extends Component {
 				<div className="App">
 					<Switch>
 						<Route exact={true} path='/research' component={Research} />
-						<Route exact={true} path='/table' component={SampleTable} />
 						<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
 						<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
 						<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
