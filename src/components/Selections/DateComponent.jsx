@@ -29,8 +29,8 @@ class DateComponent extends React.Component {
         const date = type === 'daily' 
             ? moment(DateHelper.getPreviousNonHolidayWeekday(this.state.selectedDate.toDate()))
             : moment(DateHelper.getEndOfLastWeek(this.state.selectedDate.toDate()));
-        window.history.pushState("", "AdviceQube: Daily Trading Contest", this.constructUrlDate(date));
-        this.props.history.push(this.constructUrlDate(date));
+        // window.history.pushState("", "AdviceQube: Daily Trading Contest", this.constructUrlDate(date));
+        // this.props.history.push(this.constructUrlDate(date));
         this.setState({selectedDate: date}, () => this.onDateChange());
     }
 
@@ -44,8 +44,8 @@ class DateComponent extends React.Component {
             ? moment(DateHelper.getNextNonHolidayWeekday(this.state.selectedDate.toDate()))
             : moment(DateHelper.getNextEndOfWeek(this.state.selectedDate.toDate()));
         if (!this.isFutureDate(date)) {
-            window.history.pushState("", "AdviceQube: Daily Trading Contest", this.constructUrlDate(date));
-            this.props.history.push(this.constructUrlDate(date));
+            // window.history.pushState("", "AdviceQube: Daily Trading Contest", this.constructUrlDate(date));
+            // this.props.history.push(this.constructUrlDate(date));
             this.setState({selectedDate: date}, () => this.onDateChange());
             
         }
@@ -120,7 +120,7 @@ class DateComponent extends React.Component {
     }
 
     renderNormalView = () => {
-        const {color = '#fff'} = this.props;
+        const {color = '#fff', format = 'DD MMM'} = this.props;
         const { selectedDate } = this.state;
         const disabled = _.get(this.props, 'type', 'daily') === 'overall' ? true : false;
 
@@ -131,6 +131,7 @@ class DateComponent extends React.Component {
                 </Grid>
                 <Grid item xs={8} style={{...horizontalBox, justifyContent: 'center'}}>
                     <DatePicker
+                        format={format}
                         value={selectedDate}
                         onChange={this.handleDateChange}
                         shouldDisableDate={this.disabledDate}
