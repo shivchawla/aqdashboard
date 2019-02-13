@@ -7,6 +7,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import Slide from '@material-ui/core/Slide';
 import {withStyles} from '@material-ui/core/styles';
+import ActionIcon from '../Buttons/ActionIcon';
+import { horizontalBox } from '../../constants';
 
 const dialogStyles = theme => ({
     root: {
@@ -53,10 +55,18 @@ class DialogComponent extends React.Component {
                     onEscapeKeyDown={this.props.onClose}
                     maxWidth={maxWidth}
             >
-                {
-                    title &&
-                    <DialogTitle>{title}</DialogTitle>
-                }
+                <div 
+                        style={{
+                            ...horizontalBox,
+                            justifyContent: 'space-between',
+                        }}
+                >
+                    {
+                        title &&
+                        <DialogTitle>{title}</DialogTitle>
+                    }
+                    <ActionIcon size={24} onClick={this.props.onClose} type='close'/>
+                </div>
                 <DialogContent style={this.props.style}>
                     {this.props.children}
                 </DialogContent>
