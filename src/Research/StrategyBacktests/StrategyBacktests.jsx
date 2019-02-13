@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import Utils from './../../Utils';
-import Grid from '@material-ui/core/Grid';
 import { withRouter } from 'react-router-dom';
 import BacktestsTable from './BacktestsTable';
 import axios from 'axios';
@@ -9,6 +8,7 @@ import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
 import {processBacktests} from './utils';
 import Compare from '../Compare/Compare';
 import DialogComponent from '../../components/Alerts/DialogComponent';
+import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import { CircularProgress } from '@material-ui/core';
 import { horizontalBox } from '../../constants';
 
@@ -368,18 +368,17 @@ class StrategyBacktests extends Component {
             );
         }
 
-        // const getBreadCrumbAllBacktests = () => {
-        //   if (!this.state.loading){
-        //     return(
-        //       <Breadcrumb separator=">" className="location-breadcrumb">
-        //           <Breadcrumb.Item>Research</Breadcrumb.Item>
-        //           <Breadcrumb.Item><Link to="/research">All Strategies</Link></Breadcrumb.Item>
-        //           <Breadcrumb.Item><Link to={"/research/strategy/"+this.state.strategy._id}>{this.state.strategy.name}</Link></Breadcrumb.Item>
-        //           <Breadcrumb.Item className="last">All Backtests</Breadcrumb.Item>
-        //       </Breadcrumb>
-        //     );
-        //   }
-        // }
+        const getBreadCrumbAllBacktests = () => {
+            const breadcrumbs = [
+                {url: '/research', label: 'All Strategies'},
+                {url: `/research/strategy/${this.state.strategy._id}`, label: this.state.strategy.name},
+                {url: '', label: 'All Backtests'}
+            ];
+          
+            return (
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            );
+        }
 
         const getTotalDiv = () => {
             return (
@@ -395,7 +394,7 @@ class StrategyBacktests extends Component {
                     <div style={{ 'display': 'flex', 'marginBottom': '10px' }}>
                         <div>
                             <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>All Backtests</h2>
-                            {/* {getBreadCrumbAllBacktests()} */}
+                            {getBreadCrumbAllBacktests()}
                         </div>
                     </div>
                     {getBacktestsDiv()}

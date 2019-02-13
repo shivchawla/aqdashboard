@@ -20,6 +20,7 @@ import RunningBacktestChart from './../../CustomHighCharts/RunningBacktestChart.
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import CardCustomRadio from '../../components/Selections/CardCustomRadio';
+import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import "react-table/react-table.css";
 import 'react-loading-bar/dist/index.css';
 
@@ -1546,19 +1547,17 @@ class BacktestDetail extends Component {
             }
         }
 
-        // const getBreadCrumbBacktestDetail = () => {
-        //     if (!this.state.loading) {
-        //         return (
-        //             <Breadcrumb separator=">" className="location-breadcrumb">
-        //                 <Breadcrumb.Item>Research</Breadcrumb.Item>
-        //                 <Breadcrumb.Item><Link to="/research">All Strategies</Link></Breadcrumb.Item>
-        //                 <Breadcrumb.Item><Link to={"/research/strategy/" + this.state.strategy._id}>{this.state.strategy.name}</Link></Breadcrumb.Item>
-        //                 <Breadcrumb.Item><Link to={"/research/backtests/" + this.state.strategy._id}>All Backtests</Link></Breadcrumb.Item>
-        //                 <Breadcrumb.Item className="last">{this.state.backTestName}</Breadcrumb.Item>
-        //             </Breadcrumb>
-        //         );
-        //     }
-        // }
+        const getBreadCrumbBacktestDetail = () => {
+            const breadcrumbs = [
+                {url: '/research', label: 'All Strategies'},
+                {url: `/research/strategy/${this.state.strategy._id}`, label: this.state.strategy.name},
+                {url: `/research/backtests/${this.state.strategy._id}`, label: 'All Backtests'},
+                {url: null, label: this.state.backTestName},
+            ];
+            return (
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            );
+        }
 
         const getTotalDiv = () => {
             return (
@@ -1573,7 +1572,7 @@ class BacktestDetail extends Component {
                     <div style={{ 'display': 'flex', 'marginBottom': '10px' }}>
                         <div>
                             <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>Backtest Detail</h2>
-                            {/* {getBreadCrumbBacktestDetail()} */}
+                            {getBreadCrumbBacktestDetail()}
                         </div>
                     </div>
                     <div 

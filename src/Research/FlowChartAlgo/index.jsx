@@ -1,33 +1,27 @@
 import React from 'react';
+import _ from 'lodash';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-import Script from './components/desktop/Script';
-import Position from './components/desktop/Position';
-import StopTargetConditions from './components/desktop/StopTargetConditions';
 import Entry from './components/desktop/Entry';
 import Exit from './components/desktop/Exit';
-import Name from './components/desktop/Name';
 import SectionHeader from './components/desktop/common/SectionHeader';
-import {algo} from './constants';
-import {parseObjectToCode} from './utils/parser';
-import { verticalBox } from '../../constants';
 
 export default class FlowChartAlgo extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            algo: algo
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!_.isEqual(this.props.algo, nextProps.algo) || !_.isEqual(this.state, nextState)) {
+            return true;
         }
+
+        return false;
     }
 
     updateAlgo = modifiedAlgo => {
-        this.setState({algo: modifiedAlgo});
-        const parsedObjectCode = parseObjectToCode(modifiedAlgo);
+        this.props.updateAlgo(modifiedAlgo);
     }
 
     render() {
         const commonProps = {
-            algo: this.state.algo,
+            algo: this.props.algo,
             updateAlgo: this.updateAlgo
         };
         const commonStyle = {
@@ -52,38 +46,11 @@ export default class FlowChartAlgo extends React.Component {
                         xs={12}
                         style={{
                             padding: '1% 3%',
-                            // backgroundColor: '#f5faff',
                             borderRadius: '4px'
                         }}
                         alignItems="flex-start"
                         spacing={24}
                 >
-                    {/* <Grid 
-                            item 
-                            xs={12}
-                            style={commonStyle}
-                    >
-                        <DotContainer>
-                            <Dot />
-                            <SectionHeader>Script</SectionHeader>
-                        </DotContainer>
-                        <Script {...commonProps} />
-                    </Grid>
-                    <Grid 
-                            item 
-                            xs={12}
-                            style={{
-                                ...commonStyle,
-                                ...verticalBox,
-                                alignItems: 'flex-start'
-                            }}
-                    >
-                        <DotContainer>
-                            <Dot />
-                            <SectionHeader>Position</SectionHeader>
-                        </DotContainer>
-                        <Position {...commonProps} />
-                    </Grid> */}
                     <Grid 
                             item 
                             xs={12}
@@ -106,30 +73,7 @@ export default class FlowChartAlgo extends React.Component {
                         </DotContainer>
                         <Exit {...commonProps} />
                     </Grid>
-                    {/* <Grid 
-                            item 
-                            xs={12}
-                            style={commonStyle}
-                    >
-                        <DotContainer>
-                            <Dot />
-                            <SectionHeader>Stop/Target</SectionHeader>
-                        </DotContainer>
-                        <StopTargetConditions {...commonProps} />
-                    </Grid>
-                    <Grid 
-                            item 
-                            xs={12}
-                            style={commonStyle}
-                    >
-                        <DotContainer>
-                            <Dot />
-                            <SectionHeader>Algo Name</SectionHeader>
-                        </DotContainer>
-                        <Name {...commonProps} />
-                    </Grid> */}
                 </Grid>
-                {/* <Grid item xs={3}></Grid> */}
             </Grid>
         );
     }

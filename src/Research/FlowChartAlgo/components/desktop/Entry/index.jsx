@@ -8,7 +8,7 @@ import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
 import EditDialog from './EditDialog';
 import SectionHeader from '../common/SectionHeader';
-import {defaultSecondRowEntryCondition} from '../../../constants';
+import {defaultFirstRowEntryCondition, defaultSecondRowEntryCondition} from '../../../constants';
 
 export default class Entry extends React.Component {
     constructor(props) {
@@ -78,7 +78,10 @@ export default class Entry extends React.Component {
         if (entryConditions.length >= 5) {
             return;
         }
-        entryConditions.push(defaultSecondRowEntryCondition);
+        const requiredCondition = entryConditions.length === 0
+                ? defaultFirstRowEntryCondition
+                : defaultSecondRowEntryCondition;
+        entryConditions.push(requiredCondition);
         const modifiedScript = {
             ...algo,
             entry: entryConditions

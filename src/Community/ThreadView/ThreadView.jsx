@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -11,6 +11,7 @@ import ThreadReply from './ThreadReply/ThreadReply.jsx';
 import ThreadPost from './ThreadPost/ThreadPost.jsx';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import AvailableBackTests from './AvailableBackTests/AvailableBackTests.jsx';
+import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
@@ -358,15 +359,14 @@ class ThreadView extends Component {
         }
 
         const getBreadCrumbThreadView = () => {
-            if (!this.state.loading) {
-                // return (
-                //     <Breadcrumb separator=">" className="location-breadcrumb">
-                //         <Breadcrumb.Item><Link to="/community">Community</Link></Breadcrumb.Item>
-                //         <Breadcrumb.Item className="last">{this.state.threadData.title}</Breadcrumb.Item>
-                //     </Breadcrumb>
-                // );
-                return null;
-            }
+            const breadcrumbs = [
+                {url: '/community', label: 'Community'},
+                {url: '/community', label: this.state.threadData.title},
+            ];
+            
+            return (
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            );
         }
 
         const getTotalDiv = () => {
