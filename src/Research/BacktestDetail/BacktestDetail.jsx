@@ -583,15 +583,18 @@ class BacktestDetail extends Component {
             this.updateState({ portfolioMode: portfolioValues[value] });
         }
 
-        this.updateBacktestDataFromGetCall = (data) => {
-            if (data.status && data.status.trim().toLowerCase() === 'active') {
+        this.updateBacktestDataFromGetCall = (data, reload = false) => {
+            if (!reload && data.status && data.status.trim().toLowerCase() === 'active') {
                 this.updateState({
                     'backTestData': data,
                     'isBacktestRunning': true
                 });
                 this.setupWebSocketConnections(data._id);
             } else {
-                this.updateState({ 'backTestData': data });
+                this.updateState({
+                    backTestData: data,
+                    isBacktestRunning: false
+                });
             }
         }
 
@@ -616,10 +619,10 @@ class BacktestDetail extends Component {
             if (msg.data) {
                 const data = JSON.parse(msg.data);
                 //Temporary Fix: Route to detail if "Exception" happens before any WS message
-                console.log(data);
-                if (data.status == "exception" || data.status === "complete") {
-                    const backtestRedirectUrl = `/research/backtests/${this.state.strategy._id}/${backtestId}`;
-                    this.props.history.push(backtestRedirectUrl);
+                if (data.status === "exception" || data.status === "complete") {
+                    this.setState({loading: true}, () => {
+                        this.getStrategy();
+                    })
                 }
 
                 if (data.data) {
@@ -628,7 +631,6 @@ class BacktestDetail extends Component {
                         const outputType = _.get(item, 'outputtype', null);
                         return outputType === 'performance';
                     }).length;
-                    console.log('Progress Counter ', this.pro);
                     this.updateState({ 'backtestProgress': Math.round((this.progressCounter /  this.totalDataLength) * 100)});
                     for (let i = 0; i < data.data.length; i++) {
                         let dataLocal = data.data[i];
@@ -1335,13 +1337,21 @@ class BacktestDetail extends Component {
                                     <div style={{ 'display': (this.state.isBackTestRunComplete ? 'none' : 'inherit') }}>
                                         <div style={{ 'display': 'block', 'textAlign': 'center' }}>
                                             <p style={{ 'margin': '0px', 'fontSize': '12px', 'fontWeight': '600' }}>
-                                                Running Backtest
+                                                {
+                                                    this.state.backtestProgress < 100
+                                                    ?   'Running Backtest'
+                                                    :   'Backtest Complete'
+                                                }
                                             </p>
                                             <p style={{
                                                 'margin': '0px', 'fontSize': '12px', 'fontWeight': '700',
                                                 'color': 'teal'
                                             }}>
-                                                Progress: {this.state.backtestProgress} %
+                                                {
+                                                    this.state.backtestProgress < 100 
+                                                    ? `Progress: ${this.state.backtestProgress} %`
+                                                    : 'Saving Backtest'
+                                                }
                                             </p>
                                         </div>
                                         <CircularProgress size={22} style={{ 'marginLeft': '10px' }} />
