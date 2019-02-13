@@ -20,8 +20,10 @@ export const intervals = [
 ];
 
 export const comparators = [
-    {label: 'Higher Than', value: 'ht', codeOperator: '>'},
+    {label: 'Greater Than', value: 'gt', codeOperator: '>'},
+    {label: 'Greater Than Equalto', value: 'gte', codeOperator: '>'},
     {label: 'Lower Than', value: 'lt', codeOperator: '<'},
+    {label: 'Lower Than Equalto', value: 'lte', codeOperator: '<'},
     {label: 'Crosses Above', value: 'ca', codeOperator: 'ca'},
     {label: 'Crosses Below', value: 'cb', codeOperator: 'cb'},
     {label: 'Equal To', value: 'eq', codeOperator: '='},
@@ -36,13 +38,13 @@ export const indicators = {
     sma: {
         label: 'Simle Moving Average',
         options: [
-            {key: 'period', label: 'Period', value: 10, options: [10, 20, 30, 40, 50]}
+            {key: 'horizon', label: 'Horizon', value: 10, options: [10, 20, 30, 40, 50]}
         ]
     },
     ema: {
         label: 'Exponential Moving Average',
         options: [
-            {key: 'period', label: 'Period', value: 10, options: [10, 20, 30, 40, 50]}
+            {key: 'horizon', label: 'Horizon', value: 10, options: [10, 20, 30, 40, 50]}
         ]
     },
     macd: {
@@ -87,13 +89,13 @@ export const defaultFirstRowEntryCondition = {
     firstValue: {
         key: 'sma',
         label: 'Simple Moving Average',
-        options: [{key: 'period', value: 10, label: 'Period'}]
+        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
     },
     comparator: comparators[0].value, 
     secondValue: {
         key: 'sma',
         label: 'Simple Moving Average',
-        options: [{key: 'period', value: 10, label: 'Period'}]
+        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
     }
 };
 
@@ -102,13 +104,13 @@ export const defaultSecondRowEntryCondition = {
     firstValue: {
         key: 'sma',
         label: 'Simple Moving Average',
-        options: [{key: 'period', value: 10, label: 'Period'}]
+        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
     },
     comparator: comparators[0].value, 
     secondValue: {
         key: 'sma',
         label: 'Simple Moving Average',
-        options: [{key: 'period', value: 10, label: 'Period'}]
+        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
     }
 }
 
@@ -125,5 +127,7 @@ export const algo = {
     entry: [defaultFirstRowEntryCondition],
     exit: [],
     exitConditions: [{buyValue: null, sellValue: null}],
+    target: 20,
+    stopLoss: 10,
     name: 'My Strategy'
 };

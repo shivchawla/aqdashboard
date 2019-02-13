@@ -12,6 +12,7 @@ import SnackbarComponent from '../../components/Alerts/SnackbarComponent';
 import AvailableBackTests from './../ThreadView/AvailableBackTests/AvailableBackTests.jsx';
 import ReactQuill from 'react-quill';
 import ThreadPost from './../ThreadView/ThreadPost/ThreadPost.jsx';
+import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import axios from 'axios';
 import AqLayoutDesktop from '../../components/Layout/AqDesktopLayout';
 import 'react-quill/dist/quill.snow.css';
@@ -399,14 +400,16 @@ class NewPost extends Component {
             }
         }
 
-        // const getBreadcrumbNewPost = () => {
-        //     return (
-        //         <Breadcrumb separator=">" className="location-breadcrumb">
-        //             <Breadcrumb.Item><Link to="/community">Community</Link></Breadcrumb.Item>
-        //             <Breadcrumb.Item className="last">Create a Post</Breadcrumb.Item>
-        //         </Breadcrumb>
-        //     );
-        // }
+        const getBreadcrumbNewPost = () => {
+            const breadcrumbs = [
+                {url: '/community', label: 'Community'},
+                {ur: '', label: 'Create a Post'}
+            ];
+
+            return (
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            );
+        }
 
         return (
             <AqLayoutDesktop>
@@ -441,7 +444,7 @@ class NewPost extends Component {
                             >
                                 Create a Post
                             </h2>
-                            {/* {getBreadcrumbNewPost()} */}
+                            {getBreadcrumbNewPost()}
                         </Grid>
                         <Grid 
                                 item 

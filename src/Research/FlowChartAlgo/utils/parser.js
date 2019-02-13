@@ -2,49 +2,93 @@ import _ from 'lodash';
 import {comparators, conditionalOperators} from '../constants';
 
 export const parseObjectToCode = codeObj => {
+    console.log(codeObj);
+    const type = _.get(codeObj, 'position.type', 'BUY');
     return `# © AIMSQUANT PVT. LTD.
 
 ${getInitializeMethodString(codeObj)}
 
-${getLongEntryMethodString(codeObj)}`;
+${getConditionMethodString('longEntryCondition', codeObj.entry, type === 'BUY')}
+
+${getConditionMethodString('longExitCondition', codeObj.exit, type === 'BUY')}
+
+${getConditionMethodString('shortEntryCondition', codeObj.entry, type === 'SELL')}
+
+${getConditionMethodString('shortExitCondition', codeObj.exit, type === 'SELL')}
+
+${getDataMethodString()}
+`;
+}
+
+export const getDataMethodString = () => {
+    return `function ondata(data, state)
+
+end`;
 }
 
 export const getInitializeMethodString = (codeObj) => {
     const script = _.get(codeObj, 'script', {});
+    const stopLoss = _.get(codeObj, 'stopLoss', 0).toFixed(1);
+    const target = _.get(codeObj, 'target', 0).toFixed(1);
     const instruments = _.get(script, 'instruments', []);
     const setUniverseString = setUniverse(instruments);
+    const stopLossString = setStopLoss(stopLoss);
+    const targetString = setProfitTarget(target);
 
     const methodString = `function initialize(state)
-    ${setUniverseString}
+    ${stopLossString}
+    ${targetString}
 end`;
 
     return methodString;
 }
 
 export const setUniverse = (instruments = []) => {
-    const instrumentString = `setuniverse([${instruments.join(',')}])`;
+    const instrumentString = `setuniverse()`;
     
     return instrumentString;
 }
 
-export const getLongEntryMethodString = (codeObj) => {
-    const entryConditions = _.get(codeObj, 'entry', []);
+export const setStopLoss = stopLoss => {
+    const stopLossString = `setStopLoss(${stopLoss})`;
+    
+    return stopLossString;
+}
+
+export const setProfitTarget = target => {
+    const setProfitString = `setProfitTarget(${target})`;
+    
+    return setProfitString;
+}
+
+export const getConditionMethodString = (methodName, conditions, showCode = true) => {
     let parsedString = [];
-    parsedString = entryConditions.map(condition => {
-        return getLongEntryCondition(condition);
+    parsedString = conditions.map(condition => {
+        return getCondition(condition);
     });
 
     parsedString = parsedString.join('').replace(/\n/g, '');
-
-    const methodString = `function longEntryCondition()
-    return ${parsedString}
-end
-    `;
+    let methodString = '';
+    methodString = constructMethodString(methodName, parsedString, showCode);
 
     return methodString;
 }
 
-const getLongEntryCondition = condition => {
+const constructMethodString = (methodName, parsedString, showCode = true) => {
+    let methodString = '';
+    if (showCode) {
+        methodString = `function ${methodName}()
+    return${parsedString}
+end
+    `;
+    } else {
+        methodString = `${methodName}() = nothing`;
+    }
+
+    return methodString;
+}   
+
+const getCondition = condition => {
     let conditionOperator = _.get(condition, 'condition', null);
     let comparator = _.get(condition, 'comparator', 'eq');
     let firstValue = _.get(condition, 'firstValue', 0);
@@ -56,9 +100,21 @@ const getLongEntryCondition = condition => {
     comparator = comparators.filter(comparatorItem => comparatorItem.value === comparator)[0];
     comparator = comparator ? comparator.codeOperator : null;
 
-    const conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} (SMA(horizon=${firstValue}) ${comparator} SMA(horizon=${secondValue}))`;
+    const conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} (${getIndicatorValue(firstValue)} ${comparator} ${getIndicatorValue(secondValue)})
+`;
 
     return conditionString;
+}
+
+const getIndicatorValue = indicatorValue => {
+    const methodName = _.get(indicatorValue, 'key', 'sma').toUpperCase();
+    const options = _.get(indicatorValue, 'options', []);
+    let argumentString = [];
+    options.forEach(optionItem => {
+        argumentString.push(`${optionItem.key} = ${optionItem.value}`);
+    });
+
+    return `${methodName}(${argumentString.join(',')})`;
 }
 
 const isValuePresent = value => {

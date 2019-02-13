@@ -8,7 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Chip from '@material-ui/core/Chip';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -30,8 +32,11 @@ import RunningBackTest from './RunningBackTest/RunningBackTest.jsx';
 import AqLayoutDesktop from '../../components/Layout/AqDesktopLayout';
 import {benchmarks} from '../../constants/benchmarks';
 import {universe} from '../../constants/universe';
+import {processAlgoConditions, processConditionsToAlgo, constructLogic} from './utils';
 import { primaryColor, verticalBox, horizontalBox, secondaryColor } from '../../constants';
-import { Button } from '@material-ui/core';
+import {algo} from '../FlowChartAlgo/constants';
+import {fetchAjaxPromise} from '../../utils/requests';
+import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -116,7 +121,13 @@ class StartegyDetail extends Component {
             },
             codeViewSelected: false,
             codeEditorReadOnly: true,
-            editCodeDialogOpen: false
+            editCodeDialogOpen: false,
+            algo: algo,
+            editStocksDialogOpen: false,
+            editStocksLoading: false,
+            selectedStocks: [], // contains the list of the stocks that are selected
+            searchStocksList: [], // contains the list of the stocks that are obtained from the search response
+            universeSearchValue: ''// contains text field input when searching for a particular universe,
         };
 
         this.updateState = (data) => {
@@ -126,6 +137,15 @@ class StartegyDetail extends Component {
                 }
                 this.setState(data);
             }
+        }
+
+        this.updateAlgo = modifiedAlgo => {
+            const objectCode = parseObjectToCode(modifiedAlgo);
+            this.updateState({algo: modifiedAlgo});
+            this.setState({strategy: {
+                ...this.state.strategy,
+                code: objectCode
+            }})
         }
 
         this.loadStrategyinfo = () => {
@@ -138,10 +158,24 @@ class StartegyDetail extends Component {
             })
                 .then((response) => {
                     this.cancelGetStrategy = undefined;
+                    let entryLogic = _.get(response.data, 'entryLogic', '');
+                    let exitLogic = _.get(response.data, 'exitLogic', '');
+                    let entryConditions = _.get(response.data, 'entryConditions', []);
+                    let exitConditions = _.get(response.data, 'exitConditions', []);
+                    entryConditions = processConditionsToAlgo(entryConditions, entryLogic);
+                    exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
+                    const viewType = _.get(response.data, 'type', 'GUI');
                     this.updateState({ 
-                        'strategy': {...response.data, type: 'gui'}, 
-                        'loading': false 
-                    }); // This should be changed
+                        strategy: response.data,
+                        loading: false ,
+                        algo: {
+                            ...this.state.algo,
+                            entry: entryConditions,
+                            exit: exitConditions
+                        },
+                        codeEditorReadOnly: viewType === 'GUI',
+                        codeViewSelected: !(viewType === 'GUI')
+                    });
                 })
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
@@ -225,7 +259,10 @@ class StartegyDetail extends Component {
         }
 
         this.onUniverseChange = (e) => {
-            this.updateState({ 'selectedUniverse': e.target.value });
+            this.setState({ 'selectedUniverse': e.target.value }, () => {
+                this.toggleEditStocksDialog(true);
+                this.fetchUniverseStocks('', true);
+            });
         }
 
         this.onRebalanceChange = (selectedValue = 0) => {
@@ -263,40 +300,51 @@ class StartegyDetail extends Component {
                 'endDate': this.state.endDate.format('YYYY-MM-DD'),
                 'startDate': this.state.startDate.format('YYYY-MM-DD')
             }
+            const {algo = {}} = this.state;
+            const data = {
+                name: _.get(this.state, 'strategy.name', null),
+                language: _.get(this, 'state.strategy.language', 'julia'),
+                description: _.get(this.state, 'strategy.description', null),
+                code: _.get(this, 'state.strategy.code', null),
+                type: _.get(this, 'state.strategy.type', 'gui').toUpperCase(),
+                entryConditions: processAlgoConditions(_.get(algo, 'entry', [])),
+                exitConditions: processAlgoConditions(_.get(algo, 'exit', [])),
+                entryLogic: constructLogic(_.get(algo, 'entry', [])),
+                exitLogic: constructLogic(_.get(algo, 'exit', [])),
+            };
             Utils.localStorageSaveObject('StrategyDetailSettings', settingsData);
             axios({
                 method: 'PUT',
                 url: Utils.getBaseUrl() + '/strategy/' + this.state.strategyId,
-                data: {
-                    'name': _.get(this.state, 'strategy.name', null),
-                    'language': _.get(this, 'state.strategy.language', 'julia'),
-                    'description': _.get(this.state, 'strategy.description', null),
-                    'code': _.get(this, 'state.strategy.code', null),
-                    'type': _.get(this, 'state.strategy.type', null)
-                },
-                'headers': Utils.getAuthTokenHeader()
+                data,
+                headers: Utils.getAuthTokenHeader()
             })
-                .then((response) => {
-                    if (showResultInfo) {
-                        // message.success('Strategy saved successfully');
-                        this.openSnackbar('Strategy saved successfully');
+            .then((response) => {
+                if (showResultInfo) {
+                    // message.success('Strategy saved successfully');
+                    this.openSnackbar('Strategy saved successfully');
+                }
+                resolve(true);
+            })
+            .catch((error) => {
+                reject(error);
+                Utils.checkForInternet(error, this.props.history);
+                if (error.response) {
+                    if (error.response.status === 400) {
+                        // this.props.history.push('/badRequest');
+                        // this.openSnackbar('Error Occured');
+                    } else if (error.response.status === 403) {
+                        this.props.history.push('/forbiddenAccess');
+                    } else {
+                        this.props.history.push('/errorPage');
                     }
-                    resolve(true);
-                })
-                .catch((error) => {
-                    reject(error);
-                    Utils.checkForInternet(error, this.props.history);
-                    if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
-                    }
-                    if (showResultInfo) {
-                        // message.error('Unable to save strategy');
-                        this.openSnackbar('Unable to save strategy');
-                    }
-                });
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                }
+                if (showResultInfo) {
+                    // message.error('Unable to save strategy');
+                    this.openSnackbar('Unable to save strategy');
+                }
+            });
         })
 
         this.onCodeChange = (newCode) => {
@@ -336,7 +384,7 @@ class StartegyDetail extends Component {
                             "initialCash": this.state.initialCapital,
                             "startDate": this.state.startDate.format('YYYY-MM-DD'),
                             "universe": '',
-                            "universeIndex": this.state.selectedUniverse
+                            "universeIndex": ''
                         },
                         'headers': Utils.getAuthTokenHeader()
                     })
@@ -485,6 +533,48 @@ class StartegyDetail extends Component {
 
     }
 
+    fetchUniverseStocks = (search = '', selectDefaultStocks = false) => {
+        this.setState({editStocksLoading: true});
+        let selectedStocks = _.map(this.state.selectedStocks, _.cloneDeep);
+        let requiredUniverse = _.get(this.state, 'selectedUniverse', universe[0]);
+        requiredUniverse = requiredUniverse.toUpperCase().split(' ').join('_');
+        const url = `${Utils.getBaseUrl()}/stock?limit=20&universe=${requiredUniverse}&search=${search}`;
+        fetchAjaxPromise(url, this.props.history, this.props.match.url)
+        .then(response => {
+            const stocks = response.data.map(stockItem => {
+                const ticker = (_.get(stockItem, 'detail.NSE_ID', null));
+                return ticker;
+            });
+            selectedStocks = selectDefaultStocks ? [...stocks].splice(0, 5) : selectedStocks;
+            this.setState({searchStocksList: stocks, selectedStocks});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
+            this.setState({editStocksLoading: false});
+        })
+    }
+
+    onSearchInputChange = e => {
+        const search = e.target.value;
+        this.setState({universeSearchValue: search});
+        this.fetchUniverseStocks(search);
+    }
+
+    addOrDeleteSelectedStocks = stock => {
+        const selectedStocks = _.map(this.state.selectedStocks, _.cloneDeep);
+        const requiredStockIndex = _.findIndex(selectedStocks, stockItem => stockItem === stock);
+        if (requiredStockIndex > -1) {
+            selectedStocks.splice(requiredStockIndex, 1);
+        } else {
+            if (selectedStocks.length < 20) {
+                selectedStocks.push(stock);
+            }
+        }
+        this.setState({selectedStocks});
+    }
+
     openSnackbar = (message = '') => {
         this.setState({
             snackbar: {open: true, message}
@@ -573,7 +663,6 @@ class StartegyDetail extends Component {
         });
     }
 
-
     setupWebSocketConnections(backtestId) {
         Utils.openSocketConnection();
         Utils.webSocket.onopen = () => {
@@ -600,9 +689,8 @@ class StartegyDetail extends Component {
             this.atleastOneMessageReceived = true;
             if (msg.data) {
                 const data = JSON.parse(msg.data);
-
                 //Temporary Fix: Route to detail if "Exception" happens before any WS message
-                if (data.status == "exception" || data.status == "completion") {
+                if (data.status == "exception" || data.status == "complete") {
                     const backtestRedirectUrl = `/research/backtests/${this.state.strategyId}/${backtestId}`;
                     this.props.history.push(backtestRedirectUrl)
                 }
@@ -720,7 +808,6 @@ class StartegyDetail extends Component {
         }
     }
 
-
     recursiveUpdateGraphData() {
         const backtestData = JSON.parse(JSON.stringify(this.state.newBacktestRunData));
         if (this.runningBackTestChart && this.graphData.length > 0) {
@@ -806,7 +893,8 @@ class StartegyDetail extends Component {
             '"cancelPolicy":"' + this.state.selectedCancelPolicy + '",' +
             '"slippage":{"model":"' + this.state.selectedSlipPageType + '","value":' + this.state.selectedSlipPage + '},' +
             '"commission":{"model":"' + this.state.selectedCommissionType + '","value":' + this.state.selectedCommission + '},' +
-            '"resolution":"Day","investmentPlan":"' + this.state.selectedInvestmentPlan + '","executionPolicy":"' + this.state.selectedExecutionPolicy + '"';
+            '"resolution":"Day","investmentPlan":"' + this.state.selectedInvestmentPlan + '","executionPolicy":"' + this.state.selectedExecutionPolicy + '",'+
+            '"universe":"' + this.state.selectedStocks.join(',') + '","target":"' + this.state.algo.target + '","stopLoss":"' + this.state.algo.stopLoss + '"';
         returnString = returnString + "}";
         return returnString;
     }
@@ -886,17 +974,123 @@ class StartegyDetail extends Component {
         this.setState({editCodeDialogOpen: !this.state.editCodeDialogOpen});
     }
 
-    openEditCodeDialog = () => {
-        this.setState({editCodeDialogOpen: true});
-    }
-
     closeEditCodeDialog = () => {
         this.setState({editCodeDialogOpen: false});
     }
 
+    toggleEditStocksDialog = (disabledFetch = false) => {
+        this.setState({editStocksDialogOpen: !this.state.editStocksDialogOpen}, () => {
+            if(this.state.editStocksDialogOpen && this.state.searchStocksList.length === 0) {
+                !disabledFetch && this.fetchUniverseStocks();
+            }
+        });
+    }
+
+    closeEditStocksDialog = () => {
+        this.setState({editStocksDialogOpen: false});
+    }
+
     makeCodeEditTrue = () => {
-        this.setState({codeEditorReadOnly: false, editCodeDialogOpen: false});
-        // this.saveStartegy()
+        this.setState({
+            codeEditorReadOnly: false, 
+            editCodeDialogOpen: false,
+            strategy: {
+                ...this.state.strategy,
+                type: 'CODE'
+            }
+        }, () => this.saveStartegy(true));
+    }
+
+    renderSelectedStocks = () => {
+        return (
+            <div>
+                {
+                    this.state.selectedStocks.map((stock, index) => {
+                        return (
+                            <Chip 
+                                label={stock} 
+                                style={{margin: '5px'}}
+                                color='primary'
+                                variant='default'
+                                onDelete={() => this.addOrDeleteSelectedStocks(stock)}
+                            />
+                        )
+                    })
+                }
+            </div>
+        );
+    }
+
+    renderSearchStocksList = () => {
+        const {selectedStocks = []} = this.state;
+
+        return (
+            <div>
+                {
+                    this.state.searchStocksList.map((stock, index) => {
+                        const selected = _.findIndex(selectedStocks, stockItem => stockItem === stock) > -1;
+            
+                        return (
+                            <Chip 
+                                style={{margin: '5px'}}
+                                label={stock}
+                                key={index}
+                                variant={selected ? 'outlined' : 'default'}
+                                color={selected ? 'primary' : 'default'}
+                                onClick={() => this.addOrDeleteSelectedStocks(stock)}
+                            />
+                        );
+                    })
+                }
+            </div>
+        );
+    }
+
+    renderSearchStocksDialog = () => {
+        return (
+            <Grid container alignItems='center'>
+                <Grid item xs={8}>
+                    <TextField 
+                        variant='outlined'
+                        label='Search Stocks'
+                        onChange={this.onSearchInputChange}
+                        margin='dense'
+                        style={{width: '100%'}}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    {
+                        this.state.editStocksLoading &&
+                        <CircularProgress size={22} style={{marginLeft: '10px'}}/>
+                    }
+                </Grid>
+                <Grid 
+                        item 
+                        xs={12}
+                        style={{
+                            ...verticalBox,
+                            alignItems: 'flex-start'
+                        }}
+                >
+                    <SearchHeader>Search Result</SearchHeader>
+                    {this.renderSearchStocksList()}
+                </Grid>
+                <Grid 
+                        item 
+                        xs={12}
+                        style={{
+                            ...verticalBox,
+                            alignItems: 'flex-start'
+                        }}
+                >
+                    {
+                        this.state.selectedStocks.length > 0 &&
+                        <SearchHeader>Selected Stocks</SearchHeader>
+                    }
+                    {this.renderSelectedStocks()}
+                </Grid>
+            </Grid>
+        );
     }
 
     render() {
@@ -934,18 +1128,6 @@ class StartegyDetail extends Component {
                         onCancel={() => this.updateState({cloneStrategyOpen: false})}
                     />
                 </DialogComponent>
-                // <Modal
-                //     title=""
-                //     wrapClassName="vertical-center-modal"
-                //     visible={this.state.showCloneStartegyDiv}
-                //     footer={null}
-                //     onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
-                // >
-                //     <NewStartegy
-                //         startegyClone={this.state.strategy}
-                //         onCancel={() => this.updateState({ 'showCloneStartegyDiv': false })}
-                //     />
-                // </Modal>
             );
         }
 
@@ -955,6 +1137,7 @@ class StartegyDetail extends Component {
             const cancelPolicyRadioItems = ['EOD', 'GTC'];
             const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
             const selectedSlipPageTypeRadioItems = ['Variable', 'Spread'];
+            const positionActionItems = ['BUY', 'SELL'];
 
             const benchmarksOptions = [];
             for (let i = 0; i < this.state.benchmark.length; i++) {
@@ -1047,8 +1230,15 @@ class StartegyDetail extends Component {
                                 </Select>
                             </FormControl>
                         </div>
-                        <div style={{ 'display': 'flex', 'alignItems': 'center', 'padding': '10px' }}>
-                            <FormControl style={{flex: '1'}} variant="outlined">
+                        <div 
+                                style={{ 
+                                    display: 'flex', 
+                                    flexDirection: 'column',
+                                    padding: '10px',
+                                    alignItems: 'flex-start'
+                                }}
+                        >
+                            <FormControl style={{width: '100%'}} variant="outlined">
                                 <InputLabel htmlFor="universe">Universe</InputLabel>
                                 <Select 
                                         input={
@@ -1067,6 +1257,94 @@ class StartegyDetail extends Component {
                                     {universeOptions}
                                 </Select>
                             </FormControl>
+                            <Button 
+                                    style={{
+                                        marginTop: '5px'
+                                    }}
+                                    onClick={this.toggleEditStocksDialog}
+                            >
+                                Customize
+                            </Button>
+                        </div>
+                        <div
+                                style={{
+                                    ...verticalBox,
+                                    alignItems: 'flex-start',
+                                    padding: '10px'
+                                }}
+                        >
+                            <Label>Position</Label>
+                            <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
+                                <RadioGroup 
+                                    items={positionActionItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue === 0 ? 'BUY' : 'SELL';
+                                        const modifiedAlgo = {
+                                            ...this.state.algo,
+                                            position: {
+                                                ...this.state.algo.position,
+                                                type: value
+                                            }
+                                        };
+                                        this.updateAlgo(modifiedAlgo);
+                                    }}
+                                    defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
+                                    disabled={this.state.isBacktestRunning}
+                                    CustomRadio={CardRadio}
+                                />
+                            </div>
+                        </div>
+                        <div 
+                                style={{
+                                    ...horizontalBox,
+                                    justifyContent: 'space-between',
+                                    padding: '10px'
+                                }}
+                        >
+                            <TextField
+                                style={{ 'flex': '1' }} 
+                                label="Target"
+                                variant="outlined"
+                                value={this.state.algo.target}
+                                onChange={e => {
+                                    const modifiedAlgo = {
+                                        ...this.state.algo,
+                                        target: e.target.value
+                                    };
+                                    this.updateAlgo(modifiedAlgo);
+                                }}
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="dense"
+                            />
+                        </div>
+                        <div 
+                                style={{
+                                    ...horizontalBox,
+                                    justifyContent: 'space-between',
+                                    padding: '10px'
+                                }}
+                        >
+                            <TextField
+                                style={{ 'flex': '1' }} 
+                                label="Stop Loss"
+                                variant="outlined"
+                                value={this.state.algo.stopLoss}
+                                onChange={e => {
+                                    const modifiedAlgo = {
+                                        ...this.state.algo,
+                                        stopLoss: e.target.value
+                                    };
+                                    this.updateAlgo(modifiedAlgo);
+                                }}
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="dense"
+                            />
                         </div>
                     </div>
                 </React.Fragment>
@@ -1110,7 +1388,6 @@ class StartegyDetail extends Component {
                                 defaultSelected={cancelPolicyRadioItems.indexOf(this.state.selectedCancelPolicy)}
                                 disabled={this.state.isBacktestRunning}
                                 CustomRadio={CardRadio}
-                                // small
                                 style={{marginTop: '10px'}}
                             />
                         </div>
@@ -1129,7 +1406,6 @@ class StartegyDetail extends Component {
                                         'width': '80px', 
                                         'marginRight': '6px' 
                                     }} 
-                                    // label="Commission"
                                     value={this.state.selectedCommission}
                                     onChange={(e) => { this.updateState({ 'selectedCommission': e.target.value }) }}
                                     type="number"
@@ -1148,7 +1424,6 @@ class StartegyDetail extends Component {
                                     defaultSelected={selectedCommissionTypeRadioItems.indexOf(this.state.selectedCommissionType)}
                                     disabled={this.state.isBacktestRunning}
                                     CustomRadio={CardRadio}
-                                    // small
                                 />
                             </div>
                         </div>
@@ -1410,7 +1685,10 @@ class StartegyDetail extends Component {
                     );
                 } else {
                     return (
-                        <FlowChartAlgo />
+                        <FlowChartAlgo 
+                            updateAlgo={this.updateAlgo}
+                            algo={this.state.algo}
+                        />
                     );
                 }
             }
@@ -1485,7 +1763,8 @@ class StartegyDetail extends Component {
                                     disabled={this.state.isBacktestRunning} 
                                 />
                                 {
-                                    this.state.strategy.type === 'gui' &&
+                                    !this.state.isBacktestRunning &&
+                                    this.state.strategy.type.toLowerCase() === 'gui' &&
                                     <RadioGroup 
                                         items={['GUI', 'CODE']}
                                         defaultSelected={this.state.codeViewSelected ? 1 : 0}
@@ -1549,7 +1828,7 @@ class StartegyDetail extends Component {
                                 {
                                     !this.state.isBacktestRunning &&
                                     this.state.codeViewSelected &&
-                                    this.state.strategy.type === 'gui' &&
+                                    this.state.strategy.type.toLowerCase() === 'gui' &&
                                     <Button
                                             style={{
                                                 position: 'absolute',
@@ -1622,6 +1901,20 @@ class StartegyDetail extends Component {
                 >
                     <h3>Are you sure you want to edit the code</h3>
                 </DialogComponent>
+                <DialogComponent 
+                        title={`Edit Stocks - ${this.state.selectedUniverse}`}
+                        open={this.state.editStocksDialogOpen}
+                        onClose={this.closeEditStocksDialog}
+                        onCancel={this.closeEditCodeDialog}
+                        style={{
+                            width: '50vw',
+                            height: '60vh',
+                            boxSizing: 'border-box'
+                        }}
+                        maxWidth='xl'
+                >
+                    {this.renderSearchStocksDialog()}
+                </DialogComponent>
                 <SnackbarComponent 
                     openStatus={this.state.snackbar.open}
                     message={this.state.snackbar.message}
@@ -1643,4 +1936,12 @@ const Label = styled.h3`
     font-family: 'Lato', sans-serif;
     font-weight: 400;
     font-size: 14px;
+`;
+
+const SearchHeader = styled.h3`
+    font-size: 18px;
+    font-weight: 700;
+    color: #444;
+    font-family: 'Lato', sans-serif;
+    margin: 10px 0;
 `;

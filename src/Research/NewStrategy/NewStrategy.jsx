@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import _ from 'lodash';
 import Utils from './../../Utils';
 import axios from 'axios';
@@ -9,7 +10,7 @@ import {withRouter} from 'react-router-dom';
 import InputComponent from '../../components/input/Form/components/InputComponent';
 import {getFormProps, validateSchema} from '../../utils/form';
 import {getValidationSchema} from './utils';
-import {verticalBox, primaryColor} from '../../constants';
+import {verticalBox, primaryColor, horizontalBox} from '../../constants';
 
 
 class NewStartegy extends Component {
@@ -30,8 +31,9 @@ class NewStartegy extends Component {
             strategy.name = strategy.name + "_C";
         }
         this.state = {
-            'loading': false,
-            'strategy': strategy
+            loading: false,
+            strategy: strategy,
+            error: null
         };
         this.updateState = (data) => {
             if (this._mounted) {
@@ -49,18 +51,21 @@ class NewStartegy extends Component {
                     'language': _.get(this.state, 'strategy.language', null),
                     'description': _.get(values, 'shortDescription', null),
                     'code': _.get(this.state, 'strategy.code', null),
-                    'type': _.get(this.state, 'strategy.type', null)
+                    'type': "GUI"
                 },
                 'headers': Utils.getAuthTokenHeader()
             })
             .then((response) => {
-                this.updateState({ 'loading': false });
+                this.updateState({
+                    loading: false,
+                    error: null
+                });
                 this.props.history.push('/research/strategy/' + response.data._id);
             })
             .catch((error) => {
-                console.log('Error ', error);
                 this.updateState({
-                    'loading': false
+                    loading: false,
+                    error: 'Error occured !!'
                 });
             });
         }
@@ -106,6 +111,18 @@ class NewStartegy extends Component {
                         multiline={true}
                         rowsMax={8}
                     />
+                    {
+                        this.state.error &&
+                        <div 
+                            style={{
+                                ...horizontalBox, 
+                                justifyContent: 'center', 
+                                marginTop: '5px'
+                            }}
+                    >
+                        <Error>{this.state.error}</Error>
+                    </div>
+                    }
                     <Button 
                             type="submit"
                             color="primary"
@@ -155,3 +172,9 @@ const submitButtonStyle = {
     background: primaryColor,
     marginTop: '5px'
 };
+
+const Error = styled.h3`
+    font-size: 14px;
+    color: #e06666;
+    font-family: 'Lato', sans-serif;
+`;

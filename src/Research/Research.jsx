@@ -13,6 +13,7 @@ import {withRouter, Link} from 'react-router-dom';
 import NewStartegy from './NewStrategy/NewStrategy.jsx';
 import DialogComponent from '../components/Alerts/DialogComponent';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
+import Breadcrumbs from '../components/UI/Breadcrumbs';
 import Utils from './../Utils';
 import {horizontalBox, verticalBox} from '../constants';
 
@@ -400,7 +401,7 @@ class Research extends Component {
                     }>
                         <Icon>delete</Icon>
                         Stop selected
-          </Button>
+                </Button>
                 );
             } else {
                 return (
@@ -683,13 +684,11 @@ class Research extends Component {
         }
 
         const getBreadCrumbAllStrategies = () => {
-            // return (
-            //     <Breadcrumb separator=">" className="location-breadcrumb">
-            //         <Breadcrumb.Item>Research</Breadcrumb.Item>
-            //         <Breadcrumb.Item className="last">All Strategies</Breadcrumb.Item>
-            //     </Breadcrumb>
-            // );
-            return null;
+            const breadcrumbs = [
+                {label: 'Research'},
+                {label: 'All Strategies'},
+            ];
+            return <Breadcrumbs breadcrumbs={breadcrumbs} />;
         }
 
         const getTotalDiv = () => {

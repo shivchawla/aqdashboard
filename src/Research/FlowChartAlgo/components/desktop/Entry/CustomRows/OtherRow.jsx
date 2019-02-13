@@ -8,6 +8,8 @@ import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import IndicatorLabel from '../../common/IndicatorLabel';
 import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
 import {ValueHeader, OptionValue, OptionLabel, Comparator} from '../../common/RowTexts';
@@ -79,77 +81,109 @@ export default class OtherRow extends React.Component {
                     container 
                     alignItems="center"
                     style={{
-                        background: '#fff',
-                        margin: '5px 0',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-                        padding: '5px 10px',
-                        borderRadius: '4px',
-                        boxSizing: 'border-box',
                         marginBottom: '15px'
                     }}
             >
-                <Grid item xs={4}>
-                    <div style={{...verticalBox, alignItems: 'flex=start'}}>
-                        <ValueHeader>{selectedFirstValue}</ValueHeader>
-                        <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
-                    </div>
-                    <OptionItems options={firstValueOptions} />
-                </Grid>
-                <Grid item xs={3}>
-                    <Chip 
-                        label={comparatorObj.label}
-                        avatar={<Avatar>{comparatorObj.codeOperator}</Avatar>}
-                        // color="primary"
-                        variant='outlined'
-                    />
-                </Grid>
-                <Grid item xs={5}>
-                    <div 
-                            style={{
-                                ...horizontalBox, 
-                                justifyContent: 'space-between',
-                                width: '100%'
-                            }}
+                <Grid 
+                        item 
+                        xs={12}
+                        style={{
+                            marginBottom: '10px'
+                        }}
+                >
+                    <Select
+                            value={condition}
+                            label='Condition'
+                            onChange={e => onConditionChange(e.target.value, index)}
                     >
-                        <div 
-                                style={{
-                                    ...verticalBox, 
-                                    alignItems: 'flex-start',
-                                    width: '100%'
-                                }}
-                        >
+                        {
+                            conditionalOperators.map((comparator, index) => (
+                                <MenuItem
+                                        value={comparator.value}
+                                >
+                                    {comparator.label}
+                                </MenuItem>
+                            ))
+                        }
+                    </Select>
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid 
+                            container
+                            style={{
+                                background: '#fff',
+                                margin: '5px 0',
+                                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+                                padding: '5px 10px',
+                                borderRadius: '4px',
+                                boxSizing: 'border-box',
+                            }}
+                            alignItems="center"
+                    >
+                        <Grid item xs={4}>
+                            <div style={{...verticalBox, alignItems: 'flex=start'}}>
+                                <ValueHeader>{selectedFirstValue}</ValueHeader>
+                                <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
+                            </div>
+                            <OptionItems options={firstValueOptions} />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Chip 
+                                label={comparatorObj.label}
+                                avatar={<Avatar>{comparatorObj.codeOperator}</Avatar>}
+                                // color="primary"
+                                variant='outlined'
+                            />
+                        </Grid>
+                        <Grid item xs={5}>
                             <div 
                                     style={{
                                         ...horizontalBox, 
-                                        justifyContent: 'space-between', 
-                                        width: '100%',
-                                        position: 'relative'
+                                        justifyContent: 'space-between',
+                                        width: '100%'
                                     }}
                             >
-                                <ValueHeader>{selectedSecondValue}</ValueHeader>   
                                 <div 
                                         style={{
-                                            ...horizontalBox, 
-                                            justifyContent: 'flex-end',
-                                            position: 'absolute',
-                                            right: 0
+                                            ...verticalBox, 
+                                            alignItems: 'flex-start',
+                                            width: '100%'
                                         }}
                                 >
-                                    <ActionIcon 
-                                        type='edit' 
-                                        onClick={() => toggleEditDialog(index)} 
-                                    />
-                                    <ActionIcon 
-                                        type='cancel'
-                                        onClick={() => deleteCondition(index)}
-                                        color='#ff5d5d'
-                                    />
-                                </div>                         
+                                    <div 
+                                            style={{
+                                                ...horizontalBox, 
+                                                justifyContent: 'space-between', 
+                                                width: '100%',
+                                                position: 'relative'
+                                            }}
+                                    >
+                                        <ValueHeader>{selectedSecondValue}</ValueHeader>   
+                                        <div 
+                                                style={{
+                                                    ...horizontalBox, 
+                                                    justifyContent: 'flex-end',
+                                                    position: 'absolute',
+                                                    right: 0
+                                                }}
+                                        >
+                                            <ActionIcon 
+                                                type='edit' 
+                                                onClick={() => toggleEditDialog(index)} 
+                                            />
+                                            <ActionIcon 
+                                                type='cancel'
+                                                onClick={() => deleteCondition(index)}
+                                                color='#ff5d5d'
+                                            />
+                                        </div>                         
+                                    </div>
+                                    <IndicatorLabel>{selectedSecondValueLabel}</IndicatorLabel>
+                                </div>
                             </div>
-                            <IndicatorLabel>{selectedSecondValueLabel}</IndicatorLabel>
-                        </div>
-                    </div>
-                    <OptionItems options={secondValueOptions} />
+                            <OptionItems options={secondValueOptions} />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         

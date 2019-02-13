@@ -5,12 +5,13 @@ import Utils from './../Utils';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import MultiRadioGroup from '../components/Selections/MultiRadioGroup';
-import { Link, withRouter } from 'react-router-dom';
+import {withRouter } from 'react-router-dom';
 import Search from './Search/Search.jsx';
 import CommunityTabs from './CommunityTabs/CommunityTabs.jsx';
 import ThreadList from './ThreadList/ThreadList.jsx';
 import Pagination from './Pagination/Pagination.jsx';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
+import Breadcrumbs from '../components/UI/Breadcrumbs';
 import {communityTabsArray} from './CommunityTabs/constants';
 import 'react-loading-bar/dist/index.css';
 
@@ -406,13 +407,14 @@ class Community extends Component {
             }
         }
 
-        // const getBreadCrumbCommunity = () => {
-        //     return (
-        //         <Breadcrumb separator=">" className="location-breadcrumb">
-        //             <Breadcrumb.Item className="last">Community</Breadcrumb.Item>
-        //         </Breadcrumb>
-        //     );
-        // }
+        const getBreadCrumbCommunity = () => {
+            const breadcrumbs = [
+                {url: '', label: 'Community'}
+            ];
+            return (
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            );
+        }
 
         const getSearchTextAsNeeded = () => {
             if (this.searchStringCurrent && this.searchStringCurrent.trim().length > 0) {
@@ -446,7 +448,7 @@ class Community extends Component {
                         <div style={{ 'display': 'flex', 'marginBottom': '10px' }}>
                             <div>
                                 <h2 style={{ 'color': '#3c3c3c', 'fontWeight': 'normal', 'margin': '0px' }}>Community</h2>
-                                {/* {getBreadCrumbCommunity()} */}
+                                {getBreadCrumbCommunity()}
                             </div>
                             <Button 
                                     type="primary" 
