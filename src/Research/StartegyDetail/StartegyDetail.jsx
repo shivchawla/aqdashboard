@@ -34,7 +34,7 @@ import {benchmarks} from '../../constants/benchmarks';
 import {universe} from '../../constants/universe';
 import {processAlgoConditions, processConditionsToAlgo, constructLogic} from './utils';
 import { primaryColor, verticalBox, horizontalBox, secondaryColor } from '../../constants';
-import {algo} from '../FlowChartAlgo/constants';
+import {algo, defaultFirstRowEntryCondition} from '../FlowChartAlgo/constants';
 import {fetchAjaxPromise} from '../../utils/requests';
 import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
 
@@ -162,7 +162,9 @@ class StartegyDetail extends Component {
                     let exitLogic = _.get(response.data, 'exitLogic', '');
                     let entryConditions = _.get(response.data, 'entryConditions', []);
                     let exitConditions = _.get(response.data, 'exitConditions', []);
-                    entryConditions = processConditionsToAlgo(entryConditions, entryLogic);
+                    entryConditions = entryConditions.length > 0  
+                        ? processConditionsToAlgo(entryConditions, entryLogic)
+                        : [defaultFirstRowEntryCondition];
                     exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
                     const viewType = _.get(response.data, 'type', 'GUI');
                     this.updateState({ 

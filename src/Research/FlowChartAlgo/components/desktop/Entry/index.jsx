@@ -7,7 +7,6 @@ import {horizontalBox, primaryColor} from '../../../../../constants';
 import FirstRow from './CustomRows/FirstRow';
 import OtherRow from './CustomRows/OtherRow';
 import EditDialog from './EditDialog';
-import SectionHeader from '../common/SectionHeader';
 import {defaultFirstRowEntryCondition, defaultSecondRowEntryCondition} from '../../../constants';
 
 export default class Entry extends React.Component {
