@@ -1,5 +1,5 @@
 export const universe = [
-    'All',
+    '',
     'Nifty 50',
     'Nifty Next 50',
     'Nifty 100',

@@ -1720,16 +1720,10 @@ class StartegyDetail extends Component {
                                     type='arrow_back'
                                     disabled={this.state.isBacktestRunning}
                                 />
-                                <TextField
-                                    label=""
+                                <CustomOutlinedInput
                                     style={{width: 'auto', minWidth: '300px'}}
                                     value={this.state.strategy.name}
                                     onChange={this.startegyNameChange}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    margin="dense"
-                                    variant="outlined"
                                     disabled={this.state.isBacktestRunning} 
                                 />
                                 {
@@ -1785,7 +1779,7 @@ class StartegyDetail extends Component {
                             </Grid>
                         </Grid>
                         <div style={{
-                            height: 'calc(100% - 63px)', 
+                            height: 'calc(100% - 50px)', 
                             display: 'flex',
                             padding: '5px',
                             boxSizing: 'border-box'
