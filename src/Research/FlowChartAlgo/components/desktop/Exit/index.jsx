@@ -1,13 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import {horizontalBox} from '../../../../../constants';
-import FirstRow from './CustomRows/FirstRow';
-import OtherRow from './CustomRows/OtherRow';
-import EditDialog from './EditDialog';
+import ConditionRow from '../common/ConditionRow';
 import {defaultFirstRowEntryCondition, defaultSecondRowEntryCondition} from '../../../constants';
 import {primaryColor} from '../../../../../constants';
 
@@ -115,7 +112,7 @@ export default class Exit extends React.Component {
     }
 
     render() {
-        const {algo} = this.props;
+        const {algo, updateAlgo} = this.props;
         const conditions = _.get(algo, 'exit', []);
         const rowProps = {
             onComparatorChange: this.onComparatorChange,
@@ -123,67 +120,53 @@ export default class Exit extends React.Component {
             onSecondValueChange: this.onSecondValueChange,
             onConditionChange: this.onConditionChange,
             toggleEditDialog: this.updateSelectedCondition,
-            deleteCondition: this.deleteCondition
+            deleteCondition: this.deleteCondition,
+            algo,
+            updateAlgo
         };
 
         return (
             <Grid 
                     container 
                     style={{
-                        // padding: '0 20px',
                         boxSizing: 'border-box'
                     }}
             >
-                <EditDialog 
-                    open={this.state.editDialogOpen}
-                    onClose={this.toggleEditDialog}
-                    algo={algo}
-                    updateAlgo={this.props.updateAlgo}
-                    selectedIndex={this.state.selectedCondition}
-                />
-                <Grid 
-                        item xs={12} 
-                        style={{
-                            ...horizontalBox, 
-                            justifyContent: 'flex-end',
-                            marginBottom: '5px',
-                            marginTop: '-34px'
-                        }}
-                >
-                    <Button
-                            onClick={this.addCondition}
+                {
+                    conditions.length < 5 &&
+                    <Grid 
+                            item xs={12} 
                             style={{
-                                borderLeft: `2px solid ${primaryColor}`,
-                                borderRadius: 0,
-                                backgroundColor: '#00000012'
+                                ...horizontalBox, 
+                                justifyContent: 'flex-end',
+                                marginBottom: '5px',
+                                marginTop: '-34px'
                             }}
-                            size="small"
                     >
-                        Add Condition
-                        <Icon style={{marginLeft: '5px', color: primaryColor}}>add_circle</Icon>
-                    </Button>
-                </Grid>
+                        <Button
+                                onClick={this.addCondition}
+                                style={{
+                                    borderLeft: `2px solid ${primaryColor}`,
+                                    borderRadius: 0,
+                                    backgroundColor: '#00000012'
+                                }}
+                                size="small"
+                        >
+                            Add Condition
+                            <Icon style={{marginLeft: '5px', color: primaryColor}}>add_circle</Icon>
+                        </Button>
+                    </Grid>
+                }
                 <Grid item xs={12}>
                     {
-                        conditions.map((condition, index) => {
-                            if (index === 0) {
-                                return (
-                                    <FirstRow 
-                                        index={index}
-                                        condition={condition}
-                                        {...rowProps}
-                                    />
-                                );
-                            } else {
-                                return (
-                                    <OtherRow 
-                                        index={index}
-                                        condition={condition} 
-                                        {...rowProps}
-                                    />
-                                );
-                            }
-                        })
+                        conditions.map((condition, index) => (
+                            <ConditionRow 
+                                index={index}
+                                condition={condition}
+                                requiredConditionsKey='exit'
+                                {...rowProps}
+                            />
+                        ))
                     }
                 </Grid>
             </Grid>

@@ -1351,11 +1351,14 @@ class StartegyDetail extends Component {
                         <InputContainer 
                             label='Rebalance'
                             input={
-                                <CustomOutlinedInput
-                                    value={this.state.initialCapital}
-                                    onChange={(e) => { this.updateState({ 'initialCapital': e.target.value }) }}
-                                    type="number"
-                                    style={{width: '100%'}}
+                                <RadioGroup 
+                                    items={rebalanceRadioItems}
+                                    onChange={this.onRebalanceChange} 
+                                    defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
+                                    disabled={this.state.isBacktestRunning}
+                                    CustomRadio={CardRadio}
+                                    style={{marginTop: '10px'}}
+                                    small
                                 />
                             }
                         />

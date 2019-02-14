@@ -7,15 +7,15 @@ import {primaryColor} from '../../../../../../constants';
 
 const styles = {
     root: {
-        minWidth: '35px',
-        padding: '4px',
+        minWidth: '26px',
+        padding: '2px',
         border: `1px solid ${primaryColor}`,
         color: primaryColor,
         borderRadius: '2px'
     },
     contained: {
-        minWidth: '35px',
-        padding: '4px',
+        minWidth: '26px',
+        padding: '2px',
         color: '#fff',
         boxShadow: 'none',
         borderRadius: '2px'
@@ -43,7 +43,7 @@ class CustomRadio extends React.Component {
         return (
             <div 
                     style={{
-                        width: '48px',
+                        width: '32px',
                         marginRight: '5px'
                     }}
             >
@@ -57,7 +57,7 @@ class CustomRadio extends React.Component {
                             label: classes.label
                         }}
                 >
-                    <span style={{fontFamily: 'Lato, sans-serif'}}>{label}</span>
+                    <span style={{fontFamily: 'Lato, sans-serif', fontSize: '12px'}}>{label}</span>
                 </Button>
                 {
                     !hideLabel && <Label style={{marginTop: '5px'}}>{secondaryLabel}</Label>

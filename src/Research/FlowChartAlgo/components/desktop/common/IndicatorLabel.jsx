@@ -6,8 +6,8 @@ export default styled.h3`
     font-size: 14px;
     font-weight: 400;
     color: ${primaryColor};
-    /* width: 175px;
+    width: 250px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; */
+    text-overflow: ellipsis;
 `;

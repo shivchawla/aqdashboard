@@ -64,12 +64,12 @@ class StockCardRadioGroup extends React.Component {
 
     handleTextChange = (e) => {
         const value = e.target.value;
-        if (Number(value) >=0 && Number(value) <= 30) {
+        if (Number(value) >=0 && Number(value) <= 100) {
             this.setState({sliderValue: value});
             const requiredValue = value.length === 0 ? null : Number(value);
             clearTimeout(sliderInputTimeout);
             sliderInputTimeout = setTimeout(() => {
-                this.props.onChange && this.props.onChange(requiredValue, false);
+                this.props.onChange && this.props.onChange(requiredValue, true);
             }, 300);
         } else {}
     }
@@ -86,7 +86,8 @@ class StockCardRadioGroup extends React.Component {
                         ...verticalBox, 
                         alignItems: 'flex-start',
                         ...style,
-                        marginTop: '20px'
+                        // marginTop: '20px',
+                        width: '100%'
                     }}
             >
                 <Grid item xs={12}>
@@ -98,7 +99,6 @@ class StockCardRadioGroup extends React.Component {
                             justifyContent: 'flex-start',
                             alignItems: 'flex-start',
                             width: '100%',
-                            marginTop: '10px',
                             ...this.props.style
                         }}
                 >
@@ -108,7 +108,7 @@ class StockCardRadioGroup extends React.Component {
                                 style={{
                                     ...horizontalBox, 
                                     justifyContent: 'flex-end',
-                                    alignItems: 'flex-start',
+                                    alignItems: 'center',
                                     ...this.props.style
                                 }}
                         >
@@ -131,7 +131,7 @@ class StockCardRadioGroup extends React.Component {
                                     style={{
                                         ...horizontalBox, 
                                         justifyContent: 'center',
-                                        alignItems: 'flex-start'
+                                        alignItems: 'center'
                                     }}
                             >
                                 {
@@ -141,7 +141,7 @@ class StockCardRadioGroup extends React.Component {
                                             style={{
                                                 ...verticalBox,
                                                 alignItems: 'flex-start',
-                                                width: '48px'
+                                                width: '32px'
                                             }}
                                     >
                                         <ValueContainer>
@@ -155,7 +155,7 @@ class StockCardRadioGroup extends React.Component {
                                         type="edit" 
                                         color='#444' 
                                         onClick={this.toggleSlider} 
-                                        style={{marginLeft: '-10px'}}
+                                        style={{marginLeft: '-10px', fontSize: '20px'}}
                                     />
                                 }
                             </div>
@@ -245,7 +245,7 @@ const ValueContainer = styled.div`
     align-items: center;
     flex-direction: column;
     border-radius: 2px;
-    background-color: #3e4db8;
+    background-color: ${primaryColor};
 `;
 
 const CustomText = styled.h3`
