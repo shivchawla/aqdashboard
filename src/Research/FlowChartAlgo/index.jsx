@@ -67,7 +67,7 @@ export default class FlowChartAlgo extends React.Component {
                         <Entry {...commonProps} />
                     </Grid>
                     {
-                        exitConditions.length > 0 &&
+                        (exitConditions.length > 0 || edit) && 
                         <Grid 
                                 item 
                                 xs={12}
