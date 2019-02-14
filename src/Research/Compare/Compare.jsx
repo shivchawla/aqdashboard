@@ -19,6 +19,9 @@ import Loading from 'react-loading-bar';
 import 'react-loading-bar/dist/index.css';
 
 import BacktestCompareHighChart from './../../CustomHighCharts/BacktestCompareHighChart.jsx';
+import { processConditionsToAlgo } from '../StartegyDetail/utils';
+import { verticalBox } from '../../constants';
+import FlowChartAlgo from '../FlowChartAlgo';
 
 
 class Compare extends Component {
@@ -72,7 +75,9 @@ class Compare extends Component {
             month: 'All',
             settingsLeft: [],
             settingsRight: [],
-            selectedTab: 0
+            selectedTab: 0,
+            selectedFirstGUIBacktest: 0,
+            selectedSecondGUIBacktest: 1
         };
         this.updateState = (data) => {
             if (this._mounted) {
@@ -86,8 +91,23 @@ class Compare extends Component {
 					.then((response) => {
 						this.totalBacktestrequests = this.totalBacktestrequests + 1;
 						let backtestsNow = JSON.parse(JSON.stringify(this.state.backtests));
-						let dtLocal = JSON.parse(JSON.stringify(response.data));
-						dtLocal['fullBacktestName'] = this.props.selectedBacktests[dtLocal._id];
+                        let dtLocal = JSON.parse(JSON.stringify(response.data));
+                        let entryLogic = _.get(dtLocal, 'entryLogic', '');
+                        let exitLogic = _.get(dtLocal, 'exitLogic', '');
+
+                        let entryConditions = _.get(dtLocal, 'entryConditions', []);
+                        let exitConditions = _.get(dtLocal, 'exitConditions', []);
+
+                        entryConditions = processConditionsToAlgo(entryConditions, entryLogic);
+                        exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
+
+                        const algo = {
+                            entry: entryConditions,
+                            exit: exitConditions
+                        };
+
+                        dtLocal['fullBacktestName'] = this.props.selectedBacktests[dtLocal._id];
+                        dtLocal['algo'] = algo;
 						backtestsNow.push(dtLocal);
 						backtestsNow.sort((a, b) => {
 							return a.fullBacktestName.localeCompare(b.fullBacktestName);
@@ -739,6 +759,55 @@ class Compare extends Component {
             );
         }
 
+        const getGuiTabPane = () => {
+            const backtests = this.state.backtests;
+
+            return (
+                <div style={{height: '100%'}}>
+                    <Grid container style={{ 'marginBottom': '10px' }}>
+                        <Grid 
+                                item 
+                                xs={6}
+                                style={{ 
+                                    ...verticalBox,
+                                    alignItems: 'center'
+                                }}
+                        >
+                            <RadioGroup 
+                                items={backtests.map(backtest => backtest.fullBacktestName)}
+                                onChange={value => this.setState({selectedFirstGUIBacktest: value})}
+                                defaultSelected={this.state.selectedFirstGUIBacktest}
+                                CustomRadio={CardRadio}
+                            />
+                            <FlowChartAlgo 
+                                algo={_.get(backtests, `[${this.state.selectedFirstGUIBacktest}].algo`)}
+                                edit={false}
+                            />
+                        </Grid>
+                        <Grid 
+                                item 
+                                xs={6}
+                                style={{ 
+                                    ...verticalBox,
+                                    alignItems: 'center'
+                                }}
+                        >
+                            <RadioGroup 
+                                items={backtests.map(backtest => backtest.fullBacktestName)}
+                                onChange={value => this.setState({selectedSecondGUIBacktest: value})}
+                                defaultSelected={this.state.selectedSecondGUIBacktest}
+                                CustomRadio={CardRadio}
+                            />
+                            <FlowChartAlgo 
+                                algo={_.get(backtests, `[${this.state.selectedSecondGUIBacktest}].algo`)}
+                                edit={false}
+                            />
+                        </Grid>
+                    </Grid>
+                </div>
+            );
+        }
+
         const getReturnsTabPane = () => {
             return (
                 <div style={{ 'height': '100%', 'overflowY': 'auto' }}>
@@ -874,9 +943,11 @@ class Compare extends Component {
         }
 
         const getCompareDiv = () => {
+            const shouldShowAlgo = _.get(this.props, 'strategy.type', 'CODE') === 'GUI';
+            const codeOrGUITabPane = shouldShowAlgo ? getGuiTabPane() : getCodeTabPane();
             const tabs = [
                 getSummaryTabPane(),
-                getCodeTabPane(),
+                codeOrGUITabPane,
                 getReturnsTabPane(),
                 getSettingsTabPane()
             ];
@@ -907,7 +978,7 @@ class Compare extends Component {
                                     style={{marginBottom: '10px'}}
                             >
                                 <Tab label='SUMMARY' />
-                                <Tab label='CODE' />
+                                <Tab label={shouldShowAlgo ? 'ALGO' : 'CODE'} />
                                 <Tab label='RETURNS' />
                                 <Tab label='SETTINGS' />
                             </Tabs>
