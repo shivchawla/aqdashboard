@@ -1222,7 +1222,6 @@ class StartegyDetail extends Component {
                                 <RadioGroup 
                                     items={positionActionItems}
                                     onChange={(selectedValue) => { 
-                                        console.log(selectedValue);
                                         const value = selectedValue === 0 ? 'BUY' : 'SELL';
                                         const modifiedAlgo = {
                                             ...this.state.algo,
@@ -1234,7 +1233,7 @@ class StartegyDetail extends Component {
                                         this.updateAlgo(modifiedAlgo);
                                     }}
                                     defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
-                                    disabled={this.state.isBacktestRunning}
+                                    disabled={this.state.isBacktestRunning || this.state.codeViewSelected}
                                     CustomRadio={CardRadio}
                                     small
                                 />

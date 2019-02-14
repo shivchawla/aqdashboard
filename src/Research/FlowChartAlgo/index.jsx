@@ -66,20 +66,17 @@ export default class FlowChartAlgo extends React.Component {
                         </DotContainer>
                         <Entry {...commonProps} />
                     </Grid>
-                    {
-                        (exitConditions.length > 0 || edit) && 
-                        <Grid 
-                                item 
-                                xs={12}
-                                style={commonStyle}
-                        >
-                            <DotContainer>
-                                <Dot />
-                                <SectionHeader>Exit Conditions</SectionHeader>
-                            </DotContainer>
-                            <Exit {...commonProps} />
-                        </Grid>
-                    }
+                    <Grid 
+                            item 
+                            xs={12}
+                            style={commonStyle}
+                    >
+                        <DotContainer>
+                            <Dot />
+                            <SectionHeader>Exit Conditions {exitConditions.length === 0 && `- (None Selected)`}</SectionHeader>
+                        </DotContainer>
+                        <Exit {...commonProps} />
+                    </Grid>
                 </Grid>
             </Grid>
         );
