@@ -1174,6 +1174,7 @@ class StartegyDetail extends Component {
                                     onChange={(e) => { this.updateState({ 'initialCapital': e.target.value }) }}
                                     type="number"
                                     style={{width: '100%'}}
+                                    disabled={this.state.isBacktestRunning} 
                                 />
                             }
                         />
@@ -1325,8 +1326,10 @@ class StartegyDetail extends Component {
                                     }}
                                     type="number"
                                     style={{width: '100%'}}
+                                    disabled={this.state.isBacktestRunning} 
                                 />
                             }
+                            disabled={this.state.isBacktestRunning} 
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -1344,6 +1347,7 @@ class StartegyDetail extends Component {
                                     }}
                                     type="number"
                                     style={{width: '100%'}}
+                                    disabled={this.state.isBacktestRunning} 
                                 />
                             }
                         />
