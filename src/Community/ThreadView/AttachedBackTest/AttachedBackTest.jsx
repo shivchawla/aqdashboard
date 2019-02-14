@@ -12,6 +12,8 @@ import AceEditor from 'react-ace';
 import 'brace/mode/julia';
 import 'brace/theme/xcode';
 import CustomHighCharts from './../../../CustomHighCharts/CustomHighCharts.jsx';
+import { processConditionsToAlgo } from '../../../Research/StartegyDetail/utils';
+import FlowChartAlgo from '../../../Research/FlowChartAlgo';
 
 class AttachedBackTest extends Component {
 
@@ -23,7 +25,9 @@ class AttachedBackTest extends Component {
         this.state = {
             backTestData: {},
             loading: true,
-            selectedTab: 0
+            selectedTab: 0,
+            algo: {},
+            type: 'GUI' // this should not be used, type should be obtained from the N/W call
         };
 
         this.getBacktestData = () => {
@@ -36,9 +40,24 @@ class AttachedBackTest extends Component {
                 'headers': Utils.getAuthTokenHeader()
             })
                 .then((response) => {
+                    let entryLogic = _.get(response.data, 'entryLogic', '');
+                    let exitLogic = _.get(response.data, 'exitLogic', '');
+                    let entryConditions = _.get(response.data, 'entryConditions', []);
+                    let exitConditions = _.get(response.data, 'exitConditions', []);
+                    
+                    entryConditions = processConditionsToAlgo(entryConditions, entryLogic);
+
+                    exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
+
+                    const algo = {
+                        ...this.state.algo,
+                        entry: entryConditions,
+                        exit: exitConditions
+                    };
                     this.updateState({
-                        'backTestData': response.data,
-                        'loading': false
+                        backTestData: response.data,
+                        loading: false,
+                        algo
                     });
                     this.cancelGetBackTestData = undefined;
                 })
@@ -85,7 +104,6 @@ class AttachedBackTest extends Component {
     }
 
     render() {
-        const TabPane = Tabs.TabPane;
         const getLoadingDiv = () => {
             if (this.state.loading) {
                 return (
@@ -258,6 +276,24 @@ class AttachedBackTest extends Component {
         const getBackTestBody = () => {
             if (!this.state.loading) {
                 const tabs = [];
+                const shouldShowAlgo = this.state.type === 'GUI';
+                const codeContent = (
+                    <AceEditor
+                        mode="julia"
+                        theme="xcode"
+                        name="UNIQUE_ID_OF_DIV"
+                        readOnly={true}
+                        value={this.state.backTestData.code}
+                        width="100%"
+                        editorProps={{ $blockScrolling: "Infinity" }}
+                    />
+                );
+                const guiContent = (
+                    <FlowChartAlgo 
+                        algo={this.state.algo}
+                        edit={false}
+                    />
+                );
 
                 tabs.push(
                     <div 
@@ -283,15 +319,7 @@ class AttachedBackTest extends Component {
                                 overflowY: 'auto'
                             }}
                     >
-                        <AceEditor
-                            mode="julia"
-                            theme="xcode"
-                            name="UNIQUE_ID_OF_DIV"
-                            readOnly={true}
-                            value={this.state.backTestData.code}
-                            width="100%"
-                            editorProps={{ $blockScrolling: "Infinity" }}
-                        />
+                        {shouldShowAlgo ? guiContent : codeContent}
                     </div>
                 );
                 tabs.push(getSettingsTabPane());
@@ -499,7 +527,7 @@ class AttachedBackTest extends Component {
                                 indicatorColor='primary'
                             >
                                 <Tab label='Performance' />
-                                <Tab label='Code' />
+                                <Tab label={shouldShowAlgo ? 'ALGO' : 'CODE'} />
                                 <Tab label='Settings' />
                             </Tabs>
                             {tabs[this.state.selectedTab]}
