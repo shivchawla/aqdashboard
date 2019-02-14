@@ -112,7 +112,7 @@ export default class Entry extends React.Component {
     }
 
     render() {
-        const {algo, updateAlgo} = this.props;
+        const {algo, updateAlgo, edit = true} = this.props;
         const conditions = _.get(algo, 'entry', []);
         const rowProps = {
             onComparatorChange: this.onComparatorChange,
@@ -122,7 +122,8 @@ export default class Entry extends React.Component {
             toggleEditDialog: this.updateSelectedCondition,
             deleteCondition: this.deleteCondition,
             algo,
-            updateAlgo
+            updateAlgo,
+            edit
         };
 
         return (
@@ -133,7 +134,7 @@ export default class Entry extends React.Component {
                     }}
             >
                 {
-                    conditions.length < 5 &&
+                    conditions.length < 5 && edit &&
                     <Grid 
                             item 
                             xs={12} 

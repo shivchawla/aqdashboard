@@ -82,7 +82,8 @@ class ConditionRow extends React.Component {
             algo,
             deleteCondition,
             requiredConditionsKey,
-            classes
+            classes,
+            edit = true
         } = this.props;
         const conditionProp = _.get(this.props, 'condition', {});
         const condition = _.get(conditionProp, 'condition', null);
@@ -161,6 +162,7 @@ class ConditionRow extends React.Component {
                                 classes={{
                                     select: classes.selectInput
                                 }}
+                                disabled={!edit}
                         >
                             {
                                 conditionalOperators.map((comparator, index) => (
@@ -247,27 +249,30 @@ class ConditionRow extends React.Component {
                                             }}
                                     >
                                         <ValueHeader>{selectedSecondValue}</ValueHeader>
-                                        <div
-                                                style={{
-                                                    ...horizontalBox, 
-                                                    justifyContent: 'flex-end',
-                                                    position: 'absolute',
-                                                    right: 0
-                                                }}
-                                        >
-                                            <ActionIcon 
-                                                type='edit' 
-                                                onClick={this.firstOpenPopover} 
-                                            />
-                                            {
-                                                (index > 0 || requiredConditionsKey === 'exit') &&
+                                        {
+                                            edit &&
+                                            <div
+                                                    style={{
+                                                        ...horizontalBox, 
+                                                        justifyContent: 'flex-end',
+                                                        position: 'absolute',
+                                                        right: 0
+                                                    }}
+                                            >
                                                 <ActionIcon 
-                                                    type='cancel'
-                                                    onClick={() => deleteCondition(index)}
-                                                    color='#ff5d5d'
+                                                    type='edit' 
+                                                    onClick={this.firstOpenPopover} 
                                                 />
-                                            }
-                                        </div>
+                                                {
+                                                    (index > 0 || requiredConditionsKey === 'exit') &&
+                                                    <ActionIcon 
+                                                        type='cancel'
+                                                        onClick={() => deleteCondition(index)}
+                                                        color='#ff5d5d'
+                                                    />
+                                                }
+                                            </div>
+                                        }
                                     </div>
                                     <IndicatorLabel>{selectedSecondValueLabel}</IndicatorLabel>
                                 </div>

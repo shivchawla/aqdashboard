@@ -170,21 +170,17 @@ class StartegyDetail extends Component {
                         ? processConditionsToAlgo(entryConditions, entryLogic)
                         : [defaultFirstRowEntryCondition];
 
+                    exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
+
                     const algo = {
                         ...this.state.algo,
                         entry: entryConditions,
                         exit: exitConditions
                     };
-
-                    console.log(_.get(response.data, 'code', '').length === 0);
-
                     const code = _.get(response.data, 'code', '').length === 0
                         ? parseObjectToCode(algo)
                         :_.get(response.data, 'code', '')
 
-                    console.log(code);
-
-                    exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
                     const viewType = _.get(response.data, 'type', 'GUI');
                     this.updateState({ 
                         strategy: {

@@ -23,6 +23,8 @@ import CardCustomRadio from '../../components/Selections/CardCustomRadio';
 import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import "react-table/react-table.css";
 import 'react-loading-bar/dist/index.css';
+import { processConditionsToAlgo } from '../StartegyDetail/utils';
+import FlowChartAlgo from '../FlowChartAlgo';
 
 
 class BacktestDetail extends Component {
@@ -224,6 +226,7 @@ class BacktestDetail extends Component {
             backTestName = this.queryParams.get('backtestName');
         }
         this.state = {
+            algo: {},
             strategy: {},
             backTestName: backTestName,
             backTestData: {},
@@ -591,7 +594,21 @@ class BacktestDetail extends Component {
                 });
                 this.setupWebSocketConnections(data._id);
             } else {
+                let entryLogic = _.get(data, 'entryLogic', '');
+                let exitLogic = _.get(data, 'exitLogic', '');
+                let entryConditions = _.get(data, 'entryConditions', []);
+                let exitConditions = _.get(data, 'exitConditions', []);
+                
+                entryConditions = processConditionsToAlgo(entryConditions, entryLogic);
+                exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
+
+                const algo = {
+                    entry: entryConditions,
+                    exit: exitConditions
+                };
+
                 this.updateState({
+                    algo,
                     backTestData: data,
                     isBacktestRunning: false
                 });
@@ -1252,6 +1269,21 @@ class BacktestDetail extends Component {
 
         const getBackTestTabs = () => {
             const tabs = [];
+            const shouldShowAlgo = _.get(this.state, 'strategy.type', 'CODE') === 'GUI';
+            const codeComponent = (
+                <AceEditor
+                    mode="julia"
+                    theme="xcode"
+                    name="UNIQUE_ID_OF_DIV"
+                    readOnly={true}
+                    value={this.state.backTestData.code}
+                    width="100%"
+                    editorProps={{ $blockScrolling: "Infinity" }}
+                />
+            );
+            const guiComponent = (
+                <FlowChartAlgo algo={this.state.algo} edit={false} />
+            );
             tabs.push(
                 <div 
                         style={{
@@ -1269,15 +1301,9 @@ class BacktestDetail extends Component {
                             overflowY: 'auto'
                         }}
                 >
-                    <AceEditor
-                        mode="julia"
-                        theme="xcode"
-                        name="UNIQUE_ID_OF_DIV"
-                        readOnly={true}
-                        value={this.state.backTestData.code}
-                        width="100%"
-                        editorProps={{ $blockScrolling: "Infinity" }}
-                    />
+                    {
+                        shouldShowAlgo ? guiComponent : codeComponent
+                    }
                 </div>
             );
 
@@ -1294,7 +1320,7 @@ class BacktestDetail extends Component {
                         indicatorColor='primary'
                     >
                         <Tab label='Performance' />
-                        <Tab label='Code' />
+                        <Tab label={shouldShowAlgo ? 'ALGO' : 'CODE'} />
                         <Tab label='Settings' />
                         <Tab label='Logs' />
                         <Tab label='Transaction' />

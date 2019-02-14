@@ -20,9 +20,11 @@ export default class FlowChartAlgo extends React.Component {
     }
 
     render() {
+        const {edit = true} = this.props;
         const commonProps = {
             algo: this.props.algo,
-            updateAlgo: this.updateAlgo
+            updateAlgo: this.updateAlgo,
+            edit
         };
         const commonStyle = {
             borderLeft: '2px dotted #979797',
@@ -32,6 +34,8 @@ export default class FlowChartAlgo extends React.Component {
             paddingLeft: '20px',
             boxSizing: 'border-box'
         };
+        const entryConditions = _.get(this.props, 'algo.entry', []);
+        const exitConditions = _.get(this.props, 'algo.exit', []);
 
         return (
             <Grid 
@@ -62,17 +66,20 @@ export default class FlowChartAlgo extends React.Component {
                         </DotContainer>
                         <Entry {...commonProps} />
                     </Grid>
-                    <Grid 
-                            item 
-                            xs={12}
-                            style={commonStyle}
-                    >
-                        <DotContainer>
-                            <Dot />
-                            <SectionHeader>Exit Conditions</SectionHeader>
-                        </DotContainer>
-                        <Exit {...commonProps} />
-                    </Grid>
+                    {
+                        exitConditions.length > 0 &&
+                        <Grid 
+                                item 
+                                xs={12}
+                                style={commonStyle}
+                        >
+                            <DotContainer>
+                                <Dot />
+                                <SectionHeader>Exit Conditions</SectionHeader>
+                            </DotContainer>
+                            <Exit {...commonProps} />
+                        </Grid>
+                    }
                 </Grid>
             </Grid>
         );
