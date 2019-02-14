@@ -1202,7 +1202,7 @@ class StartegyDetail extends Component {
                                             : resolutionItems[selectedValue]; 
                                         this.updateState({
                                             selectedResolution: value,
-                                            selectedRebalance: selectedValue === 0
+                                            selectedRebalance: selectedValue === 1
                                                 ?   'Daily'
                                                 :   this.state.selectedRebalance
                                         }) 
@@ -1395,7 +1395,7 @@ class StartegyDetail extends Component {
                                     items={rebalanceRadioItems}
                                     onChange={this.onRebalanceChange} 
                                     defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
-                                    disabled={this.state.isBacktestRunning || this.state.selectedResolution === 'Day'}
+                                    disabled={this.state.isBacktestRunning || this.state.selectedResolution === 'Minute'}
                                     CustomRadio={CardRadio}
                                     style={{marginTop: '10px'}}
                                     small
