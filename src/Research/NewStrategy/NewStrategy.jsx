@@ -60,7 +60,9 @@ class NewStartegy extends Component {
                     loading: false,
                     error: null
                 });
-                this.props.history.push('/research/strategy/' + response.data._id);
+                console.log(response.data._id);
+                console.log('Done');
+                window.location.href = ('/research/strategy/' + response.data._id);
             })
             .catch((error) => {
                 this.updateState({
