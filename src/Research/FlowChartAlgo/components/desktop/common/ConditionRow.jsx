@@ -327,6 +327,6 @@ const Comparator = styled.h3`
     font-family: 'Lato', sans-serif;
     padding: 5px 10px;
     display: inline;
-    border: 1px solid ${primaryColor};
-    border-radius: 20px;
+    /* border: 1px solid ${primaryColor}; */
+    /* border-radius: 20px; */
 `;

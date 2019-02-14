@@ -4,7 +4,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import { primaryColor } from '../../constants';
 const inactiveColor = '#9C9C9C';
 
-export default class CardCustomRadio extends React.Component {
+export default class CardNavCustomRadio extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (!_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState)) {
             return true;
@@ -15,12 +15,12 @@ export default class CardCustomRadio extends React.Component {
 
     render() {
         const {checked = false, label='-', small = false, disabled = false} = this.props;
-        const background = checked 
-            ? disabled ? '#a2aabe' : primaryColor
-            : disabled ? '#e9e9e9' : '#CCDBEB';
-        const color = checked ? '#fff' : '#7C7C7C';
+        const background = '#fff';
+        const color = checked ? '#ce6564' : '#7C7C7C';
+        const borderColor = checked ? '#ce6564' : '#7C7C7C';
         const fontSize = small ?  '12px' : '14px';
         const padding = small ? '4px 8px' : '6px 12px';
+        const fontWeight = checked ? '600' : '500';
 
         return (
             <ButtonBase 
@@ -30,6 +30,8 @@ export default class CardCustomRadio extends React.Component {
                         fontSize,
                         padding,
                         background,
+                        border: `${checked ? '2px' : '1px'} solid ${borderColor}`,
+                        fontWeight,
                     }}
                     onClick={this.props.onChange}
                     disabled={disabled}

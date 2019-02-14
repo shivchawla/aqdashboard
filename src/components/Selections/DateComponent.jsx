@@ -89,7 +89,8 @@ class DateComponent extends React.Component {
             disableFuture = false, 
             value = null,
             format = 'DD MMM',
-            style={}
+            style={},
+            hideNavButtons = false
         } = this.props;
 
         return (
@@ -101,7 +102,16 @@ class DateComponent extends React.Component {
                         ...style
                     }}
             >
-                <ActionIcon disabled={disabled} size={22} color={color} type='chevron_left' onClick={this.navigateToPreviousDate} />
+                {
+                    !hideNavButtons &&
+                    <ActionIcon 
+                        disabled={disabled} 
+                        size={22} 
+                        color={color} 
+                        type='chevron_left' 
+                        onClick={this.navigateToPreviousDate} 
+                    />
+                }
                 <DatePicker
                     format={format}
                     value={value}
@@ -114,22 +124,58 @@ class DateComponent extends React.Component {
                     disableFuture={disableFuture}
                     disabled={disabled}
                 />
-                <ActionIcon disabled={disabled} size={22} color={color} type='chevron_right' onClick={this.navigateToNextDate} />
+                {
+                    !hideNavButtons &&
+                    <ActionIcon 
+                        disabled={disabled} 
+                        size={22} 
+                        color={color} 
+                        type='chevron_right' 
+                        onClick={this.navigateToNextDate} 
+                    />
+                }
             </div>
         );
     }
 
     renderNormalView = () => {
-        const {color = '#fff', format = 'DD MMM'} = this.props;
+        const {color = '#fff', format = 'DD MMM', hideNavButtons = false} = this.props;
         const { selectedDate } = this.state;
         const disabled = _.get(this.props, 'type', 'daily') === 'overall' ? true : false;
 
         return (
-            <Grid container style={{backgroundColor: '#fff', width: '100%', padding: '0 30px', ...this.props.style}}>
-                <Grid item xs={2} style={{...horizontalBox, justifyContent: 'flex-start'}}>
-                    <ActionIcon size={30} color={color} type='chevron_left' disabled={disabled} onClick={this.navigateToPreviousDate}/>
-                </Grid>
-                <Grid item xs={8} style={{...horizontalBox, justifyContent: 'center'}}>
+            <Grid 
+                    container 
+                    style={{
+                        backgroundColor: '#fff', 
+                        width: '100%', 
+                        padding: '0 30px', 
+                        ...this.props.style
+                    }}
+            >
+                {
+                    !hideNavButtons &&
+                    <Grid 
+                            item xs={2} 
+                            style={{...horizontalBox, justifyContent: 'flex-start'}}
+                    >
+                        <ActionIcon 
+                            size={30} 
+                            color={color} 
+                            type='chevron_left' 
+                            disabled={disabled} 
+                            onClick={this.navigateToPreviousDate}
+                        />
+                    </Grid>
+                }
+                <Grid 
+                        item 
+                        xs={hideNavButtons ? 12 : 8} 
+                        style={{
+                            ...horizontalBox, 
+                            justifyContent: 'center'
+                        }}
+                >
                     <DatePicker
                         format={format}
                         value={selectedDate}
@@ -142,15 +188,22 @@ class DateComponent extends React.Component {
                         disabled={disabled}
                     />
                 </Grid>
-                <Grid item xs={2} style={{...horizontalBox, justifyContent: 'flex-end'}}> 
-                    <ActionIcon 
-                        size={30} 
-                        color={color} 
-                        type='chevron_right' 
-                        disabled={disabled}
-                        onClick={this.navigateToNextDate}
-                    />
-                </Grid>
+                {
+                    !hideNavButtons &&
+                    <Grid 
+                            item 
+                            xs={2} 
+                            style={{...horizontalBox, justifyContent: 'flex-end'}}
+                    > 
+                        <ActionIcon 
+                            size={30} 
+                            color={color} 
+                            type='chevron_right' 
+                            disabled={disabled}
+                            onClick={this.navigateToNextDate}
+                        />
+                    </Grid>
+                }
             </Grid>
         );
     }
@@ -166,8 +219,19 @@ export default withRouter(DateComponent);
 
 const DateFields = props => {
     return (
-        <div style={{...horizontalBox}}>
-            <DateText color={props.color} onClick={props.onClick}>{props.value}</DateText>
+        <div 
+                style={{
+                    ...horizontalBox,
+                    justifyContent: 'center',
+                    border: `2px solid #ced4da`,
+                    borderRadius: '4px',
+                    padding: '4px 4px',
+                    cursor: 'pointer',
+                    width: '90px'
+                }}
+                onClick={props.onClick}
+        >
+            <DateText color={props.color}>{props.value}</DateText>
         </div>
     );
 }

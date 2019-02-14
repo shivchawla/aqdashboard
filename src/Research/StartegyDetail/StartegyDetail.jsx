@@ -6,12 +6,10 @@ import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Chip from '../../components/DataDisplay/Chip';
-import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import Chip from '@material-ui/core/Chip';
+import Select from '@material-ui/core/Select';
 import {withStyles} from '@material-ui/core/styles';
 import ActionIcon from '../../components/Buttons/ActionIcon';
 import RadioGroup from '../../components/Selections/RadioGroup';
@@ -36,15 +34,15 @@ import { primaryColor, verticalBox, horizontalBox, secondaryColor } from '../../
 import {algo, defaultFirstRowEntryCondition} from '../FlowChartAlgo/constants';
 import {fetchAjaxPromise} from '../../utils/requests';
 import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
-import { InputBase } from '@material-ui/core';
+import CardNavCustomRadio from '../../components/Selections/CardNavCustomRadio';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
 const endDate = moment(DateHelper.getPreviousNonHolidayWeekday(moment().add(1, 'days')));
 
 const styles = {
-    textField: {
-        // padding: '7px'
+    selectInput: {
+        boxSizing: 'border-box'
     }
 }
 
@@ -1140,12 +1138,12 @@ class StartegyDetail extends Component {
         const getSettingsDivTabsRight = () => {
             const tabs = [];
             const rebalanceRadioItems = ['Daily', 'Weekly', 'Monthly'];
-            const cancelPolicyRadioItems = ['EOD', 'GTC'];
             const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
             const selectedSlipPageTypeRadioItems = ['Variable', 'Spread'];
             const positionActionItems = ['BUY', 'SELL'];
             const resolutionItems = ['Day', 'Minute'];
             const inputProps = {style: {padding: '7px'}};
+            const {classes} = this.props;
 
             const benchmarksOptions = [];
             for (let i = 0; i < this.state.benchmark.length; i++) {
@@ -1163,7 +1161,8 @@ class StartegyDetail extends Component {
                         style={{ 
                             height: '100%', 
                             overflowY: 'auto',
-                            marginTop: '20px'
+                            marginTop: '10px',
+                            backgroundColor: '#fcfcfc'
                         }}
                 >
                     <Grid item xs={12}>
@@ -1181,100 +1180,32 @@ class StartegyDetail extends Component {
                     </Grid>
                     <Grid item xs={12}>
                         <InputContainer 
-                            label='Start Date'
-                            style={{marginBottom: 0}}
+                            label='Resolution'
                             input={
-                                <DateComponent
-                                    style={{flex: '1', padding: 0}}
-                                    value={this.state.startDate}
-                                    onChange={this.onStartDateChange}
-                                    format="DD-MM-YYYY"
-                                    disabledDate={this.getDisabledStartDate}
-                                    disabled={this.state.isBacktestRunning} 
-                                    color='#222'
-                                    // compact
+                                <RadioGroup 
+                                    items={resolutionItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue >= resolutionItems.length 
+                                            ? resolutionItems[0]
+                                            : resolutionItems[selectedValue]; 
+                                        this.updateState({
+                                            selectedResolution: value,
+                                            selectedRebalance: selectedValue === 0
+                                                ?   'Daily'
+                                                :   this.state.selectedRebalance
+                                        }) 
+                                    }}
+                                    defaultSelected={resolutionItems.indexOf(this.state.selectedResolution)}
+                                    disabled={this.state.isBacktestRunning || this.state.codeViewSelected}
+                                    CustomRadio={CardRadio}
+                                    small
                                 />
                             }
                         />
                     </Grid>
                     <Grid item xs={12}>
                         <InputContainer 
-                            label='End Date'
-                            style={{marginBottom: 0}}
-                            input={
-                                <DateComponent
-                                    style={{flex: '1', padding: 0}}
-                                    value={this.state.endDate}
-                                    onChange={this.onEndDateChange}
-                                    format="DD-MM-YYYY"
-                                    disabledDate={this.getDisabledEndDate}
-                                    disabled={this.state.isBacktestRunning} 
-                                    color='#222'
-                                    // compact
-                                />
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Benchmark'
-                            input={
-                                <Select 
-                                    style={{width: '100%'}}
-                                    input={
-                                        <CustomOutlinedInput
-                                            name="benchmark"
-                                            id="benchmark"
-                                            margin="dense"
-                                            inputProps={inputProps}
-                                        />
-                                    }
-                                    value={this.state.selectedBenchmark}
-                                    onChange={this.onBenchmarkChange}
-                                    disabled={this.state.isBacktestRunning}
-                            >
-                                {benchmarksOptions}
-                            </Select>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Universe'
-                            input={
-                                <React.Fragment>
-                                    <Select 
-                                            style={{width: '100%'}}
-                                            input={
-                                                <CustomOutlinedInput
-                                                    name="universe"
-                                                    id="universe"
-                                                    margin="dense"
-                                                    labelWidth={60}
-                                                />
-                                            }
-                                            value={this.state.selectedUniverse}
-                                            onChange={this.onUniverseChange}
-                                            disabled={this.state.isBacktestRunning}
-                                            placeholder="Universe"
-                                    >
-                                        {universeOptions}
-                                    </Select>
-                                    {/* <Button 
-                                            style={{
-                                                marginTop: '5px'
-                                            }}
-                                            onClick={this.toggleEditStocksDialog}
-                                    >
-                                        Customize
-                                    </Button> */}
-                                </React.Fragment>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Position'
+                            label='Trade Direction'
                             input={
                                 <RadioGroup 
                                     items={positionActionItems}
@@ -1300,7 +1231,88 @@ class StartegyDetail extends Component {
                     </Grid>
                     <Grid item xs={12}>
                         <InputContainer 
-                            label='Target'
+                            label='Universe'
+                            input={
+                                <div
+                                        style={{
+                                            ...horizontalBox,
+                                            justifyContent: 'space-between'
+                                        }}
+                                >
+                                    <Select 
+                                            style={{width: '100%'}}
+                                            input={
+                                                <CustomOutlinedInput
+                                                    name="universe"
+                                                    id="universe"
+                                                    margin="dense"
+                                                    labelWidth={60}
+                                                />
+                                            }
+                                            value={this.state.selectedUniverse}
+                                            onChange={this.onUniverseChange}
+                                            disabled={this.state.isBacktestRunning}
+                                            placeholder="Universe"
+                                    >
+                                        {universeOptions}
+                                    </Select>
+                                    <ActionIcon 
+                                        size={16}
+                                        onClick={this.toggleEditStocksDialog}
+                                        type='edit'
+                                        style={{marginLeft: '10px'}}
+                                    />
+                                </div>
+                            }
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InputContainer 
+                            label='Date Range'
+                            input={
+                                <div 
+                                        style={{
+                                            ...horizontalBox, 
+                                            justifyContent: 'space-between'
+                                        }}
+                                >
+                                    <DateComponent
+                                        value={this.state.startDate}
+                                        onChange={this.onStartDateChange}
+                                        format="DD-MM-YYYY"
+                                        disabledDate={this.getDisabledStartDate}
+                                        disabled={this.state.isBacktestRunning} 
+                                        color='#222'
+                                        compact
+                                        hideNavButtons={true}
+                                    />
+                                    <h3 
+                                            style={{
+                                                fontSize: '13px',
+                                                fontFamily: 'Lato, sans-serif',
+                                                fontWeight: 700,
+                                                color: '#747474'
+                                            }}
+                                    >
+                                        to
+                                    </h3>
+                                    <DateComponent
+                                        value={this.state.endDate}
+                                        onChange={this.onEndDateChange}
+                                        format="DD-MM-YYYY"
+                                        disabledDate={this.getDisabledEndDate}
+                                        disabled={this.state.isBacktestRunning} 
+                                        color='#222'
+                                        compact
+                                        hideNavButtons={true}
+                                    />
+                                </div>
+                            }
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InputContainer 
+                            label='Target (%)'
                             input={
                                 <CustomOutlinedInput
                                     value={this.state.algo.target}
@@ -1319,7 +1331,7 @@ class StartegyDetail extends Component {
                     </Grid>
                     <Grid item xs={12}>
                         <InputContainer 
-                            label='Stop/Loss'
+                            label='Stop/Loss (%)'
                             input={
                                 <CustomOutlinedInput
                                     value={this.state.algo.stopLoss}
@@ -1336,17 +1348,30 @@ class StartegyDetail extends Component {
                             }
                         />
                     </Grid>
-                </Grid>
-            );
-            tabs.push(
-                <Grid 
-                        container
-                        style={{ 
-                            height: '100%', 
-                            overflowY: 'auto',
-                            marginTop: '20px'
-                        }}
-                >
+                    <Grid item xs={12}>
+                        <InputContainer 
+                            label='Benchmark'
+                            input={
+                                <Select 
+                                    classes={{select: classes.selectInput}}
+                                    style={{width: '100%', boxSizing: 'border-box'}}
+                                    input={
+                                        <CustomOutlinedInput
+                                            name="benchmark"
+                                            id="benchmark"
+                                            margin="dense"
+                                            inputProps={inputProps}
+                                        />
+                                    }
+                                    value={this.state.selectedBenchmark}
+                                    onChange={this.onBenchmarkChange}
+                                    disabled={this.state.isBacktestRunning}
+                            >
+                                {benchmarksOptions}
+                            </Select>
+                            }
+                        />
+                    </Grid>
                     <Grid item xs={12}>
                         <InputContainer 
                             label='Rebalance'
@@ -1355,49 +1380,9 @@ class StartegyDetail extends Component {
                                     items={rebalanceRadioItems}
                                     onChange={this.onRebalanceChange} 
                                     defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
-                                    disabled={this.state.isBacktestRunning}
+                                    disabled={this.state.isBacktestRunning || this.state.selectedResolution === 'Day'}
                                     CustomRadio={CardRadio}
                                     style={{marginTop: '10px'}}
-                                    small
-                                />
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Cancel Policy'
-                            input={
-                                <RadioGroup 
-                                    items={cancelPolicyRadioItems}
-                                    onChange={(selectedValue) => { 
-                                        const value = selectedValue >= cancelPolicyRadioItems.length 
-                                            ? cancelPolicyRadioItems[0]
-                                            : cancelPolicyRadioItems[selectedValue]; 
-                                        this.updateState({ 'selectedCancelPolicy': value }) 
-                                    }}
-                                    defaultSelected={cancelPolicyRadioItems.indexOf(this.state.selectedCancelPolicy)}
-                                    disabled={this.state.isBacktestRunning}
-                                    CustomRadio={CardRadio}
-                                    small
-                                />
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Resolution'
-                            input={
-                                <RadioGroup 
-                                    items={resolutionItems}
-                                    onChange={(selectedValue) => { 
-                                        const value = selectedValue >= resolutionItems.length 
-                                            ? resolutionItems[0]
-                                            : resolutionItems[selectedValue]; 
-                                        this.updateState({selectedResolution: value }) 
-                                    }}
-                                    defaultSelected={resolutionItems.indexOf(this.state.selectedResolution)}
-                                    disabled={this.state.isBacktestRunning || this.state.codeViewSelected}
-                                    CustomRadio={CardRadio}
                                     small
                                 />
                             }
@@ -1465,31 +1450,6 @@ class StartegyDetail extends Component {
                             }
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Investment Plan'
-                            input={
-                                <Select 
-                                        style={{width: '100%'}} 
-                                        value={this.state.selectedInvestmentPlan}
-                                        onChange={e => this.updateState({ 'selectedInvestmentPlan': e.target.value })}
-                                        disabled={this.state.isBacktestRunning}
-                                        placeholder="Investment Plan"
-                                        input={
-                                            <CustomOutlinedInput
-                                                name= "investment-plan"
-                                                id= "investment-plan"
-                                            />
-                                        }
-                                >
-                                    <MenuItem value="AllIn">AllIn</MenuItem>
-                                    <MenuItem value="Monthly">Monthly</MenuItem>
-                                    <MenuItem value="Yearly">Yearly</MenuItem>
-                                    <MenuItem value="Weekly">Weekly</MenuItem>
-                                </Select>
-                            }
-                        />
-                    </Grid>
                 </Grid>
             );
             
@@ -1506,15 +1466,6 @@ class StartegyDetail extends Component {
                                 display: extraTabsContent === 'settings' ? 'block' : 'none',
                             }} 
                     >
-                        <Tabs 
-                                onChange={this.onSettingsTabChanged}
-                                value={this.state.settingsTab}
-                                variant="fullWidth"
-                                indicatorColor='primary'
-                        >
-                            <Tab label='BASIC'/>
-                            <Tab label='ADVANCED'/>
-                        </Tabs>
                         {getSettingsDivTabsRight()[this.state.settingsTab]}
                     </div>
                     <div 
@@ -1773,8 +1724,8 @@ class StartegyDetail extends Component {
                                         items={['GUI', 'CODE']}
                                         defaultSelected={this.state.codeViewSelected ? 1 : 0}
                                         onChange={this.toggleEditMode}
-                                        CustomRadio={CardRadio}
-                                        small
+                                        CustomRadio={CardNavCustomRadio}
+                                        style={{marginLeft: '50%'}}
                                     />
                                 }
                             </Grid>
@@ -1969,7 +1920,7 @@ const Label = styled.h3`
     font-family: 'Lato', sans-serif;
     font-weight: 400;
     font-size: 14px;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 `;
 
 const SearchHeader = styled.h3`
