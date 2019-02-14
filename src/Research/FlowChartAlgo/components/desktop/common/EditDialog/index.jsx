@@ -6,10 +6,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {withStyles} from '@material-ui/core/styles';
 import StockCardRadioGroup from './StockCardRadioGroup';
 import AutoComplete from '../../../../../../components/input/AutoComplete';
-import {indicators, comparators, getIndicatorValue} from '../../../../constants';
+import RadioGroup from '../../../../../../components/Selections/RadioGroup';
+import CustomRadio from '../../../../../../components/Selections/CardCustomRadio';
+import {comparators, getIndicatorValue} from '../../../../constants';
+import {indicators as nIndicators} from '../../../../constants/indicators';
 import {verticalBox, horizontalBox} from '../../../../../../constants';
 
-const indicatorsArray = Object.keys(indicators);
+const indicatorsArray = Object.keys(nIndicators);
 
 const styles = {
     menuItemRoot: {
@@ -43,18 +46,21 @@ class EditDialog extends React.Component {
     }
 
     onIndicatorChanged = (key, type = 'firstValue') => {
+        let {resolution = 'Day'} = this.props;
+        resolution = resolution.toUpperCase() === 'DAY' ? 'daily' : 'minute';
+        
         const selectedIndex = _.get(this.props, 'selectedIndex', 0);
         const {requiredConditionsKey} = this.props;
         const algo = _.get(this.props, 'algo', {});
         const conditions = _.map(algo[requiredConditionsKey], _.cloneDeep);
-        let options = indicators[key].options;
+        let options = _.get(nIndicators, `[${key}].options`, []);
         options = options.map(option => ({
             key: option.key, 
-            value: 10,
+            value: _.get(option, `defaultValue[${resolution}]`, null),
             label: option.label
         }));
         conditions[selectedIndex][type] = {
-            label: indicators[key].label,
+            label: nIndicators[key].label,
             key,
             options,
         }
@@ -78,7 +84,7 @@ class EditDialog extends React.Component {
         this.props.updateAlgo(modifiedAlgo);
     }
 
-    processRadioGroupOptions = options => {
+    processRadioGroupOptions = (options = []) => {
         return options.map(option => ({key: option, label: ''}));
     }
 
@@ -111,40 +117,74 @@ class EditDialog extends React.Component {
         this.props.updateAlgo(modifiedAlgo);
     }
 
+    onRadioGroupItemChanged = (key, value, type = 'firstValue') => {
+        const selectedValue = value === 0 ? true : false;
+        const selectedIndex = _.get(this.props, 'selectedIndex', 0);
+        const {requiredConditionsKey} = this.props;
+        const algo = _.get(this.props, 'algo', {});
+        const conditions = _.map(algo[requiredConditionsKey], _.cloneDeep);
+
+        const options = _.map(_.get(conditions, `[${selectedIndex}][${type}].options`, []), _.cloneDeep);
+        const requiredOptionIndex = _.findIndex(options, option => option.key === key);
+        options[requiredOptionIndex].value = selectedValue;
+        
+        conditions[selectedIndex][type] = {
+            ...conditions[selectedIndex][type],
+            options
+        };
+
+        const modifiedAlgo = {
+            ...algo,
+            [requiredConditionsKey]: conditions
+        }
+        this.props.updateAlgo(modifiedAlgo);
+    }
+
     getRadioOptionsSelectedItem = (optioItem, valueOptions) => {
         const selectedIndex = _.findIndex(valueOptions, firstValueOption => firstValueOption.key === optioItem.key);
 
         return selectedIndex > -1 ? valueOptions[selectedIndex].value : 0;
     }
 
+    getRadioGroupSelectedItem = (optioItem, valueOptions) => {
+        const selectedIndex = _.findIndex(valueOptions, firstValueOption => firstValueOption.key === optioItem.key);
+
+        return selectedIndex > -1 
+            ? valueOptions[selectedIndex].value === true ? 0 : 1 
+            : 0;        
+    }
+
     formatIndicatorsToAutoCompleteOptions = () => {
         return indicatorsArray.map(indicator => {
             return {
                 value: indicator, 
-                label: indicators[indicator].label
+                label: nIndicators[indicator].label
             }
         })
     }
 
     constructAutocompleteValue = key => {
-        return {value: key, label: key.toUpperCase()};
+        return {value: key, label: key};
     }
 
     render() {
-        const {classes} = this.props;
+        let {classes, resolution = 'Day'} = this.props;
+
+        resolution = resolution.toUpperCase() === 'DAY' ? 'daily' : 'minute';
+
         const selectedIndex = _.get(this.props, 'selectedIndex', 0);
         const {algo, requiredConditionsKey} = this.props;
         const firstValueProp = _.get(algo, `[${requiredConditionsKey}][${selectedIndex}].firstValue`, {});
         const secondValueProp = _.get(algo, `[${requiredConditionsKey}][${selectedIndex}].secondValue`, {});
 
-        const firstValueSelectedOption = _.get(firstValueProp, 'key', 'sma');
-        const secondValueSelectedOption = _.get(secondValueProp, 'key', 'sma');
+        const firstValueSelectedOption = _.get(firstValueProp, 'key', 'SMA');
+        const secondValueSelectedOption = _.get(secondValueProp, 'key', 'SMA');
 
         const firstValueOptions = _.get(firstValueProp, 'options', []);
         const secondValueOptions = _.get(secondValueProp, 'options', []);
 
-        const firstOptions = _.get(indicators, `[${firstValueSelectedOption}].options`, []);
-        const secondOptions = _.get(indicators, `[${secondValueSelectedOption}].options`, []);
+        let firstOptions = _.get(nIndicators, `[${firstValueSelectedOption}].options`, []);
+        let secondOptions = _.get(nIndicators, `[${secondValueSelectedOption}].options`, []);
 
         const selectedComparator = _.get(algo, `[${requiredConditionsKey}][${selectedIndex}].comparator`, comparators[0].value);
 
@@ -178,18 +218,30 @@ class EditDialog extends React.Component {
                         />
                         <div>
                             {
-                                firstOptions.map((optionItem, index) => (
-                                    <StockCardRadioGroup 
-                                        label={optionItem.label}
-                                        defaultSelected={this.getRadioOptionsSelectedItem(optionItem, firstValueOptions)}
-                                        key={index}
-                                        items={this.processRadioGroupOptions(optionItem.options)}
-                                        hideLabel={true}
-                                        checkIfCustom={target => this.checkIfCustomValue(optionItem.options, target)}
-                                        showSlider={true}
-                                        onChange={(value, custom = false) => {this.onOptionsRadioChanged(firstValueSelectedOption, optionItem.key, value, 'firstValue', custom)}}
-                                    />
-                                ))
+                                firstOptions.map((optionItem, index) => {
+                                    const items = this.processRadioGroupOptions(_.get(optionItem, `values[${resolution}]`, []));
+                                    const type = _.get(optionItem, 'type', '');
+
+                                    return (type.toUpperCase() === 'INTEGER')
+                                    ?   (
+                                            <StockCardRadioGroup 
+                                                label={optionItem.label}
+                                                defaultSelected={this.getRadioOptionsSelectedItem(optionItem, firstValueOptions)} // not done
+                                                key={index}
+                                                items={items}
+                                                max={_.get(optionItem, `maxValue[${resolution}]`, 0)}
+                                                hideLabel={true}
+                                                checkIfCustom={target => this.checkIfCustomValue(_.get(optionItem, `values[${resolution}]`), target)}
+                                                showSlider={true}
+                                                onChange={(value, custom = false) => {this.onOptionsRadioChanged(firstValueSelectedOption, optionItem.key, value, 'firstValue', custom)}}
+                                            />
+                                        )
+                                    :   <RadioSelection 
+                                            label={_.get(optionItem, 'label', '')}
+                                            value={this.getRadioGroupSelectedItem(optionItem, firstValueOptions)}
+                                            onChange={value => this.onRadioGroupItemChanged(optionItem.key, value, 'firstValue')}
+                                        />
+                                })
                             }                        
                         </div>
                     </Grid>
@@ -226,18 +278,29 @@ class EditDialog extends React.Component {
                         />
                         <div>
                             {
-                                secondOptions.map((optionItem, index) => (
-                                    <StockCardRadioGroup 
-                                        defaultSelected={this.getRadioOptionsSelectedItem(optionItem, secondValueOptions)}
-                                        key={index}
-                                        items={this.processRadioGroupOptions(optionItem.options)}
-                                        hideLabel={true}
-                                        checkIfCustom={target => this.checkIfCustomValue(optionItem.options, target)}
-                                        label={optionItem.label}
-                                        showSlider={true}
-                                        onChange={(value, custom = false) => {this.onOptionsRadioChanged(secondValueSelectedOption, optionItem.key, value, 'secondValue', custom)}}
-                                    />
-                                ))
+                                secondOptions.map((optionItem, index) => {
+                                    const type = _.get(optionItem, 'type', '');
+
+                                    return (type.toUpperCase() === 'INTEGER')
+                                    ?   (
+                                            <StockCardRadioGroup 
+                                                defaultSelected={this.getRadioOptionsSelectedItem(optionItem, secondValueOptions)}
+                                                key={index}
+                                                items={this.processRadioGroupOptions(_.get(optionItem, `values[${resolution}]`, []))}
+                                                hideLabel={true}
+                                                max={_.get(optionItem, `maxValue[${resolution}]`, 0)}
+                                                checkIfCustom={target => this.checkIfCustomValue(_.get(optionItem, `values[${resolution}]`), target)}
+                                                label={optionItem.label}
+                                                showSlider={true}
+                                                onChange={(value, custom = false) => {this.onOptionsRadioChanged(secondValueSelectedOption, optionItem.key, value, 'secondValue', custom)}}
+                                            />
+                                        )
+                                    :   <RadioSelection 
+                                            value={this.getRadioGroupSelectedItem(optionItem, secondValueOptions)}
+                                            label={_.get(optionItem, 'label', '')}
+                                            onChange={value => this.onRadioGroupItemChanged(optionItem.key, value, 'secondValue')}
+                                        />
+                                })
                             }                        
                         </div>
                     </Grid> 
@@ -248,3 +311,30 @@ class EditDialog extends React.Component {
 }
 
 export default withStyles(styles)(EditDialog)
+
+const RadioSelection = ({label, onChange, value=0}) => {
+    return (
+        <div style={{...verticalBox, alignItems: 'flex-start'}}>
+            <h3 
+                    style={{
+                        fontSize: '14px',
+                        color: '#2e2e2e',
+                        fontWeight: 500,
+                        fontFamily: 'Lato, sans-serif'
+                    }}
+            >
+                {label}
+            </h3>
+            <RadioGroup 
+                items={['True', 'False']}
+                defaultSelected={value}
+                onChange={onChange}
+                small
+                CustomRadio={CustomRadio}
+                style={{
+                    marginTop: '7px'
+                }}
+            /> 
+        </div>
+    );
+}

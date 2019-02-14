@@ -1,5 +1,5 @@
 import _ from 'lodash';
-
+import {indicators as nIndicators} from './indicators';
 export const buy = 'BUY';
 export const sell = 'SELL';
 
@@ -20,13 +20,13 @@ export const intervals = [
 ];
 
 export const comparators = [
-    {label: 'Greater Than', value: 'gt', codeOperator: '>'},
-    {label: 'Greater Than or Equalto', value: 'gte', codeOperator: '>'},
-    {label: 'Lower Than', value: 'lt', codeOperator: '<'},
-    {label: 'Lower Than or Equalto', value: 'lte', codeOperator: '<'},
+    {label: 'Is Greater Than', value: 'gt', codeOperator: '>'},
+    {label: 'Is Greater Than or Equalto', value: 'gte', codeOperator: '>'},
+    {label: 'Is Lower Than', value: 'lt', codeOperator: '<'},
+    {label: 'Is Lower Than or Equalto', value: 'lte', codeOperator: '<'},
     {label: 'Crosses Above', value: 'ca', codeOperator: 'ca'},
     {label: 'Crosses Below', value: 'cb', codeOperator: 'cb'},
-    {label: 'Equal To', value: 'eq', codeOperator: '='},
+    {label: 'Is Equal To', value: 'eq', codeOperator: '=='},
 ];
 
 export const conditionalOperators = [
@@ -71,12 +71,11 @@ export const indicators = {
     }
 }
 
-export const getIndicatorValue = (itemKey, key, valueIndex) => {
-    const options = _.get(indicators, `${itemKey}.options`, []);
+export const getIndicatorValue = (itemKey, key, valueIndex, resolution = 'daily') => {
+    const options = _.get(nIndicators, `${itemKey}.options`, []);
     const selectedOptionIndex = _.findIndex(options, option => option.key === key);
-
     if (selectedOptionIndex > -1) {
-        const value = options[selectedOptionIndex].options[valueIndex] || valueIndex;
+        const value = options[selectedOptionIndex].values[resolution][valueIndex] || valueIndex;
 
         return value;
     } else {

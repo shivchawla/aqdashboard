@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import {comparators, indicators, conditionalOperators} from '../../FlowChartAlgo/constants';
+import {comparators, conditionalOperators} from '../../FlowChartAlgo/constants';
+import {indicators as nIndicators} from '../../FlowChartAlgo/constants/indicators';
 
 export const processAlgoConditions = (conditions = []) => {
     return conditions.map((condition, index) => {
@@ -101,13 +102,14 @@ const processOperator = operator => {
 
 const getIndicatorValueObj = indicator => {
     const indicatorParams = _.get(indicator, 'params', {});
-    const indicatorName = _.get(indicator, 'name', 'SMA').toLowerCase();
-    let indicatorObj = indicators[indicatorName];
+    const indicatorName = _.get(indicator, 'name', 'SMA');
+    console.log(indicatorName);
+    let indicatorObj = nIndicators[indicatorName];
     let indicatorKey = indicatorName;
-
+    console.log(indicatorObj);
     if (indicatorObj === undefined) {
-        indicatorObj = indicators.sma;
-        indicatorKey = 'sma'
+        indicatorObj = nIndicators.SMA;
+        indicatorKey = 'SMA'
     }   
 
     let options = indicatorObj.options;
@@ -128,14 +130,14 @@ const getIndicatorValueObj = indicator => {
 export const defaultSecondRowEntryCondition = {
     condition: conditionalOperators[0].value, 
     firstValue: {
-        key: 'sma',
+        key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
+        options: [{key: nIndicators.SMA.options[0].key, value: 10, label: nIndicators.SMA.options[0].label}]
     },
     comparator: comparators[0].value, 
     secondValue: {
-        key: 'sma',
+        key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
+        options: [{key: nIndicators.SMA.options[0].key, value: 10, label: nIndicators.SMA.options[0].label}]
     }
 }

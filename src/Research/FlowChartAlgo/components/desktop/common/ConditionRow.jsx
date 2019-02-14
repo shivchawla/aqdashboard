@@ -311,6 +311,12 @@ const OptionItems = ({options}) => {
 }
 
 const OptionItem = ({label, value}) => {
+    value = typeof(value) === 'number'
+        ?   value
+        :   value === true
+                ?   'True'
+                :   'False'   
+    
     return (
         <div 
                 style={{

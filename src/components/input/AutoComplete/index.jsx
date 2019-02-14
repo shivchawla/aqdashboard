@@ -124,7 +124,7 @@ function inputComponent({ inputRef, ...props }) {
 function Option(props) {
     const label = _.get(props, 'data.label', null);
     const value = _.get(props, 'data.value', null);
-    console.log(props);
+
     return (
         <MenuItem
             buttonRef={props.innerRef}
