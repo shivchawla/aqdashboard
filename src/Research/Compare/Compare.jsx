@@ -492,7 +492,8 @@ class Compare extends Component {
                     this.updateCodeDiffs();
                 } catch(err) {console.log('Error ', err)}
             }, 100);
-        } else if (this.state.selectedTab === 3) {
+        } else if (value === 4) {
+            console.log('Entered Here');
             setTimeout(() => {
                 try {
                     this.updateSettingsDiffs();

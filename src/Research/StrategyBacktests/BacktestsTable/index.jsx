@@ -222,7 +222,6 @@ class EnhancedTable extends React.Component {
                                 data.map((item, index) => {
                                     const dataItem = processRowData(item, index);
                                     const isException = dataItem.status.toLowerCase() === 'exception';
-                                    console.log('Exception ',isException);
 
                                     return (
                                         <TableRow

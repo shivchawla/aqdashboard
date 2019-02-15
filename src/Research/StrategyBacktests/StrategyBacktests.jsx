@@ -332,18 +332,7 @@ class StrategyBacktests extends Component {
         this.setState({backtests: clonedBacktests});
     }
 
-    getTitle = () => {
-        console.log('called');
-        let {selectedBacktests = {}} = this.state;
-        console.log(selectedBacktests);
-        Object.keys(selectedBacktests).forEach(item => {
-            console.log(selectedBacktests[item])
-        });
-    }
-
     render() {
-        this.getTitle();
-
         const getCompareModal = () => {
             const selectedBacktests = {};
             for (let i = 0; i < this.state.backtests.length; i++) {
