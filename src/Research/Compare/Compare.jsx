@@ -507,22 +507,22 @@ class Compare extends Component {
                 if (this.state.summaryTimePeriod === 0) {
 
                     var summary = this.state.backtests[i].output.summary;
-                    var totalReturn = _.get(summary, 'totalreturn', 0);
-                    var annualReturn = _.get(summary, 'annualreturn', 0);
-                    var annualstandarddeviation = _.get(summary, 'annualstandarddeviation', 0);
-                    var sharperatio = _.get(summary, 'sharperatio', 0);
-                    var informationratio = _.get(summary, 'informationratio', 0);
-                    var maxdrawdown = _.get(summary, 'maxdrawdown', 0);
-                    var calmarratio = _.get(summary, 'calmarratio', 0);
-                    var beta = _.get(summary, 'beta', 0);
-                    var stability = _.get(summary, 'stability', 0);
-                    var alpha = _.get(summary, 'alpha', 0);
-
+					var totalReturn = _.get(summary, 'totalreturn', 0).toFixed(2);
+					var annualReturn = _.get(summary, 'annualreturn', 0).toFixed(2);
+					var annualstandarddeviation = _.get(summary, 'annualstandarddeviation', 0).toFixed(2);
+					var sharperatio = _.get(summary, 'sharperatio', 0).toFixed(2);
+					var informationratio = _.get(summary, 'informationratio', 0).toFixed(2);
+					var maxdrawdown = _.get(summary, 'maxdrawdown', 0).toFixed(2);
+					var calmarratio = _.get(summary, 'calmarratio', 0).toFixed(2);
+					var beta = _.get(summary, 'beta', 0).toFixed(2);
+					var stability = _.get(summary, 'stability', 0).toFixed(2);
+                    var alpha = _.get(summary, 'alpha', 0).toFixed(2);
+                    
                     result.push({
                         'backtest': _.get(this.state, `backtests[${i}].fullBacktestName`, null),
                         'key': _.get(this.state, `backtests[${i}].fullBacktestName`, null),
                         // 'totalReturn':((summary.totalreturn || summary.totalreturn===0) ? summary.totalreturn.toFixed(2) : '')+'%',
-                        'totalReturn': totalReturn.toFixed(2) + '%',
+                        'totalReturn': totalReturn + '%',
                         'annualReturn': annualReturn + '%',
                         'volatility': annualstandarddeviation + '%',
                         'sharpeRatio': sharperatio,
@@ -539,17 +539,17 @@ class Compare extends Component {
 
                     result.push({
                         'backtest': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
-                        'key': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
-                        'totalReturn': _.get(rolling, 'totalreturn', 0) + '%',
-                        'annualReturn': _.get(rolling, 'annualreturn', 0) + '%',
-                        'volatility': _.get(rolling, 'annualstandarddeviation', 0) + '%',
-                        'sharpeRatio': _.get(rolling, 'sharperatio', 0),
-                        '5': _.get(rolling, 'informationratio', 0),
-                        'maxDrawdown': _.get(rolling, 'maxdrawdown', 0) + '%',
-                        '7': _.get(rolling, 'calmarratio', 0),
-                        'beta': _.get(rolling, 'beta', 0),
-                        '9': _.get(rolling, 'stability', 0),
-                        '10': _.get(rolling, 'alpha', 0)
+						'key': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
+						'totalReturn': _.get(rolling, 'totalreturn', 0).toFixed(2) + '%',
+						'annualReturn': _.get(rolling, 'annualreturn', 0).toFixed(2) + '%',
+						'volatility': _.get(rolling, 'annualstandarddeviation', 0).toFixed(2) + '%',
+						'sharpeRatio': _.get(rolling, 'sharperatio', 0).toFixed(2),
+						'5': _.get(rolling, 'informationratio', 0).toFixed(2),
+						'maxDrawdown': _.get(rolling, 'maxdrawdown', 0).toFixed(2) + '%',
+						'7': _.get(rolling, 'calmarratio', 0).toFixed(2),
+						'beta': _.get(rolling, 'beta', 0).toFixed(2),
+						'9': _.get(rolling, 'stability', 0).toFixed(2),
+						'10': _.get(rolling, 'alpha', 0).toFixed(2)
                     });
                 } else if ((_.get(this.state, 'summaryTimePeriod', 0)) === 2) {
 
@@ -563,17 +563,17 @@ class Compare extends Component {
 
                             result.push({
                                 'backtest': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
-                                'key': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
-                                'totalReturn': _.get(yearField, 'totalreturn', 0) + '%',
-                                'annualReturn': _.get(yearField, 'annualreturn', 0) + '%',
-                                'volatility': _.get(yearField, 'annualstandarddeviation', 0) + '%',
-                                'sharpeRatio': _.get(yearField, 'sharperatio', 0),
-                                '5': _.get(yearField, 'informationratio', 0),
-                                'maxDrawdown': _.get(yearField, 'maxdrawdown', 0) + '%',
-                                '7': _.get(yearField, 'calmarratio', 0),
-                                'beta': _.get(yearField, 'beta', 0),
-                                '9': _.get(yearField, 'stability', 0),
-                                '10': _.get(yearField, 'alpha', 0)
+								'key': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
+								'totalReturn': _.get(yearField, 'totalreturn', 0).toFixed(2) + '%',
+								'annualReturn': _.get(yearField, 'annualreturn', 0).toFixed(2) + '%',
+								'volatility': _.get(yearField, 'annualstandarddeviation', 0).toFixed(2) + '%',
+								'sharpeRatio': _.get(yearField, 'sharperatio', 0).toFixed(2),
+								'5': _.get(yearField, 'informationratio', 0).toFixed(2),
+								'maxDrawdown': _.get(yearField, 'maxdrawdown', 0).toFixed(2) + '%',
+								'7': _.get(yearField, 'calmarratio', 0).toFixed(2),
+								'beta': _.get(yearField, 'beta', 0).toFixed(2),
+								'9': _.get(yearField, 'stability', 0).toFixed(2),
+								'10': _.get(yearField, 'alpha', 0).toFixed(2)
                             });
                         } else {
                             result.push({
@@ -605,17 +605,17 @@ class Compare extends Component {
                         if (monthField) {
                             result.push({
                                 'backtest': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
-                                'key': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
-                                'totalReturn': _.get(monthField, 'totalreturn', 0) + '%',
-                                'annualReturn': _.get(monthField, 'annualreturn', 0) + '%',
-                                'volatility': _.get(monthField, 'annualstandarddeviation', 0) + '%',
-                                'sharpeRatio': _.get(monthField, 'sharperatio', 0),
-                                '5': _.get(monthField, 'informationratio', 0),
-                                'maxDrawdown': _.get(monthField, 'maxdrawdown', 0) + '%',
-                                '7': _.get(monthField, 'calmarratio', 0),
-                                'beta': _.get(monthField, 'beta', 0),
-                                '9': _.get(monthField, 'stability', 0),
-                                '10': _.get(monthField, 'alpha', 0)
+								'key': _.get(this.state, `backtests[${i}].fullBacktestName`, ''),
+								'totalReturn': _.get(monthField, 'totalreturn', 0).toFixed(2) + '%',
+								'annualReturn': _.get(monthField, 'annualreturn', 0).toFixed(2) + '%',
+								'volatility': _.get(monthField, 'annualstandarddeviation', 0).toFixed(2) + '%',
+								'sharpeRatio': _.get(monthField, 'sharperatio', 0).toFixed(2),
+								'5': _.get(monthField, 'informationratio', 0).toFixed(2),
+								'maxDrawdown': _.get(monthField, 'maxdrawdown', 0).toFixed(2) + '%',
+								'7': _.get(monthField, 'calmarratio', 0).toFixed(2),
+								'beta': _.get(monthField, 'beta', 0).toFixed(2),
+								'9': _.get(monthField, 'stability', 0).toFixed(2),
+								'10': _.get(monthField, 'alpha', 0).toFixed(2)
                             });
                         } else {
                             result.push({

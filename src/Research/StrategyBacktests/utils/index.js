@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
+import Utils from '../../../Utils';
 
 export const processRowData = (backtest, index) => {
     const name = `Backtest ${index + 1}`;
@@ -9,9 +10,9 @@ export const processRowData = (backtest, index) => {
     const key = _.get(backtest, '_id', null);
     const id = _.get(backtest, '_id', null);
     let totalReturn = _.get(backtest, 'output.summary.totalreturn', null);
-    totalReturn = totalReturn !== null ? `${totalReturn}%` : '-';
+    totalReturn = totalReturn !== null ? `${totalReturn.toFixed(2)}%` : '-';
     let sharpeRatio = _.get(backtest, 'output.summary.sharperatio', null);
-    sharpeRatio = sharpeRatio !== null ? `${sharpeRatio}%` : '-';
+    sharpeRatio = sharpeRatio !== null ? `${sharpeRatio.toFixed(2)}` : '-';
     let startDate = _.get(backtest, 'settings.startDate', null);
     let endDate = _.get(backtest, 'settings.endDate', null);
     const dateRange = startDate + ' - ' + endDate; 
@@ -21,7 +22,7 @@ export const processRowData = (backtest, index) => {
         id,
         name,
         createdAt,
-        status: rawStatus,
+        status: rawStatus[0].toUpperCase() + rawStatus.slice(1),
         key,
         totalReturn,
         sharpeRatio,

@@ -267,7 +267,6 @@ class StrategyBacktests extends Component {
         }
 
         this.showcompareModal = () => {
-            console.log('showcompareModal called');
             this.updateState({ 'backtestsCompareModalVisible': true });
         }
     }

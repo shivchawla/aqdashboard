@@ -1516,7 +1516,7 @@ class BacktestDetail extends Component {
                                     <h2 id="total_return" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary &&
                                             this.state.backTestData.output.summary.totalreturn) ?
-                                            this.state.backTestData.output.summary.totalreturn + ' %' : '-'}
+                                            this.state.backTestData.output.summary.totalreturn.toFixed(2) + ' %' : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Total Return
@@ -1531,7 +1531,7 @@ class BacktestDetail extends Component {
                                     <h2 id="annual_return" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary &&
                                             this.state.backTestData.output.summary.annualreturn) ?
-                                            this.state.backTestData.output.summary.annualreturn + ' %' : '-'}
+                                            this.state.backTestData.output.summary.annualreturn.toFixed(2) + ' %' : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Annual Return
@@ -1546,7 +1546,7 @@ class BacktestDetail extends Component {
                                     <h2 id="volatility" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.annualstandarddeviation) ?
-                                            this.state.backTestData.output.summary.annualstandarddeviation + ' %' : '-'}
+                                            this.state.backTestData.output.summary.annualstandarddeviation.toFixed(2) + ' %' : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Volatility
@@ -1561,7 +1561,7 @@ class BacktestDetail extends Component {
                                     <h2 id="sharpe_ratio" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.sharperatio) ?
-                                            this.state.backTestData.output.summary.sharperatio : '-'}
+                                            this.state.backTestData.output.summary.sharperatio.toFixed(2) : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Sharpe Ratio
@@ -1576,7 +1576,7 @@ class BacktestDetail extends Component {
                                     <h2 id="information_ratio" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.informationratio) ?
-                                            this.state.backTestData.output.summary.informationratio : '-'}
+                                            this.state.backTestData.output.summary.informationratio.toFixed(2) : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Information Ratio
@@ -1591,7 +1591,7 @@ class BacktestDetail extends Component {
                                     <h2 id="max_drawdown" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.maxdrawdown) ?
-                                            this.state.backTestData.output.summary.maxdrawdown + '%' : '-'}
+                                            this.state.backTestData.output.summary.maxdrawdown.toFixed(2) + '%' : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Max Drawdown
