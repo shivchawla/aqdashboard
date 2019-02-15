@@ -252,6 +252,7 @@ class Research extends Component {
                         onCancel={this.toggleDeleteDialog}
                         onOk={this.deleteAllSelectedStrategies}
                         action
+                        hideClose
                 >
                     {
                         this.state.deleteStrategiesLoading

@@ -254,6 +254,7 @@ class StrategyBacktests extends Component {
                         onCancel={this.toggleDeleteDialog}
                         onOk={this.deleteSelectedBacktests}
                         action
+                        hideClose
                 >
                     {
                         this.state.tableButtonsLoading
