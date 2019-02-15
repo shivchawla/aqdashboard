@@ -197,6 +197,7 @@ class EditDialog extends React.Component {
                         alignItems="flex-start"
                         style={{
                             padding: '10px',
+                            paddingTop: '20px',
                             boxSizing: 'border-box',
                             background: '#fff'
                         }}

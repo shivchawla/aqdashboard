@@ -75,6 +75,18 @@ class ConditionRow extends React.Component {
         });
     }
 
+    checkIfConditionsEqual = () => {
+        const conditionProp = _.get(this.props, 'condition', {});
+        const firstValue = _.get(conditionProp, 'firstValue', {});
+        const secondValue = _.get(conditionProp, 'secondValue', {});
+
+        if (_.isEqual(firstValue, secondValue)) {
+            return true;
+        }
+
+        return false;
+    }
+
     render() {
         const {
             index = 0,
@@ -85,6 +97,7 @@ class ConditionRow extends React.Component {
             classes,
             edit = true
         } = this.props;
+        this.checkIfConditionsEqual();
         const conditionProp = _.get(this.props, 'condition', {});
         const condition = _.get(conditionProp, 'condition', null);
         const comparator = _.get(conditionProp, 'comparator', comparators[0].value);
@@ -187,14 +200,116 @@ class ConditionRow extends React.Component {
                                 background: '#fff',
                                 margin: '5px 0',
                                 boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-                                padding: '5px 10px',
+                                padding: '5px 20px',
                                 borderRadius: '4px',
                                 boxSizing: 'border-box',
-                                paddingRight: '0px'
                             }}
                             alignItems="center"
                     >
                         <Grid 
+                                item 
+                                xs={12}
+                                style={{
+                                    ...horizontalBox,
+                                    justifyContent: 'space-between',
+                                }}
+                        >
+                            <div 
+                                    style={{
+                                        ...verticalBox,
+                                        alignItems: 'flex-start',
+                                    }}
+                            >
+                                <div style={{...verticalBox, alignItems: 'flex=start'}}>
+                                    <ValueHeader 
+                                            onClick={this.firstOpenPopover}
+                                    >
+                                        {selectedFirstValue}
+                                    </ValueHeader>
+                                    <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
+                                </div>
+                                <OptionItems options={firstValueOptions} />
+                            </div>
+                            <div 
+                                    style={{
+                                        ...verticalBox
+                                    }}
+                            >
+                                <Comparator onClick={this.firstOpenPopover}>
+                                    {comparatorObj.label}
+                                </Comparator>
+                                {
+                                    this.checkIfConditionsEqual() &&
+                                    <EqualCondition>* same indicators</EqualCondition>
+                                }
+                            </div>
+                            <div 
+                                    style={{
+                                        ...verticalBox,
+                                        alignItems: 'flex-start',
+                                    }}
+                            >
+                                <div 
+                                        style={{
+                                            ...horizontalBox, 
+                                            justifyContent: 'space-between',
+                                            width: '100%'
+                                        }}
+                                >
+                                    <div 
+                                            style={{
+                                                ...verticalBox, 
+                                                alignItems: 'flex-start',
+                                                width: '100%'
+                                            }}
+                                    >
+                                        <div 
+                                                style={{
+                                                    ...horizontalBox, 
+                                                    justifyContent: 'space-between',
+                                                    width: '100%',
+                                                    // position: 'relative'
+                                                }}
+                                        >
+                                            <ValueHeader
+                                                    onClick={this.firstOpenPopover}
+                                            >
+                                                {selectedSecondValue}
+                                            </ValueHeader>
+                                            {
+                                                edit &&
+                                                <div
+                                                        style={{
+                                                            ...horizontalBox, 
+                                                            justifyContent: 'flex-end',
+                                                            position: 'absolute',
+                                                            right: 0
+                                                        }}
+                                                >
+                                                    <ActionIcon 
+                                                        type='edit' 
+                                                        onClick={this.firstOpenPopover} 
+                                                    />
+                                                    {
+                                                        (index > 0 || requiredConditionsKey === 'exit') &&
+                                                        <ActionIcon 
+                                                            type='cancel'
+                                                            onClick={() => deleteCondition(index)}
+                                                            color='#ff5d5d'
+                                                        />
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <IndicatorLabel>
+                                            {selectedSecondValueLabel}
+                                        </IndicatorLabel>
+                                    </div>
+                                </div>
+                                <OptionItems options={secondValueOptions} />
+                            </div>
+                        </Grid>
+                        {/* <Grid 
                                 item 
                                 xs={4}
                                 style={{
@@ -207,8 +322,8 @@ class ConditionRow extends React.Component {
                                 <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
                             </div>
                             <OptionItems options={firstValueOptions} />
-                        </Grid>
-                        <Grid 
+                        </Grid> */}
+                        {/* <Grid 
                                 item 
                                 xs={3}
                                 style={{
@@ -217,8 +332,8 @@ class ConditionRow extends React.Component {
                                 }}
                         >
                             <Comparator>{comparatorObj.label}</Comparator>
-                        </Grid>
-                        <Grid 
+                        </Grid> */}
+                        {/* <Grid 
                                 item 
                                 xs={5}
                                 style={{
@@ -278,7 +393,7 @@ class ConditionRow extends React.Component {
                                 </div>
                             </div>
                             <OptionItems options={secondValueOptions} />
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Grid>
             </Grid>
@@ -332,12 +447,18 @@ const OptionItem = ({label, value}) => {
 }
 
 const Comparator = styled.h3`
-    font-size: 12px;
+    font-size: 14px;
     color: #222;
     font-weight: 500;
     font-family: 'Lato', sans-serif;
     padding: 5px 10px;
     display: inline;
-    /* border: 1px solid ${primaryColor}; */
-    /* border-radius: 20px; */
+    cursor: pointer;
+`;
+
+const EqualCondition = styled.h3`
+    font-size: 12px;
+    color: ${primaryColor};
+    font-weight: 500;
+    font-family: 'Lato', sans-serif;
 `;

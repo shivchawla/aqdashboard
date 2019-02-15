@@ -6,6 +6,7 @@ export const ValueHeader = styled.h3`
     font-size: 16px;
     font-weight: 700;
     color: #222;
+    cursor: pointer;
 `;
 
 export const OptionValue = styled.h3`
