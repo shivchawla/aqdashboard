@@ -13,6 +13,7 @@ import ActionIcon from '../../../../../components/Buttons/ActionIcon';
 import {comparators, conditionalOperators} from '../../../constants';
 import {ValueHeader, OptionValue, OptionLabel} from './RowTexts';
 import {horizontalBox, verticalBox, primaryColor} from '../../../../../constants';
+import { Icon } from '@material-ui/core';
 
 const styles = {
     backdropRoot: {
@@ -243,7 +244,15 @@ class ConditionRow extends React.Component {
                                 </Comparator>
                                 {
                                     this.checkIfConditionsEqual() &&
-                                    <EqualCondition>* same indicators</EqualCondition>
+                                    <div 
+                                            style={{
+                                                ...horizontalBox, 
+                                                justifyContent: 'flex-start'
+                                            }}
+                                    >
+                                        <Icon style={{fontSize: '16px', color: '#ff6060'}}>error</Icon>
+                                        <EqualCondition>Same indicators</EqualCondition>                                    
+                                    </div>
                                 }
                             </div>
                             <div 
@@ -461,7 +470,7 @@ const Comparator = styled.h3`
 
 const EqualCondition = styled.h3`
     font-size: 12px;
-    color: ${primaryColor};
+    color: #fe3838;
     font-weight: 500;
     font-family: 'Lato', sans-serif;
 `;

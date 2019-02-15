@@ -383,7 +383,7 @@ class StartegyDetail extends Component {
         this.clickedOnRunBacktest = () => {
             if (this.state.selectedStocks.length === 0) {
                 this.toggleEditStocksDialog();
-                this.openSnackbar('You must choose atleast 5 stocks as Universe');
+                this.openSnackbar('Please select atleast one stock for your Universe');
                 return;
             }
             try {
