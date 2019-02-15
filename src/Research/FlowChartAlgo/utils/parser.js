@@ -101,7 +101,6 @@ const getCondition = condition => {
     comparator = comparator ? comparator.codeOperator : null;
     
     let conditionString = '';
-    console.log(comparator);
     if (comparator === 'crossAbove' || comparator === 'crossBelow') {
         conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} ${comparator}((${getIndicatorValue(firstValue)}, ${getIndicatorValue(secondValue)}))`;
     } else {
