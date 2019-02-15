@@ -20,8 +20,9 @@ import 'react-loading-bar/dist/index.css';
 
 import BacktestCompareHighChart from './../../CustomHighCharts/BacktestCompareHighChart.jsx';
 import { processConditionsToAlgo } from '../StartegyDetail/utils';
-import { verticalBox } from '../../constants';
+import { verticalBox, horizontalBox } from '../../constants';
 import FlowChartAlgo from '../FlowChartAlgo';
+import ActionIcons from '../../components/Buttons/ActionIcon';
 
 
 class Compare extends Component {
@@ -115,14 +116,16 @@ class Compare extends Component {
 						if (this.totalBacktestrequests === Object.keys(this.props.selectedBacktests).length) {
 							const yearNMonth = this.updateYearsMonths(backtestsNow);
 							const getCodeDiffIdsDefault = this.getCodeDiffIds(backtestsNow);
-							this.updateState({
+							this.setState({
 								'backtests': backtestsNow,
 								'loading': false,
 								'year': yearNMonth['year'],
 								'month': yearNMonth['month'],
 								'codeDiffBacktestIdOne': getCodeDiffIdsDefault['codeDiffBacktestIdOne'],
 								'codeDiffBacktestIdTwo': getCodeDiffIdsDefault['codeDiffBacktestIdTwo']
-							});
+							}, () => {
+                                this.props.updateTitle(this.getTitle())
+                            });
 						} else {
 							this.updateState({ 'backtests': backtestsNow });
 						}
@@ -498,6 +501,18 @@ class Compare extends Component {
         }
     }
 
+    getTitle = () => {
+        let titleString = "";
+        for (let i = 0; i < this.state.backtests.length; i++) {
+            titleString = titleString + "<span style=\"color: black; font-weight:700\">" + this.state.backtests[i]['fullBacktestName'] + "</span>";
+            if (i !== (this.state.backtests.length - 1)) {
+                titleString = titleString + " vs ";
+            }
+        }
+        titleString = titleString + " comparision for <span style=\"color: #cc4444; font-weight: 700\">" + _.get(this.props, 'strategy.fullName', '') + "</span>";
+        return { __html: titleString };
+    }
+
     render() {
         const getSummaryData = () => {
 
@@ -652,18 +667,6 @@ class Compare extends Component {
                 chartData.monthly[bkTestLcl['fullBacktestName']] = _.get(bkTestLcl, 'output.performance.detail.returns.monthly.algorithm', null);
             }
             return chartData;
-        }
-
-        const getTitle = () => {
-            let titleString = "";
-            for (let i = 0; i < this.state.backtests.length; i++) {
-                titleString = titleString + "<span style=\"color: black; font-weight:700\">" + this.state.backtests[i]['fullBacktestName'] + "</span>";
-                if (i !== (this.state.backtests.length - 1)) {
-                    titleString = titleString + " vs ";
-                }
-            }
-            titleString = titleString + " comparision for <span style=\"color: #cc4444; font-weight: 700\">" + _.get(this.props, 'strategy.fullName', '') + "</span>";
-            return { __html: titleString };
         }
 
         const getCustomRadioButtons = () => {
@@ -967,10 +970,16 @@ class Compare extends Component {
             } else {
                 return (
                     <React.Fragment>
-                        <div style={{ 'marginBottom': '10px' }}>
+                        <div 
+                                style={{ 
+                                    ...horizontalBox,
+                                    justifyContent: 'space-between',
+                                    marginBottom: '10px' 
+                                }}>
                             <p style={{ 'color': '#8c8c8c', 'fontWeight': '400', 'fontSize': '15px' }}
-                                dangerouslySetInnerHTML={getTitle()}>
+                                dangerouslySetInnerHTML={this.getTitle()}>
                             </p>
+                            <ActionIcons type='close' onClick={this.props.onClose}/>
                         </div>
                         <div style={{ 'width': '100%', 'height': '100%' }}>
                             <Tabs

@@ -90,6 +90,7 @@ end
 const getCondition = condition => {
     let conditionOperator = _.get(condition, 'condition', null);
     let comparator = _.get(condition, 'comparator', 'eq');
+    
     let firstValue = _.get(condition, 'firstValue', 0);
     let secondValue = _.get(condition, 'secondValue', 0);
 
@@ -98,9 +99,14 @@ const getCondition = condition => {
 
     comparator = comparators.filter(comparatorItem => comparatorItem.value === comparator)[0];
     comparator = comparator ? comparator.codeOperator : null;
-
-    const conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} (${getIndicatorValue(firstValue)} ${comparator} ${getIndicatorValue(secondValue)})
-`;
+    
+    let conditionString = '';
+    console.log(comparator);
+    if (comparator === 'crossAbove' || comparator === 'crossBelow') {
+        conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} ${comparator}((${getIndicatorValue(firstValue)}, ${getIndicatorValue(secondValue)}))`;
+    } else {
+        conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} (${getIndicatorValue(firstValue)} ${comparator} ${getIndicatorValue(secondValue)})`;
+    }
 
     return conditionString;
 }

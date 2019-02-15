@@ -30,13 +30,18 @@ class StrategyBacktests extends Component {
             disableRunTests: false,
             tableButtonsLoading: false,
             backtestsCompareModalVisible: false,
-            showDeleteDialog: false
+            showDeleteDialog: false,
+            compareTitle: {__html: ''}
         };
 
         this.updateState = (data) => {
             if (this._mounted) {
                 this.setState(data);
             }
+        }
+
+        this.updateTitle = title => {
+            this.updateState({compareTitle: title});
         }
 
         this.getStrategy = () => {
@@ -324,11 +329,21 @@ class StrategyBacktests extends Component {
             })
         }
 
-        console.log(clonedBacktests);
         this.setState({backtests: clonedBacktests});
     }
 
+    getTitle = () => {
+        console.log('called');
+        let {selectedBacktests = {}} = this.state;
+        console.log(selectedBacktests);
+        Object.keys(selectedBacktests).forEach(item => {
+            console.log(selectedBacktests[item])
+        });
+    }
+
     render() {
+        this.getTitle();
+
         const getCompareModal = () => {
             const selectedBacktests = {};
             for (let i = 0; i < this.state.backtests.length; i++) {
@@ -338,7 +353,6 @@ class StrategyBacktests extends Component {
             }
             return (
                 <DialogComponent
-                    title="Backtest Compare"
                     open={this.state.backtestsCompareModalVisible}
                     onClose={() => this.updateState({ 'backtestsCompareModalVisible': false })}
                     style={{
@@ -346,10 +360,21 @@ class StrategyBacktests extends Component {
                         height: '100vh'
                     }}
                     maxWidth='xl'
+                    hideClose
                 >
+                    <div 
+                            style={{
+                                ...horizontalBox,
+                                justifyContent: 'space-between'
+                            }}
+                    >
+
+                    </div>
                     <Compare
                         selectedBacktests={selectedBacktests}
                         strategy={this.state.strategy}
+                        updateTitle={this.updateTitle}
+                        onClose={() => this.updateState({ 'backtestsCompareModalVisible': false })}
                     />
                 </DialogComponent>
             );

@@ -21,11 +21,11 @@ export const intervals = [
 
 export const comparators = [
     {label: 'Is Greater Than', value: 'gt', codeOperator: '>'},
-    {label: 'Is Greater Than or Equalto', value: 'gte', codeOperator: '>'},
+    {label: 'Is Greater Than or Equalto', value: 'gte', codeOperator: '>='},
     {label: 'Is Lower Than', value: 'lt', codeOperator: '<'},
-    {label: 'Is Lower Than or Equalto', value: 'lte', codeOperator: '<'},
-    {label: 'Crosses Above', value: 'ca', codeOperator: 'ca'},
-    {label: 'Crosses Below', value: 'cb', codeOperator: 'cb'},
+    {label: 'Is Lower Than or Equalto', value: 'lte', codeOperator: '<='},
+    {label: 'Crosses Above', value: 'ca', codeOperator: 'crossAbove'},
+    {label: 'Crosses Below', value: 'cb', codeOperator: 'crossBelow'},
     {label: 'Is Equal To', value: 'eq', codeOperator: '=='},
 ];
 

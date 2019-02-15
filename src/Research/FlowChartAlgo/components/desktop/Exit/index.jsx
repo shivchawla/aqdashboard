@@ -153,7 +153,7 @@ export default class Exit extends React.Component {
                                 }}
                                 size="small"
                         >
-                            Add Condition
+                            Exit Condition
                             <Icon style={{marginLeft: '5px', color: primaryColor}}>add_circle</Icon>
                         </Button>
                     </Grid>

@@ -154,7 +154,7 @@ export default class Entry extends React.Component {
                                 }}
                                 size="small"
                         >
-                            Add Condition
+                            Entry Condition
                             <Icon style={{marginLeft: '5px', color: primaryColor}}>add_circle</Icon>
                         </Button>
                     </Grid>

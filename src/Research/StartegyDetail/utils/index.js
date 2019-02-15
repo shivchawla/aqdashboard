@@ -103,10 +103,8 @@ const processOperator = operator => {
 const getIndicatorValueObj = indicator => {
     const indicatorParams = _.get(indicator, 'params', {});
     const indicatorName = _.get(indicator, 'name', 'SMA');
-    console.log(indicatorName);
     let indicatorObj = nIndicators[indicatorName];
     let indicatorKey = indicatorName;
-    console.log(indicatorObj);
     if (indicatorObj === undefined) {
         indicatorObj = nIndicators.SMA;
         indicatorKey = 'SMA'

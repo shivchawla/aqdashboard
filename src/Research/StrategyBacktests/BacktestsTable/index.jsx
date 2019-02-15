@@ -221,6 +221,9 @@ class EnhancedTable extends React.Component {
                             {
                                 data.map((item, index) => {
                                     const dataItem = processRowData(item, index);
+                                    const isException = dataItem.status.toLowerCase() === 'exception';
+                                    console.log('Exception ',isException);
+
                                     return (
                                         <TableRow
                                             hover
@@ -252,7 +255,15 @@ class EnhancedTable extends React.Component {
                                                 {dataItem.name}
                                             </STableCell>
                                             <STableCell align="left">{dataItem.createdAt}</STableCell>
-                                            <STableCell align="left">{dataItem.status}</STableCell>
+                                            <STableCell 
+                                                    align="left"
+                                                    style={{
+                                                        color: isException ? '#ff3737' : '#595959',
+                                                        fontWeight: isException ? 700 : 500
+                                                    }}
+                                            >
+                                                {dataItem.status}
+                                            </STableCell>
                                             <STableCell align="left">{dataItem.dateRange}</STableCell>
                                             <STableCell align="left">{dataItem.totalReturn}</STableCell>
                                             <STableCell align="left">{dataItem.sharpeRatio}</STableCell>
@@ -281,4 +292,5 @@ const STableCell = styled(TableCell)`
     color: #595959;
     font-family: 'Lato', sans-serif;
     font-size: 14px;
+    font-weight: 500
 `;

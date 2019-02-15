@@ -25,7 +25,7 @@ class CustomHighCharts extends React.Component {
         lineWidth: 2,
         resize: {
             enabled: true
-        }
+        },
     };
 
     yAxisOne = {
@@ -64,7 +64,7 @@ class CustomHighCharts extends React.Component {
             xDateFormat: '%B %e, %Y'
         },
         series: [],
-        colors: ["#cc6666", "#0375b4", "#6e2667", "#FFAA1D", "#007849", "#fc4a1a"]
+        colors: ["#0375b4", "#cc6666", "#6e2667", "#FFAA1D", "#007849", "#fc4a1a"]
 
     };
 
@@ -209,8 +209,8 @@ class CustomHighCharts extends React.Component {
                     this.props.uniqueKey, 
                     this.dataObj
                 );
-                this.chart.addSeries(niftySeries);
                 this.chart.addSeries(strategySeries);
+                this.chart.addSeries(niftySeries);
                 for(let key in secondGraphSeries){
                     this.chart.addSeries(secondGraphSeries[key]);
                 }
@@ -225,8 +225,8 @@ class CustomHighCharts extends React.Component {
                     this.props.uniqueKey, 
                     this.dataObj
                 );
-                this.chart.addSeries(niftySeries);
                 this.chart.addSeries(strategySeries);
+                this.chart.addSeries(niftySeries);
             }
             
         }else{
@@ -272,8 +272,8 @@ class CustomHighCharts extends React.Component {
                 this.props.uniqueKey, 
                 this.dataBarObj
             );
-            this.chart.addSeries(benchSeries);
             this.chart.addSeries(algoSeries);
+            this.chart.addSeries(benchSeries);
             if (this.props.onCustomHighChartCreated){
                 this.props.onCustomHighChartCreated(this.chart);
             }
