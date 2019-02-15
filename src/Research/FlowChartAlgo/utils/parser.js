@@ -102,9 +102,9 @@ const getCondition = condition => {
     
     let conditionString = '';
     if (comparator === 'crossAbove' || comparator === 'crossBelow') {
-        conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} ${comparator}((${getIndicatorValue(firstValue)}, ${getIndicatorValue(secondValue)}))`;
+        conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} ${comparator}(${getIndicatorValue(firstValue)}, ${getIndicatorValue(secondValue)})\n`;
     } else {
-        conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} (${getIndicatorValue(firstValue)} ${comparator} ${getIndicatorValue(secondValue)})`;
+        conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} (${getIndicatorValue(firstValue)} ${comparator} ${getIndicatorValue(secondValue)})\n`;
     }
 
     return conditionString;

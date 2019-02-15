@@ -149,6 +149,7 @@ class StartegyDetail extends Component {
 
         this.updateAlgo = modifiedAlgo => {
             const objectCode = parseObjectToCode(modifiedAlgo);
+            console.log(objectCode);
             this.updateState({algo: modifiedAlgo});
             this.setState({strategy: {
                 ...this.state.strategy,

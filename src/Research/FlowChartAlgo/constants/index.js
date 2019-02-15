@@ -35,7 +35,7 @@ export const conditionalOperators = [
 ];
 
 export const indicators = {
-    sma: {
+    SMA: {
         label: 'Simple Moving Average',
         options: [
             {key: 'horizon', label: 'Horizon', value: 10, options: [10, 20, 30, 40, 50]}
@@ -86,30 +86,30 @@ export const getIndicatorValue = (itemKey, key, valueIndex, resolution = 'daily'
 export const defaultFirstRowEntryCondition = {
     condition: null, 
     firstValue: {
-        key: 'sma',
+        key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
+        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
     },
     comparator: comparators[0].value, 
     secondValue: {
-        key: 'sma',
+        key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
+        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
     }
 };
 
 export const defaultSecondRowEntryCondition = {
     condition: conditionalOperators[0].value, 
     firstValue: {
-        key: 'sma',
+        key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
+        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
     },
     comparator: comparators[0].value, 
     secondValue: {
-        key: 'sma',
+        key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.sma.options[0].key, value: 10, label: indicators.sma.options[0].label}]
+        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
     }
 }
 
