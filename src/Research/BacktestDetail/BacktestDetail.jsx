@@ -1591,7 +1591,7 @@ class BacktestDetail extends Component {
                                     <h2 id="max_drawdown" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.maxdrawdown) ?
-                                            this.state.backTestData.output.summary.maxdrawdown : '-'}
+                                            this.state.backTestData.output.summary.maxdrawdown + '%' : '-'}
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Max Drawdown
