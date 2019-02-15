@@ -245,13 +245,13 @@ class StartegyDetail extends Component {
                 shouldChange = difference <= 0 ||  difference >= 5 
             } else {
                 difference = this.state.endDate.diff(date, 'months', true);
-                shouldChange = difference <= 0 ||  difference >= 3 
+                shouldChange = difference <= 0 ||  difference >= 1 
             }
             if (shouldChange) {
                 if (selectedResolution === 'Day') {
-                    requiredEndDate = moment.min(_.cloneDeep(date).add(5, 'years'), endDate);
+                    requiredEndDate = moment.min(_.cloneDeep(date).add(1, 'years'), endDate);
                 } else {
-                    requiredEndDate = moment.min(_.cloneDeep(date).add(3, 'months'), endDate);
+                    requiredEndDate = moment.min(_.cloneDeep(date).add(1, 'months'), endDate);
                 }
             }
             this.updateState({startDate: date, endDate: requiredEndDate});
@@ -266,13 +266,13 @@ class StartegyDetail extends Component {
                 shouldChange = difference <= 0 ||  difference >= 5 
             } else {
                 difference = date.diff(this.state.startDate, 'months', true);
-                shouldChange = difference <= 0 ||  difference >= 3 
+                shouldChange = difference <= 0 ||  difference >= 1 
             }
             if (shouldChange) {
                 if (selectedResolution === 'Day') {
-                    requiredStartDate = moment.max(moment('2007-01-01T00:00:00Z'), _.cloneDeep(date).subtract(5, 'years'));
+                    requiredStartDate = moment.max(moment('2007-01-01T00:00:00Z'), _.cloneDeep(date).subtract(1, 'years'));
                 } else {
-                    requiredStartDate = moment.max(moment('2007-01-01T00:00:00Z'), _.cloneDeep(date).subtract(3, 'months'));
+                    requiredStartDate = moment.max(moment('2007-01-01T00:00:00Z'), _.cloneDeep(date).subtract(1, 'months'));
                 }
             }
             this.updateState({endDate: date, startDate: requiredStartDate});
@@ -964,9 +964,12 @@ class StartegyDetail extends Component {
     }
 
     getDisabledStartDate = (currentDate) => {
-        console.log(currentDate);
+        const {selectedResolution = 'Day'} = this.state;
+        const minDate = selectedResolution.toLowerCase() === 'day'
+                ?   '2007-01-01T00:00:00Z'
+                :   moment().subtract(1, 'months');
         if (
-            currentDate.isAfter('2007-01-01T00:00:00Z') &&
+            currentDate.isAfter(minDate) &&
             currentDate.isBefore(this.state.endDate) &&
             DateHelper.isWeekDay(currentDate)
         ) {
@@ -977,7 +980,11 @@ class StartegyDetail extends Component {
     }
 
     getDisabledEndDate = (currentDate) => {
-        if (currentDate.isAfter('2007-01-01T00:00:00Z') &&
+        const {selectedResolution = 'Day'} = this.state;
+        const minDate = selectedResolution.toLowerCase() === 'day'
+                ?   '2007-01-01T00:00:00Z'
+                :   moment().subtract(1, 'months');
+        if (currentDate.isAfter(minDate) &&
             DateHelper.isWeekDay(currentDate) &&
             currentDate.isBefore(moment(DateHelper.getPreviousNonHolidayWeekday(moment())))
         ) {
@@ -1120,6 +1127,27 @@ class StartegyDetail extends Component {
         );
     }
 
+    onResolutionChanged = selectedValue => { 
+        let requiredStartDate = moment(), requiredEndDate = moment();
+        const resolutionItems = ['Day', 'Minute'];
+        const value = selectedValue >= resolutionItems.length 
+            ? resolutionItems[0]
+            : resolutionItems[selectedValue]; 
+        if (value === 'Day') {
+            requiredStartDate = _.cloneDeep(requiredEndDate).subtract(1, 'years');
+        } else {
+            requiredStartDate = _.cloneDeep(requiredEndDate).subtract(1, 'months');
+        }
+        this.updateState({
+            startDate: requiredStartDate,
+            endDate: requiredEndDate,
+            selectedResolution: value,
+            selectedRebalance: selectedValue === 1
+                ?   'Daily'
+                :   this.state.selectedRebalance
+        }) 
+    }
+
     render() {
         const getNewStartegyModal = () => {
             return (
@@ -1233,17 +1261,7 @@ class StartegyDetail extends Component {
                             input={
                                 <RadioGroup 
                                     items={resolutionItems}
-                                    onChange={(selectedValue) => { 
-                                        const value = selectedValue >= resolutionItems.length 
-                                            ? resolutionItems[0]
-                                            : resolutionItems[selectedValue]; 
-                                        this.updateState({
-                                            selectedResolution: value,
-                                            selectedRebalance: selectedValue === 1
-                                                ?   'Daily'
-                                                :   this.state.selectedRebalance
-                                        }) 
-                                    }}
+                                    onChange={this.onResolutionChanged}
                                     defaultSelected={resolutionItems.indexOf(this.state.selectedResolution)}
                                     disabled={this.state.isBacktestRunning || this.state.codeViewSelected}
                                     CustomRadio={CardRadio}
@@ -1779,6 +1797,7 @@ class StartegyDetail extends Component {
                                         onChange={this.toggleEditMode}
                                         CustomRadio={CardNavCustomRadio}
                                         style={{marginLeft: '50%'}}
+                                        small
                                     />
                                 }
                             </Grid>
