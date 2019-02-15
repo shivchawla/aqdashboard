@@ -85,6 +85,7 @@ class StartegyDetail extends Component {
             savedSettings = '{}';
         }
         savedSettings = JSON.parse(savedSettings);
+      
         this.state = {
             loading: true,
             strategyId: props.match.params.strategyId,
@@ -96,7 +97,11 @@ class StartegyDetail extends Component {
             benchmark: [],
             universe: [],
             selectedBenchmark: (savedSettings.selectedBenchmark) ? savedSettings.selectedBenchmark : '',
-            selectedUniverse: (savedSettings.selectedUniverse) ? savedSettings.selectedBenchmark : '',
+            selectedUniverse: savedSettings.selectedUniverse
+                ? savedSettings.selectedUniverse.length === 0 
+                    ? 'Nifty 50'
+                    :  savedSettings.selectedUniverse
+                : 'Nifty 50',
             selectedRebalance: (savedSettings.selectedRebalance) ? savedSettings.selectedRebalance : 'Daily',
             selectedCancelPolicy: (savedSettings.selectedCancelPolicy) ? (savedSettings.selectedCancelPolicy) : 'EOD',
             selectedResolution: (savedSettings.selectedResolution) ? (savedSettings.selectedResolution) : 'Day',
@@ -210,12 +215,14 @@ class StartegyDetail extends Component {
 
         this.loadBenchMarkDropdownData = () => {
             const selectedBenchmark = benchmarks[0];
-            const selectedUniverse = universe[0];
-            this.updateState({
+            const selectedUniverse = 'Nifty 50';
+            this.setState({
                 'benchmark': benchmarks,
                 'universe': universe,
                 'selectedBenchmark': selectedBenchmark,
                 'selectedUniverse': selectedUniverse
+            }, () => {
+                this.fetchUniverseStocks('', true);
             });
         }
 
@@ -373,7 +380,11 @@ class StartegyDetail extends Component {
         }
 
         this.clickedOnRunBacktest = () => {
-            // console.log('Running Backtest');
+            if (this.state.selectedStocks.length === 0) {
+                this.toggleEditStocksDialog();
+                this.openSnackbar('You must choose atleast 5 stocks as Universe');
+                return;
+            }
             try {
                 const logsDivRef = document.getElementById('logsDiv');
                 const logElement = this.logElement;
@@ -399,7 +410,7 @@ class StartegyDetail extends Component {
                             "endDate": this.state.endDate.format('YYYY-MM-DD'),
                             "initialCash": this.state.initialCapital,
                             "startDate": this.state.startDate.format('YYYY-MM-DD'),
-                            "universe": '',
+                            "universe": _.get(this.state, 'selectedStocks', []).join(','),
                             "universeIndex": ''
                         },
                         'headers': Utils.getAuthTokenHeader()
