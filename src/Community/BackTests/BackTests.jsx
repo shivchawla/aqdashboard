@@ -75,10 +75,10 @@ class BackTests extends React.Component {
                 dataObj['status'] = Utils.firstLetterUppercase(dty.status);
                 dataObj['key'] = dty._id;
                 if (dty.output && dty.output.summary) {
-                    dataObj['totalreturn'] = dty.output.summary.totalreturn;
+                    dataObj['totalreturn'] = _.get(dty, 'output.summary.totalreturn', 0).toFixed(2);
                 }
                 if (dty.output && dty.output.summary) {
-                    dataObj['sharperatio'] = dty.output.summary.sharperatio;
+                    dataObj['sharperatio'] = _.get(dty, 'output.summary.sharperatio', 0).toFixed(2);
                 }
                 if (dty.settings && dty.settings.startDate && dty.settings.endDate) {
                     dataObj['dateRange'] = moment(dty.settings.startDate).format('DD/MM/YYYY') + ' - '
@@ -167,7 +167,7 @@ class BackTests extends React.Component {
                                 {
                                     dataItem.totalreturn
                                     ?   dataItem.totalreturn + '%'
-                                    :   null
+                                    :   '-'
                                 }
                             </TableCell>
                             <TableCell 
@@ -176,7 +176,7 @@ class BackTests extends React.Component {
                                         root: classes.cellRoot
                                     }}
                             >
-                                {dataItem.sharperatio}
+                                {dataItem.sharperatio || '-'}
                             </TableCell>
                         </TableRow>
                     ))
