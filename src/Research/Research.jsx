@@ -542,7 +542,7 @@ class Research extends Component {
         const getNewStartegyModal = () => {
             return (
                 <DialogComponent
-                    title=""
+                    title="Create Strategy"
                     open={this.state.showNewStartegyDiv}
                     onClose={() => this.updateState({ 'showNewStartegyDiv': false })}
                     maxWidth='xl'

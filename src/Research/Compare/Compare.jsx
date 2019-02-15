@@ -510,7 +510,7 @@ class Compare extends Component {
                 titleString = titleString + " vs ";
             }
         }
-        titleString = titleString + " comparision for <span style=\"color: #cc4444; font-weight: 700\">" + _.get(this.props, 'strategy.fullName', '') + "</span>";
+        titleString = titleString + " comparison for <span style=\"color: #cc4444; font-weight: 700\">" + _.get(this.props, 'strategy.fullName', '') + "</span>";
         return { __html: titleString };
     }
 

@@ -153,8 +153,7 @@ class NewStartegy extends Component {
                 }
             :   {};
         return (
-            <div className="new-strategy-div" style={{ 'padding': '20px' }}>
-                <h2>CREATE STRATEGY</h2>
+            <div className="new-strategy-div" style={{ 'padding': '20px 0' }}>
                 <Formik 
                     initialValues={defaultValues}
                     onSubmit={this.handleSubmit}

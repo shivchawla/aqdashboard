@@ -1153,7 +1153,7 @@ class StartegyDetail extends Component {
             return (
                 <DialogComponent
                         open={this.state.newStrategyOpen}
-                        title=""
+                        title="Create Strategy"
                         onClose={this.toggleNewStrategyModal}
                         maxWidth='xl'
                         style={{
@@ -1171,7 +1171,7 @@ class StartegyDetail extends Component {
             return (
                 <DialogComponent
                         open={this.state.cloneStrategyOpen}
-                        title=""
+                        title="Clone Strategy"
                         onClose={this.toggleClonedStrategyModal}
                         maxWidth='xl'
                         style={{
