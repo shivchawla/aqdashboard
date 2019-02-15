@@ -25,6 +25,7 @@ import "react-table/react-table.css";
 import 'react-loading-bar/dist/index.css';
 import { processConditionsToAlgo } from '../StartegyDetail/utils';
 import FlowChartAlgo from '../FlowChartAlgo';
+import { verticalBox, horizontalBox } from '../../constants';
 
 
 class BacktestDetail extends Component {
@@ -247,7 +248,8 @@ class BacktestDetail extends Component {
             backtestProgress: 0,
             progressCounter: 0,
             defaultSelectedPortfolio: 0,
-            selectedTab: 0
+            selectedTab: 0,
+            selectedAlgoView: 0
         };
 
         this.updateState = (data) => {
@@ -1282,7 +1284,27 @@ class BacktestDetail extends Component {
                 />
             );
             const guiComponent = (
-                <FlowChartAlgo algo={this.state.algo} edit={false} />
+                <div 
+                        style={{
+                            ...verticalBox,
+                            alignItems: 'flex-start',
+                            justifyContent: 'flex-start'
+                        }}
+                >
+                    <div style={{...horizontalBox, justifyContent: 'center', width: '100%'}}>
+                        <RadioGroup 
+                            items={['ALGORITHM', 'CODE']}
+                            onChange={value => this.setState({selectedAlgoView: value})}
+                            defaultSelected={this.state.selectedAlgoView}
+                            CustomRadio={CardCustomRadio}
+                        />
+                    </div>
+                    {
+                        this.state.selectedAlgoView === 0 
+                            ? <FlowChartAlgo algo={this.state.algo} edit={false} />
+                            : codeComponent
+                    }
+                </div>
             );
             tabs.push(
                 <div 

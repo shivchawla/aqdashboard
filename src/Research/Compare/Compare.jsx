@@ -169,13 +169,13 @@ class Compare extends Component {
                 if (this.state.codeDiffBacktestIdOne !== backtestId) {
                     this.updateState({codeDiffBacktestIdOne: backtestId });
 
-                    if (this.state.selectedTab === 1) {
+                    if (this.state.selectedTab === 2) {
                         setTimeout(() => {
                             try {
                                 this.updateCodeDiffs();
                             } catch (err) {}
                         }, 100);
-                    } else if (this.state.selectedTab === 3) {
+                    } else if (this.state.selectedTab === 4) {
                         setTimeout(() => {
                             try {
                                 this.updateSettingsDiffs();
@@ -192,13 +192,13 @@ class Compare extends Component {
             if (backtestId !== undefined) {
                 if (this.state.codeDiffBacktestIdTwo !== backtestId) {
                     this.updateState({ 'codeDiffBacktestIdTwo': backtestId });
-                    if (this.state.selectedTab === 1) {
+                    if (this.state.selectedTab === 2) {
                         setTimeout(() => {
                             try {
                                 this.updateCodeDiffs();
                             } catch(err) {}
                         }, 100);
-                    } else if (this.state.selectedTab === 3) {
+                    } else if (this.state.selectedTab === 4) {
                         setTimeout(() => {
                             try {
                                 this.updateSettingsDiffs();
@@ -483,13 +483,13 @@ class Compare extends Component {
 
     onTabChanged = (event, value) => {
         this.updateState({selectedTab: value});
-        if (value === 1) {
+        if (value === 2) {
             setTimeout(() => {
                 try {
                     this.updateCodeDiffs();
                 } catch(err) {console.log('Error ', err)}
             }, 100);
-        } else if (this.state.selectedTab === 2) {
+        } else if (this.state.selectedTab === 3) {
             setTimeout(() => {
                 try {
                     this.updateSettingsDiffs();
@@ -943,11 +943,12 @@ class Compare extends Component {
         }
 
         const getCompareDiv = () => {
-            const shouldShowAlgo = _.get(this.props, 'strategy.type', 'CODE') === 'GUI';
-            const codeOrGUITabPane = shouldShowAlgo ? getGuiTabPane() : getCodeTabPane();
+            // const shouldShowAlgo = _.get(this.props, 'strategy.type', 'CODE') === 'GUI';
+            // const codeOrGUITabPane = shouldShowAlgo ? getGuiTabPane() : getCodeTabPane();
             const tabs = [
                 getSummaryTabPane(),
-                codeOrGUITabPane,
+                getGuiTabPane(),
+                getCodeTabPane(),
                 getReturnsTabPane(),
                 getSettingsTabPane()
             ];
@@ -978,7 +979,9 @@ class Compare extends Component {
                                     style={{marginBottom: '10px'}}
                             >
                                 <Tab label='SUMMARY' />
-                                <Tab label={shouldShowAlgo ? 'ALGO' : 'CODE'} />
+                                {/* <Tab label={shouldShowAlgo ? 'ALGO' : 'CODE'} /> */}
+                                <Tab label='ALGO' />
+                                <Tab label='CODE' />
                                 <Tab label='RETURNS' />
                                 <Tab label='SETTINGS' />
                             </Tabs>
