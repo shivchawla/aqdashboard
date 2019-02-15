@@ -11,9 +11,12 @@ import Moment from 'react-moment';
 import AceEditor from 'react-ace';
 import 'brace/mode/julia';
 import 'brace/theme/xcode';
+import RadioGroup from '../../../components/Selections/RadioGroup';
+import CustomRadio from '../../../components/Selections/CardCustomRadio';
 import CustomHighCharts from './../../../CustomHighCharts/CustomHighCharts.jsx';
 import { processConditionsToAlgo } from '../../../Research/StartegyDetail/utils';
 import FlowChartAlgo from '../../../Research/FlowChartAlgo';
+import { verticalBox, horizontalBox } from '../../../constants';
 
 class AttachedBackTest extends Component {
 
@@ -27,7 +30,8 @@ class AttachedBackTest extends Component {
             loading: true,
             selectedTab: 0,
             algo: {},
-            type: 'GUI' // this should not be used, type should be obtained from the N/W call
+            type: 'GUI', // this should not be used, type should be obtained from the N/W call
+            selectedAlgoView: 0
         };
 
         this.getBacktestData = () => {
@@ -289,10 +293,21 @@ class AttachedBackTest extends Component {
                     />
                 );
                 const guiContent = (
-                    <FlowChartAlgo 
-                        algo={this.state.algo}
-                        edit={false}
-                    />
+                    <div style={{...verticalBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                        <div style={{...horizontalBox, justifyContent: 'center', width: '100%'}}>
+                            <RadioGroup 
+                                items={['ALGORITHM', 'CODE']}
+                                onChange={value => this.setState({selectedAlgoView: value})}
+                                defaultSelected={this.state.selectedAlgoView}
+                                CustomRadio={CustomRadio}
+                            />
+                        </div>
+                        {
+                            this.state.selectedAlgoView === 0 
+                                ? <FlowChartAlgo algo={this.state.algo} edit={false}/>
+                                : codeContent
+                        }
+                    </div>
                 );
 
                 tabs.push(
