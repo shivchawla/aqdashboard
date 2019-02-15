@@ -1263,7 +1263,7 @@ class StartegyDetail extends Component {
                                     items={resolutionItems}
                                     onChange={this.onResolutionChanged}
                                     defaultSelected={resolutionItems.indexOf(this.state.selectedResolution)}
-                                    disabled={this.state.isBacktestRunning || this.state.codeViewSelected}
+                                    disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
                                     CustomRadio={CardRadio}
                                     small
                                 />
@@ -1288,7 +1288,7 @@ class StartegyDetail extends Component {
                                         this.updateAlgo(modifiedAlgo);
                                     }}
                                     defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
-                                    disabled={this.state.isBacktestRunning || this.state.codeViewSelected}
+                                    disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
                                     CustomRadio={CardRadio}
                                     small
                                 />
@@ -1457,7 +1457,7 @@ class StartegyDetail extends Component {
                                     items={rebalanceRadioItems}
                                     onChange={this.onRebalanceChange} 
                                     defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
-                                    disabled={this.state.isBacktestRunning || this.state.selectedResolution === 'Minute'}
+                                    disabled={this.state.isBacktestRunning || this.state.selectedResolution === 'Minute' || !this.state.codeEditorReadOnly}
                                     CustomRadio={CardRadio}
                                     style={{marginTop: '10px'}}
                                     small
@@ -1930,6 +1930,7 @@ class StartegyDetail extends Component {
                         action={true}
                         onOk={this.makeCodeEditTrue}
                         onCancel={this.closeEditCodeDialog}
+                        hideClose
                 >
                     <h3>Are you sure you want to edit the code</h3>
                 </DialogComponent>
