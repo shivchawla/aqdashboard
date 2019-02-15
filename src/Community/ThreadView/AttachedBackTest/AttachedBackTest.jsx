@@ -280,7 +280,8 @@ class AttachedBackTest extends Component {
         const getBackTestBody = () => {
             if (!this.state.loading) {
                 const tabs = [];
-                const shouldShowAlgo = this.state.type === 'GUI';
+                const shouldShowAlgo = _.get(this.state, 'backTestData', 'CODE') === 'GUI' 
+                        || _.get(this.state, 'backTestData.entryConditions', []).length > 0;
                 const codeContent = (
                     <AceEditor
                         mode="julia"
