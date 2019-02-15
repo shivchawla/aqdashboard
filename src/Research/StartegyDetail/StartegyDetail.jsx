@@ -1213,14 +1213,14 @@ class StartegyDetail extends Component {
                                     />
                                     <h3 
                                             style={{
-                                                fontSize: '12px',
+                                                fontSize: '14px',
                                                 fontWeight: 700,
                                                 color: '#575757',
                                                 fontFamily: 'Lato, sans-serif',
                                                 marginLeft: '10px'
                                             }}
                                     >
-                                        ₹{Utils.formatMoneyValueMaxTwoDecimals(this.state.initialCapital)}
+                                        {Utils.formatInvestmentValueNormal(Number(this.state.initialCapital))}
                                     </h3>
                                 </div>
                             }
