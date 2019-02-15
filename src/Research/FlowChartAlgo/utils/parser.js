@@ -27,8 +27,8 @@ end`;
 
 export const getInitializeMethodString = (codeObj) => {
     const script = _.get(codeObj, 'script', {});
-    const stopLoss = _.get(codeObj, 'stopLoss', 0).toFixed(1);
-    const target = _.get(codeObj, 'target', 0).toFixed(1);
+    const stopLoss = Number(_.get(codeObj, 'stopLoss', 0)).toFixed(1);
+    const target = Number(_.get(codeObj, 'target', 0)).toFixed(1);
     const instruments = _.get(script, 'instruments', []);
     const setUniverseString = setUniverse(instruments);
     const stopLossString = setStopLoss(stopLoss);

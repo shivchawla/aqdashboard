@@ -922,7 +922,7 @@ class StartegyDetail extends Component {
             '"slippage":{"model":"' + this.state.selectedSlipPageType + '","value":' + this.state.selectedSlipPage + '},' +
             '"commission":{"model":"' + this.state.selectedCommissionType + '","value":' + this.state.selectedCommission + '},' +
             '"resolution":"Day","investmentPlan":"' + this.state.selectedInvestmentPlan + '","executionPolicy":"' + this.state.selectedExecutionPolicy + '",'+
-            '"universe":"' + this.state.selectedStocks.join(',') + '","target":"' + this.state.algo.target + '","stopLoss":"' + this.state.algo.stopLoss + '"';
+            '"universe":"' + this.state.selectedStocks.join(',') + '","profitTarget":"' + this.state.algo.target + '","stopLoss":"' + this.state.algo.stopLoss + '"';
         returnString = returnString + "}";
         return returnString;
     }
@@ -1191,13 +1191,38 @@ class StartegyDetail extends Component {
                         <InputContainer 
                             label='Initial Capital'
                             input={
-                                <CustomOutlinedInput
-                                    value={this.state.initialCapital}
-                                    onChange={(e) => { this.updateState({ 'initialCapital': e.target.value }) }}
-                                    type="number"
-                                    style={{width: '100%'}}
-                                    disabled={this.state.isBacktestRunning} 
-                                />
+                                <div 
+                                        style={{
+                                            ...horizontalBox,
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}
+                                >
+                                    <CustomOutlinedInput
+                                        value={this.state.initialCapital}
+                                        onChange={e => { 
+                                            const numValue = Number(e.target.value);
+                                            if (numValue < 0) {
+                                                return;
+                                            }
+                                            this.updateState({ 'initialCapital': e.target.value }) 
+                                        }}
+                                        type="number"
+                                        style={{width: '100%'}}
+                                        disabled={this.state.isBacktestRunning} 
+                                    />
+                                    <h3 
+                                            style={{
+                                                fontSize: '12px',
+                                                fontWeight: 700,
+                                                color: '#575757',
+                                                fontFamily: 'Lato, sans-serif',
+                                                marginLeft: '10px'
+                                            }}
+                                    >
+                                        ₹{Utils.formatMoneyValueMaxTwoDecimals(this.state.initialCapital)}
+                                    </h3>
+                                </div>
                             }
                         />
                     </Grid>
@@ -1339,9 +1364,13 @@ class StartegyDetail extends Component {
                                 <CustomOutlinedInput
                                     value={this.state.algo.target}
                                     onChange={e => {
+                                        const numValue = Number(e.target.value);
+                                        if (numValue < 0 || numValue > 100) {
+                                            return;
+                                        }
                                         const modifiedAlgo = {
                                             ...this.state.algo,
-                                            target: Number(e.target.value)
+                                            target: e.target.value
                                         };
                                         this.updateAlgo(modifiedAlgo);
                                     }}
@@ -1360,9 +1389,13 @@ class StartegyDetail extends Component {
                                 <CustomOutlinedInput
                                     value={this.state.algo.stopLoss}
                                     onChange={e => {
+                                        const numValue = Number(e.target.value);
+                                        if (numValue < 0 || numValue > 100) {
+                                            return;
+                                        }
                                         const modifiedAlgo = {
                                             ...this.state.algo,
-                                            stopLoss: Number(e.target.value)
+                                            stopLoss: e.target.value
                                         };
                                         this.updateAlgo(modifiedAlgo);
                                     }}
