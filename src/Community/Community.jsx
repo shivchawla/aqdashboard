@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Utils from './../Utils';
 import Grid from '@material-ui/core/Grid';
@@ -36,6 +37,8 @@ class Community extends Component {
         'searchString': Utils.getCommunitySearchString()
     }
     searchStringCurrent = Utils.getCommunitySearchString();
+
+    containerCard = null;
 
     constructor(props) {
         super();
@@ -97,6 +100,7 @@ class Community extends Component {
 
         this.pageChanged = (newPage) => {
             if (newPage > 0) {
+                this.handleScrollToTop();
                 this.getThreads({ 'skip': ((newPage - 1) * 10) });
                 this.updateState({
                     'loading': true,
@@ -349,6 +353,13 @@ class Community extends Component {
         }
     }
 
+    handleScrollToTop = () =>{
+        const node = ReactDOM.findDOMNode(this.containerCard)
+        if (node){
+          window.scrollTo(0, node.offsetTop);
+        }
+      }
+
     render() {
 
         const getListDivSize = () => {
@@ -467,8 +478,12 @@ class Community extends Component {
                                     width: '100%', 
                                     background: 'white' 
                                 }}
+                                ref={el => this.containerCard = el}
                         >
-                            <Grid container style={{ 'height': '100%' }}>
+                            <Grid 
+                                    container 
+                                    style={{ 'height': '100%' }}
+                            >
                                 <Grid 
                                         item 
                                         xs={12} 
@@ -496,7 +511,11 @@ class Community extends Component {
                                             {getCheckBoxGroup()}
                                             <ThreadList loading={this.state.loading} threads={this.state.threads} />
                                         </div>
-                                        <Pagination page={this.state.page} onpageChanged={this.pageChanged} numberOfPages={this.state.numberOfPages} />
+                                        <Pagination 
+                                            page={this.state.page} 
+                                            onpageChanged={this.pageChanged} 
+                                            numberOfPages={this.state.numberOfPages} 
+                                        />
                                     </div>
                                 </Grid>
                                 <Grid 

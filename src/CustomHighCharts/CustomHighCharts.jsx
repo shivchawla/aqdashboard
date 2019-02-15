@@ -84,6 +84,11 @@ class CustomHighCharts extends React.Component {
         credits: {
             enabled: false
         },
+        plotOptions: {
+            series: {
+                showInNavigator: true,
+            }
+        },
         tooltip: {
             pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>',
             split: false,

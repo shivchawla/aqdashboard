@@ -3,7 +3,7 @@ import {comparators, conditionalOperators} from '../constants';
 
 export const parseObjectToCode = codeObj => {
     const type = _.get(codeObj, 'position.type', 'BUY');
-    return `# © AIMSQUANT PVT. LTD.
+    return `# This is a machine generated code.
 
 ${getInitializeMethodString(codeObj)}
 

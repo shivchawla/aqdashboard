@@ -238,7 +238,7 @@ class RunningBackTest extends Component {
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
-                                        Information Ratio
+                                        Inf. Ratio
                                     </p>
                                 </div>
                             </Grid>
