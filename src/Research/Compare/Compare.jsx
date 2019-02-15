@@ -770,7 +770,8 @@ class Compare extends Component {
                                 xs={6}
                                 style={{ 
                                     ...verticalBox,
-                                    alignItems: 'center'
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start'
                                 }}
                         >
                             <RadioGroup 
