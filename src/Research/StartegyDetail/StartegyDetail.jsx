@@ -3,12 +3,11 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import Utils from './../../Utils';
 import axios from 'axios';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
+import Chip from '../../components/DataDisplay/Chip';
 import Select from '@material-ui/core/Select';
 import {withStyles} from '@material-ui/core/styles';
 import ActionIcon from '../../components/Buttons/ActionIcon';
@@ -1119,7 +1118,9 @@ class StartegyDetail extends Component {
                 >
                     {
                         this.state.selectedStocks.length > 0 &&
-                        <SearchHeader>Selected Stocks</SearchHeader>
+                        <SearchHeader>
+                            Selected Stocks ({this.state.selectedStocks.length})
+                        </SearchHeader>
                     }
                     {this.renderSelectedStocks()}
                 </Grid>
@@ -1997,7 +1998,7 @@ const Label = styled.h3`
 `;
 
 const SearchHeader = styled.h3`
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #444;
     font-family: 'Lato', sans-serif;
