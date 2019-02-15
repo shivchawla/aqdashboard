@@ -50,11 +50,14 @@ class ConditionRow extends React.Component {
     }
 
     firstOpenPopover = event => {
-        const node = ReactDOM.findDOMNode(this.containerEl);
-        this.setState({
-            popoverWidth: node.clientWidth,
-            fristValueAnchorEl: ReactDOM.findDOMNode(node)
-        });
+        const {edit = true} = this.props;
+        if (edit) {
+            const node = ReactDOM.findDOMNode(this.containerEl);
+            this.setState({
+                popoverWidth: node.clientWidth,
+                fristValueAnchorEl: ReactDOM.findDOMNode(node)
+            });
+        }
     }
 
     secondOpenPopover = event => {
