@@ -718,8 +718,8 @@ class StartegyDetail extends Component {
             if (msg.data) {
                 const data = JSON.parse(msg.data);
                 //Temporary Fix: Route to detail if "Exception" happens before any WS message
-                if (data.status == "exception" || data.status == "complete") {
-                    const backtestRedirectUrl = `/research/backtests/${this.state.strategyId}/${backtestId}`;
+                if (data.status === "exception" || data.status === "complete") {
+                    const backtestRedirectUrl = `/research/backtests/${this.state.strategyId}/${backtestId}?type=backtest&strategyName=${this.state.strategy.name}&backtestName=New Backtest`;
                     this.props.history.push(backtestRedirectUrl)
                 }
 
