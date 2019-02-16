@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '../../components/DataDisplay/Chip';
 import Select from '@material-ui/core/Select';
 import {withStyles} from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import ActionIcon from '../../components/Buttons/ActionIcon';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import DateComponent from '../../components/Selections/DateComponent';
@@ -1715,18 +1716,21 @@ class StartegyDetail extends Component {
                             type='add'
                             onClick={this.toggleNewStrategyModal}
                             color={secondaryColor}
+                            toolTipTitle='Create Strategy'
                         />
                         {getNewStartegyModal()}
                         <ActionIcon 
                             type='file_copy'
                             onClick={this.toggleClonedStrategyModal}
                             color={secondaryColor}
+                            toolTipTitle='Clone Strategy'
                         />
                         {getCloneStrategyModal()}
                         <ActionIcon 
                             type='save'
                             onClick={() => this.clickedOnSave()}
                             color={secondaryColor}
+                            toolTipTitle='Save Strategy'
                         />
                         <div style={{
                             'height': '30px',
@@ -1738,11 +1742,13 @@ class StartegyDetail extends Component {
                             type='bar_chart'
                             color={secondaryColor}
                             onClick={() => {this.props.history.push('/research/backtests/' + this.state.strategyId)}}
+                            toolTipTitle='Backtests'
                         />
                         <ActionIcon 
                             type='play_arrow' 
                             onClick={this.clickedOnRunBacktest}
                             color={secondaryColor}
+                            toolTipTitle='Run Backtest'
                         />
                         <div style={{
                             'height': '30px',
@@ -1970,6 +1976,7 @@ class StartegyDetail extends Component {
                                                     rightDivOpen: true 
                                                 });
                                             }}
+                                            toolTipTitle='Settings'
                                         />
                                     </div>
                                     <div>
@@ -1983,6 +1990,7 @@ class StartegyDetail extends Component {
                                                         rightDivOpen: true 
                                                     });
                                             }}
+                                            toolTipTitle='Logs'
                                         />
                                     </div>
                                 </div>
