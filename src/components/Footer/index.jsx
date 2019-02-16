@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from "@fortawesome/free-brands-svg-icons";
 import advicequbeLogo from '../../assets/logo-advq-new.png';
 
-const {researchDomain} = require('../../localConfig');
+const {dailyContestDomain} = require('../../localConfig');
 
 class NewFooter extends React.Component {
     render() {
@@ -29,20 +29,43 @@ class NewFooter extends React.Component {
                         </ColGrid>
                         <ColGrid item sm={3} xs={12}>
                             <LinkHeader>Products</LinkHeader>
-                            <ListItem history={this.props.history} url='/dailycontest/home'>Stock Prediction Contest</ListItem>
                             <ListItem 
                                     history={this.props.history} 
-                                    url={`${researchDomain}`}
                                     href={true}
+                                    url={`${dailyContestDomain}/dailycontest/home`}
+                            >
+                                Stock Prediction Contest
+                            </ListItem>
+                            <ListItem 
+                                    history={this.props.history} 
+                                    url='/'
                             >
                                 Research Platform
                             </ListItem>
                         </ColGrid>
                         <ColGrid item sm={3} xs={12}>
                             <LinkHeader>Company</LinkHeader>
-                            <ListItem history={this.props.history} url='/aboutus'>About Us</ListItem>
-                            <ListItem history={this.props.history} url='/policies/tnc'>Terms of Use</ListItem>
-                            <ListItem history={this.props.history} url='/policies/privacy'>Privacy Policy</ListItem>
+                            <ListItem 
+                                    history={this.props.history} 
+                                    url={`${dailyContestDomain}/aboutus`}
+                                    href={true}
+                            >
+                                About Us
+                            </ListItem>
+                            <ListItem 
+                                    history={this.props.history} 
+                                    url={`${dailyContestDomain}/policies/tnc`}
+                                    href={true}
+                            >
+                                Terms of Use
+                            </ListItem>
+                            <ListItem 
+                                    history={this.props.history} 
+                                    url={`${dailyContestDomain}/policies/privacy`}
+                                    href={true}
+                            >
+                                Privacy Policy
+                            </ListItem>
                         </ColGrid>
                         <ColGrid item sm={3} xs={12}>
                             <LinkHeader>Contact Info</LinkHeader>
