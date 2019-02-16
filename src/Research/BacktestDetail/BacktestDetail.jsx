@@ -87,7 +87,7 @@ class BacktestDetail extends Component {
     subTransactionColumns = [
         {
             Header: 'Date',
-            accessor: 'date',
+            accessor: 'date_time',
             sortMethod: (a, b, desc) => {
                 return 0;
             }
@@ -253,7 +253,8 @@ class BacktestDetail extends Component {
             defaultSelectedPortfolio: 0,
             selectedTab: 0,
             selectedAlgoView: 0,
-            universeDialogOpen: false
+            universeDialogOpen: false,
+            resolution: 'Day'
         };
 
         this.updateState = (data) => {
@@ -402,16 +403,18 @@ class BacktestDetail extends Component {
                                         } catch (err) { }
                                         try {
                                             if (dtL3.datetime) {
+                                                const format = this.state.resolution.toLowerCase() === 'minute'
+                                                    ?   'DD MMM YYYY, HH.mm.ss'
+                                                    :   'DD MMM YYYY';
                                                 finalPushObj['date'] = moment(dtL3.datetime).format('DD MMM YYYY');
-                                            }
+                                                finalPushObj['date_time'] = moment(`${dtL3.datetime}Z`).format(format);                                            }
                                         } catch (err) { }
-
+                                        
                                         if (transactionHistoryData[finalPushObj['date']]) {
                                             transactionHistoryData[finalPushObj['date']].push(finalPushObj);
                                         } else {
                                             transactionHistoryData[finalPushObj['date']] = [finalPushObj];
                                         }
-
                                         let dataObj = {
 
                                         };
@@ -600,6 +603,8 @@ class BacktestDetail extends Component {
                 });
                 this.setupWebSocketConnections(data._id);
             } else {
+                const settings = JSON.parse(_.get(data, 'settings.advanced', {}));
+                const resolution = _.get(settings, 'resolution', 'Day');
                 let entryLogic = _.get(data, 'entryLogic', '');
                 let exitLogic = _.get(data, 'exitLogic', '');
                 let entryConditions = _.get(data, 'entryConditions', []);
@@ -614,6 +619,7 @@ class BacktestDetail extends Component {
                 };
 
                 this.updateState({
+                    resolution,
                     algo,
                     backTestData: data,
                     isBacktestRunning: false
@@ -990,27 +996,14 @@ class BacktestDetail extends Component {
                         SubComponent={row => {
                             return (
                                 <div style={{ 'padding': '20px' }}>
-                                    <ReactTable ref="transactionSubTable" columns={this.subTransactionColumns}
+                                    <ReactTable ref="transactionSubTable" 
+                                        columns={this.subTransactionColumns}
                                         data={getTransactionDataForDate(row.original.date)}
                                         // minRows={4}
                                         showPagination={false}
                                         defaultPageSize={getTransactionDataCountForDate(row.original.date)}
                                         className="backtestdetail-table"
                                         headerStyle={{ 'textAlign': 'left' }} 
-                                        SubComponent={nRow => {
-                                            return (
-                                                <div style={{padding: '20px', boxSizing: 'border-box'}}>
-                                                    <ReactTable ref="transactionSubTable" columns={this.subTransactionColumns}
-                                                        data={getTransactionDataForDate(row.original.date)}
-                                                        // minRows={4}
-                                                        showPagination={false}
-                                                        defaultPageSize={getTransactionDataCountForDate(row.original.date)}
-                                                        className="backtestdetail-table"
-                                                        headerStyle={{ 'textAlign': 'left' }} 
-                                                    />
-                                                </div>
-                                            );
-                                        }}
                                     />
                                 </div>
                             );
