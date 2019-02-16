@@ -982,7 +982,7 @@ class BacktestDetail extends Component {
                     />
                     <ReactTable ref="transactionTable" columns={this.transactionColumns}
                         data={this.state.transactionHistoryParentData}
-                        minRows={4}
+                        // minRows={4}
                         filterable
                         showPagination={false}
                         defaultPageSize={_.get(this.state, 'transactionHistoryParentData', []).length}
@@ -992,11 +992,26 @@ class BacktestDetail extends Component {
                                 <div style={{ 'padding': '20px' }}>
                                     <ReactTable ref="transactionSubTable" columns={this.subTransactionColumns}
                                         data={getTransactionDataForDate(row.original.date)}
-                                        minRows={4}
+                                        // minRows={4}
                                         showPagination={false}
                                         defaultPageSize={getTransactionDataCountForDate(row.original.date)}
                                         className="backtestdetail-table"
-                                        headerStyle={{ 'textAlign': 'left' }} />
+                                        headerStyle={{ 'textAlign': 'left' }} 
+                                        SubComponent={nRow => {
+                                            return (
+                                                <div style={{padding: '20px', boxSizing: 'border-box'}}>
+                                                    <ReactTable ref="transactionSubTable" columns={this.subTransactionColumns}
+                                                        data={getTransactionDataForDate(row.original.date)}
+                                                        // minRows={4}
+                                                        showPagination={false}
+                                                        defaultPageSize={getTransactionDataCountForDate(row.original.date)}
+                                                        className="backtestdetail-table"
+                                                        headerStyle={{ 'textAlign': 'left' }} 
+                                                    />
+                                                </div>
+                                            );
+                                        }}
+                                    />
                                 </div>
                             );
                         }}
