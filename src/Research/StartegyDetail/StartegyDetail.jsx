@@ -169,8 +169,6 @@ class StartegyDetail extends Component {
                     let exitLogic = _.get(response.data, 'exitLogic', '');
                     let entryConditions = _.get(response.data, 'entryConditions', []);
                     let exitConditions = _.get(response.data, 'exitConditions', []);
-                    console.log('entryConditions', entryConditions);
-                    console.log('exitConditions', exitConditions);
                     entryConditions = entryConditions.length > 0  
                         ? processConditionsToAlgo(entryConditions, entryLogic)
                         : [defaultFirstRowEntryCondition];
@@ -196,12 +194,9 @@ class StartegyDetail extends Component {
                         algo,
                         codeEditorReadOnly: viewType === 'GUI',
                         codeViewSelected: !(viewType === 'GUI')
-                    }, () => {
-                        console.log(this.state.strategy);
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         if (error.response.status === 400 || error.response.status === 403) {
@@ -1166,7 +1161,7 @@ class StartegyDetail extends Component {
     }
 
     onResolutionChanged = selectedValue => { 
-        let requiredStartDate = moment(), requiredEndDate = moment();
+        let requiredStartDate = endDate, requiredEndDate = endDate;
         const resolutionItems = ['Day', 'Minute'];
         const value = selectedValue >= resolutionItems.length 
             ? resolutionItems[0]

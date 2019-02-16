@@ -46,7 +46,7 @@ class RunningBackTest extends Component {
         const createdAt = _.get(backTestData, 'createdAt', null);
         const startDate = _.get(backTestData, 'settings.startDate', null);
         const endDate = _.get(backTestData, 'settings.endDate', null);
-        const status = _.get(backTestData, 'status', 'undefined');
+        const status = _.get(backTestData, 'status', '-');
         const totalReturn = _.get(backTestData, 'output.summary.totalreturn', 0).toFixed(2);
         const annualReturn = _.get(backTestData, 'output.summary.annualreturn', 0).toFixed(2);
         const standardDeviation = _.get(backTestData.output, 'summary.annualstandarddeviation', 0).toFixed(2);
