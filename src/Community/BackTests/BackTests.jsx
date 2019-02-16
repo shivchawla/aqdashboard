@@ -13,7 +13,7 @@ import Utils from './../../Utils';
 
 const styles = theme => ({
     cellRoot: {
-        padding: '0 10px'
+        padding: '0 10px',
     }
 })
 
@@ -106,80 +106,88 @@ class BackTests extends React.Component {
         return (
             <TableBody>
                 {
-                    data.map((dataItem, index) => (
-                        <TableRow key={index}>
-                            <TableCell 
-                                    align="left"
-                                    padding="checkbox"
-                                    onClick={e => e.stopPropagation()}
-                                    style={{boxSizing: 'border-box'}}
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                <Radio 
-                                    onChange={e => {
-                                        e.stopPropagation();
-                                        this.onRadioChange(dataItem)
-                                    }}
-                                    checked={dataItem.key === this.state.selectedBacktestId}
-                                    color='primary'
-                                />
-                            </TableCell>
-                            <TableCell 
-                                    align="left" 
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                {dataItem.name}
-                            </TableCell>
-                            <TableCell 
-                                    align="left"
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                {dataItem.createdAt}
-                            </TableCell>
-                            <TableCell 
-                                    align="left"
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                {dataItem.status}
-                            </TableCell>
-                            <TableCell 
-                                    align="left"
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                {dataItem.dateRange}
-                            </TableCell>
-                            <TableCell 
-                                    align="left"
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                {
-                                    dataItem.totalreturn
-                                    ?   dataItem.totalreturn + '%'
-                                    :   '-'
-                                }
-                            </TableCell>
-                            <TableCell 
-                                    align="left"
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                            >
-                                {dataItem.sharperatio || '-'}
-                            </TableCell>
-                        </TableRow>
-                    ))
+                    data.map((dataItem, index) => {
+                        const isException = dataItem.status.toLowerCase() === 'exception';
+
+                        return (
+                            <TableRow key={index}>
+                                <TableCell 
+                                        align="left"
+                                        padding="checkbox"
+                                        onClick={e => e.stopPropagation()}
+                                        style={{boxSizing: 'border-box'}}
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                >
+                                    <Radio 
+                                        onChange={e => {
+                                            e.stopPropagation();
+                                            this.onRadioChange(dataItem)
+                                        }}
+                                        checked={dataItem.key === this.state.selectedBacktestId}
+                                        color='primary'
+                                    />
+                                </TableCell>
+                                <TableCell 
+                                        align="left" 
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                >
+                                    {dataItem.name}
+                                </TableCell>
+                                <TableCell 
+                                        align="left"
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                >
+                                    {dataItem.createdAt}
+                                </TableCell>
+                                <TableCell 
+                                        align="left"
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                        style={{
+                                            color: isException ? '#ff3737' : '#595959',
+                                            fontWeight: isException ? 700 : 500
+                                        }}
+                                >
+                                    {dataItem.status}
+                                </TableCell>
+                                <TableCell 
+                                        align="left"
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                >
+                                    {dataItem.dateRange}
+                                </TableCell>
+                                <TableCell 
+                                        align="left"
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                >
+                                    {
+                                        dataItem.totalreturn
+                                        ?   dataItem.totalreturn + '%'
+                                        :   '-'
+                                    }
+                                </TableCell>
+                                <TableCell 
+                                        align="left"
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                >
+                                    {dataItem.sharperatio || '-'}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })
                 }
             </TableBody>
         );

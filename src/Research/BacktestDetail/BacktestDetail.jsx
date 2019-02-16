@@ -1158,7 +1158,7 @@ class BacktestDetail extends Component {
                                         }}
                                 >
                                     {
-                                        _.get(this.state, 'backTestData.settings.universe', []).length > 0
+                                        _.get(this.state, 'backTestData.settings.universe', '').length > 0
                                             ?   _.get(this.state, 'backTestData.settings.universe', '')
                                                 .split(',')
                                                 .splice(0, 3)
@@ -1173,19 +1173,22 @@ class BacktestDetail extends Component {
                                                 })
                                             :   '-'
                                     }
-                                    <h3
-                                            style={{
-                                                fontFamily: 'Lato, sans-serif',
-                                                fontSize: '12px',
-                                                color: primaryColor,
-                                                marginLeft: '5px',
-                                                cursor: 'pointer',
-                                                fontWeight: 700
-                                            }}
-                                            onClick={this.toggleUniverseDialog}
-                                    >
-                                        more
-                                    </h3>
+                                    {
+                                        _.get(this.state, 'backTestData.settings.universe', '').length > 0 &&
+                                        <h3
+                                                style={{
+                                                    fontFamily: 'Lato, sans-serif',
+                                                    fontSize: '12px',
+                                                    color: primaryColor,
+                                                    marginLeft: '5px',
+                                                    cursor: 'pointer',
+                                                    fontWeight: 700
+                                                }}
+                                                onClick={this.toggleUniverseDialog}
+                                        >
+                                            more
+                                        </h3>
+                                    }
                                 </Grid>
                             </Grid>
                             <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
