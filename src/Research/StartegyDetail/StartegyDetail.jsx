@@ -283,7 +283,7 @@ class StartegyDetail extends Component {
 
         this.onUniverseChange = (e) => {
             this.setState({ 'selectedUniverse': e.target.value }, () => {
-                this.toggleEditStocksDialog(true);
+                // this.toggleEditStocksDialog(true);
                 this.fetchUniverseStocks('', true);
             });
         }
@@ -1082,8 +1082,23 @@ class StartegyDetail extends Component {
     }
 
     renderSearchStocksDialog = () => {
+        const universeOptions = [];
+        for (let i = 0; i < this.state.universe.length; i++) {
+            universeOptions.push(
+                <MenuItem 
+                        key={i} 
+                        value={this.state.universe[i]}
+                >
+                    {this.state.universe[i]}
+                </MenuItem>);
+        }
+        
         return (
-            <Grid container alignItems='center'>
+            <Grid 
+                    container 
+                    alignItems='center'
+                    spacing={16}
+            >
                 <Grid item xs={8}>
                     <CustomOutlinedInput 
                         placeholder='Search Stocks'
@@ -1092,10 +1107,23 @@ class StartegyDetail extends Component {
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    {
-                        this.state.editStocksLoading &&
-                        <CircularProgress size={22} style={{marginLeft: '10px'}}/>
-                    }
+                    <Select 
+                            style={{width: '100%'}}
+                            input={
+                                <CustomOutlinedInput
+                                    name="universe"
+                                    id="universe"
+                                    margin="dense"
+                                    labelWidth={60}
+                                />
+                            }
+                            value={this.state.selectedUniverse}
+                            onChange={this.onUniverseChange}
+                            disabled={this.state.isBacktestRunning}
+                            placeholder="Universe"
+                    >
+                        {universeOptions}
+                    </Select>
                 </Grid>
                 <Grid 
                         item 
@@ -1105,7 +1133,13 @@ class StartegyDetail extends Component {
                             alignItems: 'flex-start'
                         }}
                 >
-                    <SearchHeader>Search Result</SearchHeader>
+                    <div style={{...horizontalBox, justifyContent: 'flex-start'}}>
+                        <SearchHeader>Search Result</SearchHeader>
+                        {
+                            this.state.editStocksLoading &&
+                            <CircularProgress size={22} style={{marginLeft: '10px'}}/>
+                        }
+                    </div>
                     {this.renderSearchStocksList()}
                 </Grid>
                 <Grid 
@@ -1309,7 +1343,7 @@ class StartegyDetail extends Component {
                                             justifyContent: 'space-between'
                                         }}
                                 >
-                                    <Select 
+                                    {/* <Select 
                                             style={{width: '100%'}}
                                             input={
                                                 <CustomOutlinedInput
@@ -1325,7 +1359,18 @@ class StartegyDetail extends Component {
                                             placeholder="Universe"
                                     >
                                         {universeOptions}
-                                    </Select>
+                                    </Select> */}
+                                    <CustomOutlinedInput
+                                        name="universe"
+                                        id="universe"
+                                        margin="dense"
+                                        labelWidth={60}
+                                        style={{width: '190px', display: 'block'}}
+                                        value={
+                                            _.get(this.state, 'selectedStocks', [])
+                                            .join(', ')
+                                        }
+                                    />
                                     <ActionIcon 
                                         size={16}
                                         onClick={this.toggleEditStocksDialog}
