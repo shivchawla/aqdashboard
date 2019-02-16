@@ -171,11 +171,16 @@ class StartegyDetail extends Component {
                 'headers': Utils.getAuthTokenHeader()
             })
                 .then((response) => {
+                    console.log(response.data);
                     this.cancelGetStrategy = undefined;
                     let entryLogic = _.get(response.data, 'entryLogic', '');
                     let exitLogic = _.get(response.data, 'exitLogic', '');
                     let entryConditions = _.get(response.data, 'entryConditions', []);
                     let exitConditions = _.get(response.data, 'exitConditions', []);
+                    const type = _.get(response.data, 'type', 'CODE').toLowerCase();
+                    const selectedResolution = type === 'code' 
+                        ?   'Day'
+                        :   'Minute';
                     entryConditions = entryConditions.length > 0  
                         ? processConditionsToAlgo(entryConditions, entryLogic)
                         : [defaultFirstRowEntryCondition];
@@ -210,7 +215,8 @@ class StartegyDetail extends Component {
                         loading: false ,
                         algo,
                         codeEditorReadOnly: viewType === 'GUI',
-                        codeViewSelected: !(viewType === 'GUI')
+                        codeViewSelected: !(viewType === 'GUI'),
+                        selectedResolution
                     });
                 })
                 .catch((error) => {
