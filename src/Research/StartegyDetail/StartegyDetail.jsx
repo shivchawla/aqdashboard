@@ -919,7 +919,7 @@ class StartegyDetail extends Component {
             '"cancelPolicy":"' + this.state.selectedCancelPolicy + '",' +
             '"slippage":{"model":"' + this.state.selectedSlipPageType + '","value":' + this.state.selectedSlipPage + '},' +
             '"commission":{"model":"' + this.state.selectedCommissionType + '","value":' + this.state.selectedCommission + '},' +
-            '"resolution":"Day","investmentPlan":"' + this.state.selectedInvestmentPlan + '","executionPolicy":"' + this.state.selectedExecutionPolicy + '",'+
+            '"resolution":"' + this.state.selectedResolution + '","investmentPlan":"' + this.state.selectedInvestmentPlan + '","executionPolicy":"' + this.state.selectedExecutionPolicy + '",'+
             '"universe":"' + this.state.selectedStocks.join(',') + '","profitTarget":"' + this.state.algo.target + '","stopLoss":"' + this.state.algo.stopLoss + '"';
         returnString = returnString + "}";
         return returnString;
