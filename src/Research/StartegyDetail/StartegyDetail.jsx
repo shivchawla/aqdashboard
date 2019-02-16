@@ -11,6 +11,7 @@ import Chip from '../../components/DataDisplay/Chip';
 import Select from '@material-ui/core/Select';
 import {withStyles} from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import {StrategyDetailMeta} from '../../metas';
 import ActionIcon from '../../components/Buttons/ActionIcon';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import DateComponent from '../../components/Selections/DateComponent';
@@ -2009,6 +2010,7 @@ class StartegyDetail extends Component {
 
         return (
             <AqLayoutDesktop loading={this.state.loading} hideFooter>
+                <StrategyDetailMeta />
                 <DialogComponent 
                         title="Edit Code"
                         open={this.state.editCodeDialogOpen}

@@ -15,6 +15,7 @@ import moment from 'moment';
 import AceEditor from 'react-ace';
 import 'brace/mode/julia';
 import 'brace/theme/xcode';
+import {BacktestDetailMeta} from '../../metas';
 import CustomHighCharts from './../../CustomHighCharts/CustomHighCharts.jsx';
 import RunningBacktestChart from './../../CustomHighCharts/RunningBacktestChart.jsx';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
@@ -1695,6 +1696,7 @@ class BacktestDetail extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
+                <BacktestDetailMeta />
                 <DialogComponent 
                         open={this.state.universeDialogOpen}
                         onClose={this.toggleUniverseDialog}

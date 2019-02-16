@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import {CommunityMeta} from '../metas';
 import Utils from './../Utils';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -566,6 +567,7 @@ class Community extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.mainLoading}>
+                <CommunityMeta />
                 {getTotalDiv()}
             </AqDesktopLayout>
         );

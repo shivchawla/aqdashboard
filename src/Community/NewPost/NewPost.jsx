@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Utils from './../../Utils';
 import Chip from '../../components/DataDisplay/Chip';
 import Grid from '@material-ui/core/Grid';
+import {NewPostMeta} from '../../metas';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import Button from '@material-ui/core/Button';
@@ -413,6 +414,7 @@ class NewPost extends Component {
 
         return (
             <AqLayoutDesktop>
+                <NewPostMeta />
                 <SnackbarComponent 
                     openStatus={this.state.snackbar.open}
                     message={this.state.snackbar.message}

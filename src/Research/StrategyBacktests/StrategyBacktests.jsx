@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import BacktestsTable from './BacktestsTable';
 import axios from 'axios';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
+import {BacktestListMeta} from '../../metas';
 import {processBacktests} from './utils';
 import Compare from '../Compare/Compare';
 import DialogComponent from '../../components/Alerts/DialogComponent';
@@ -418,6 +419,7 @@ class StrategyBacktests extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
+                <BacktestListMeta />
                 {this.showDeleteConfirm('Are you sure you want to delete?', this.state.selectedBacktests.length + ' backtests will be deleted.')}
                 {getTotalDiv()}
             </AqDesktopLayout>

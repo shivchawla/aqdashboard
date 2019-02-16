@@ -14,6 +14,7 @@ import NewStartegy from './NewStrategy/NewStrategy.jsx';
 import DialogComponent from '../components/Alerts/DialogComponent';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
 import Breadcrumbs from '../components/UI/Breadcrumbs';
+import {StrategiesMeta} from '../metas';
 import Utils from './../Utils';
 import {horizontalBox, verticalBox} from '../constants';
 
@@ -748,6 +749,7 @@ class Research extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
+                <StrategiesMeta />
                 {getTotalDiv()}
             </AqDesktopLayout>
         );

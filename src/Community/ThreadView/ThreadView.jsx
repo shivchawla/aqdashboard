@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
+import {PostDetailMeta} from '../../metas';
 import Chip from '../../components/DataDisplay/Chip';
 import Utils from './../../Utils';
 import ThreadReply from './ThreadReply/ThreadReply.jsx';
@@ -403,6 +404,7 @@ class ThreadView extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
+                <PostDetailMeta />
                 {getTotalDiv()}
             </AqDesktopLayout>
         );
