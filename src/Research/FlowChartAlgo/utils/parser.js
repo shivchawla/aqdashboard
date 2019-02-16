@@ -35,8 +35,7 @@ export const getInitializeMethodString = (codeObj) => {
     const targetString = setProfitTarget(target);
 
     const methodString = `function initialize(state)
-    ${stopLossString}
-    ${targetString}
+    
 end`;
 
     return methodString;
