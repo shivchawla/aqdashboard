@@ -156,6 +156,12 @@ class StartegyDetail extends Component {
         }
 
         this.loadStrategyinfo = () => {
+            let savedSettings = Utils.getFromLocalStorage('StrategyDetailSettings');
+            if (!savedSettings) {
+                savedSettings = '{}';
+            }
+            savedSettings = JSON.parse(savedSettings);
+            const savedTradeDirection = _.get(savedSettings, 'tradeDirection', '');
             axios(Utils.getBaseUrl() + '/strategy/' + this.state.strategyId, {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
@@ -172,13 +178,23 @@ class StartegyDetail extends Component {
                     entryConditions = entryConditions.length > 0  
                         ? processConditionsToAlgo(entryConditions, entryLogic)
                         : [defaultFirstRowEntryCondition];
+                    let tradeDirection = _.get(response.data, 'tradeDirection', '');
+                    tradeDirection = tradeDirection.length > 0
+                        ?   tradeDirection
+                        :   savedTradeDirection.length > 0
+                                ?   savedTradeDirection
+                                :   'BUY';
 
                     exitConditions = processConditionsToAlgo(exitConditions, exitLogic);
 
                     const algo = {
                         ...this.state.algo,
                         entry: entryConditions,
-                        exit: exitConditions
+                        exit: exitConditions,
+                        position: {
+                            ...this.state.algo.position,
+                            type: tradeDirection
+                        }
                     };
                     const code = _.get(response.data, 'code', '').length === 0
                         ? parseObjectToCode(algo)
@@ -307,19 +323,20 @@ class StartegyDetail extends Component {
 
         this.saveStartegy = (showResultInfo) => new Promise((resolve, reject) => {
             let settingsData = {
-                'selectedBenchmark': this.state.selectedBenchmark,
-                'selectedUniverse': this.state.selectedUniverse,
-                'selectedRebalance': this.state.selectedRebalance,
-                'selectedCancelPolicy': this.state.selectedCancelPolicy,
-                'selectedCommissionType': this.state.selectedCommissionType,
-                'selectedCommission': this.state.selectedCommission,
-                'selectedSlipPage': this.state.selectedSlipPage,
-                'selectedSlipPageType': this.state.selectedSlipPageType,
-                'selectedInvestmentPlan': this.state.selectedInvestmentPlan,
-                'selectedExecutionPolicy': this.state.selectedExecutionPolicy,
-                'initialCapital': this.state.initialCapital,
-                'endDate': this.state.endDate.format('YYYY-MM-DD'),
-                'startDate': this.state.startDate.format('YYYY-MM-DD')
+                selectedBenchmark: this.state.selectedBenchmark,
+                selectedUniverse: this.state.selectedUniverse,
+                selectedRebalance: this.state.selectedRebalance,
+                selectedCancelPolicy: this.state.selectedCancelPolicy,
+                selectedCommissionType: this.state.selectedCommissionType,
+                selectedCommission: this.state.selectedCommission,
+                selectedSlipPage: this.state.selectedSlipPage,
+                selectedSlipPageType: this.state.selectedSlipPageType,
+                selectedInvestmentPlan: this.state.selectedInvestmentPlan,
+                selectedExecutionPolicy: this.state.selectedExecutionPolicy,
+                initialCapital: this.state.initialCapital,
+                endDate: this.state.endDate.format('YYYY-MM-DD'),
+                startDate: this.state.startDate.format('YYYY-MM-DD'),
+                tradeDirection: _.get(this.state, 'algo.position.type', 'BUY')
             }
             const {algo = {}} = this.state;
             const data = {
@@ -332,6 +349,7 @@ class StartegyDetail extends Component {
                 exitConditions: processAlgoConditions(_.get(algo, 'exit', [])),
                 entryLogic: constructLogic(_.get(algo, 'entry', [])),
                 exitLogic: constructLogic(_.get(algo, 'exit', [])),
+                tradeDirection: _.get(this.state, 'algo.position.type', 'BUY')
             };
             Utils.localStorageSaveObject('StrategyDetailSettings', settingsData);
             axios({
