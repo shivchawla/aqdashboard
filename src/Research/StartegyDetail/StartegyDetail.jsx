@@ -84,7 +84,7 @@ class StartegyDetail extends Component {
             savedSettings = '{}';
         }
         savedSettings = JSON.parse(savedSettings);
-      
+        const savedSelectedStocks = _.get(savedSettings, 'selectedStocks', []);
         this.state = {
             loading: true,
             strategyId: props.match.params.strategyId,
@@ -129,10 +129,10 @@ class StartegyDetail extends Component {
             codeViewSelected: false,
             codeEditorReadOnly: true,
             editCodeDialogOpen: false,
-            algo: algo,
+            algo: _.get(savedSettings, 'algo', algo),
             editStocksDialogOpen: false,
             editStocksLoading: false,
-            selectedStocks: [], // contains the list of the stocks that are selected
+            selectedStocks: savedSelectedStocks, // contains the list of the stocks that are selected
             searchStocksList: [], // contains the list of the stocks that are obtained from the search response
             universeSearchValue: ''// contains text field input when searching for a particular universe,
         };
@@ -228,15 +228,15 @@ class StartegyDetail extends Component {
         }
 
         this.loadBenchMarkDropdownData = () => {
-            const selectedBenchmark = benchmarks[0];
-            const selectedUniverse = 'Nifty 50';
+            // const selectedBenchmark = benchmarks[0];
+            // const selectedUniverse = 'Nifty 50';
             this.setState({
                 'benchmark': benchmarks,
                 'universe': universe,
-                'selectedBenchmark': selectedBenchmark,
-                'selectedUniverse': selectedUniverse
+                // 'selectedBenchmark': selectedBenchmark,
+                // 'selectedUniverse': selectedUniverse
             }, () => {
-                this.fetchUniverseStocks('', true);
+                this.fetchUniverseStocks('', this.state.selectedStocks.length === 0);
             });
         }
 
@@ -336,7 +336,10 @@ class StartegyDetail extends Component {
                 initialCapital: this.state.initialCapital,
                 endDate: this.state.endDate.format('YYYY-MM-DD'),
                 startDate: this.state.startDate.format('YYYY-MM-DD'),
-                tradeDirection: _.get(this.state, 'algo.position.type', 'BUY')
+                tradeDirection: _.get(this.state, 'algo.position.type', 'BUY'),
+                selectedResolution: this.state.selectedResolution,
+                algo: this.state.algo,
+                selectedStocks: this.state.selectedStocks
             }
             const {algo = {}} = this.state;
             const data = {
