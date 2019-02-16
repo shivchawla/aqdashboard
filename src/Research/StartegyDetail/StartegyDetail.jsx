@@ -1271,31 +1271,34 @@ class StartegyDetail extends Component {
                             }
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Trade Direction'
-                            input={
-                                <RadioGroup 
-                                    items={positionActionItems}
-                                    onChange={(selectedValue) => { 
-                                        const value = selectedValue === 0 ? 'BUY' : 'SELL';
-                                        const modifiedAlgo = {
-                                            ...this.state.algo,
-                                            position: {
-                                                ...this.state.algo.position,
-                                                type: value
-                                            }
-                                        };
-                                        this.updateAlgo(modifiedAlgo);
-                                    }}
-                                    defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
-                                    disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
-                                    CustomRadio={CardRadio}
-                                    small
-                                />
-                            }
-                        />
-                    </Grid>
+                    {
+                        this.state.codeEditorReadOnly &&
+                        <Grid item xs={12}>
+                            <InputContainer 
+                                label='Trade Direction'
+                                input={
+                                    <RadioGroup 
+                                        items={positionActionItems}
+                                        onChange={(selectedValue) => { 
+                                            const value = selectedValue === 0 ? 'BUY' : 'SELL';
+                                            const modifiedAlgo = {
+                                                ...this.state.algo,
+                                                position: {
+                                                    ...this.state.algo.position,
+                                                    type: value
+                                                }
+                                            };
+                                            this.updateAlgo(modifiedAlgo);
+                                        }}
+                                        defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
+                                        disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
+                                        CustomRadio={CardRadio}
+                                        small
+                                    />
+                                }
+                            />
+                        </Grid>
+                    }
                     <Grid item xs={12}>
                         <InputContainer 
                             label='Universe'
@@ -1458,7 +1461,10 @@ class StartegyDetail extends Component {
                                     items={rebalanceRadioItems}
                                     onChange={this.onRebalanceChange} 
                                     defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
-                                    disabled={this.state.isBacktestRunning || this.state.selectedResolution === 'Minute' || !this.state.codeEditorReadOnly}
+                                    disabled={
+                                        this.state.isBacktestRunning || 
+                                        this.state.selectedResolution === 'Minute' 
+                                    }
                                     CustomRadio={CardRadio}
                                     style={{marginTop: '10px'}}
                                     small
