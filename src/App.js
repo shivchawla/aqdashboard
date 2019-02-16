@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Route from 'react-router/Route';
+import ReactGA from 'react-ga';
 import Media from 'react-media';
 import Switch from 'react-router-dom/Switch';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import MomentUtils from '@date-io/moment';
+import {withRouter} from 'react-router-dom';
 import Research from './Research/Research';
 import StrategyDetail from './Research/StartegyDetail/StartegyDetail';
 import StrategyBacktests from './Research/StrategyBacktests/StrategyBacktests';
@@ -22,6 +24,8 @@ import PageNotFound from './ErrorPages/PageNotFound';
 import FlowChartAlgo from './Research/FlowChartAlgo';
 import './App.css';
 
+const {gaTrackingId} = require('./localConfig');
+
 const theme = createMuiTheme({
 	palette: {
 		primary: {
@@ -31,6 +35,21 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        ReactGA.initialize(gaTrackingId); //Unique Google Analytics tracking number
+    }
+
+    fireTracking = () => {
+        ReactGA.pageview(window.location.href);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) { // Route changed
+            this.fireTracking();
+        }
+    }
+
     render() {
         return (
             <MuiThemeProvider theme={theme}>
@@ -70,4 +89,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default withRouter(App);
