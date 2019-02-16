@@ -9,6 +9,13 @@ export const indicators = {
         }]    
     },
 
+    "CONSTANT": {
+        "label": "Constant Value",
+        "options": [{
+            "defaultValue": {"daily": 10, "minute": 30}, 
+        }]    
+    },
+
     "EMA": {
         "label": "Exponential Moving Average",
         "options": [{
@@ -252,7 +259,7 @@ export const indicators = {
     "LagOpen": {
         "label": "Lagged Open",
         "options":[{
-            "key": "period", 
+            "key": "period", "type": "Integer",
             "label": "Lag Period",
             "defaultValue": {"daily": 1, "minute": 5}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
@@ -263,7 +270,7 @@ export const indicators = {
     "LagHigh": {
         "label": "Lagged High",
         "options":[{
-            "key": "period", 
+            "key": "period", "type": "Integer",
             "label": "Lag Period",
             "defaultValue": {"daily": 1, "minute": 5}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
@@ -274,7 +281,7 @@ export const indicators = {
     "LagLow": {
         "label": "Lagged Low",
         "options":[{
-            "key": "period", 
+            "key": "period", "type": "Integer",
             "label": "Lag Period",
             "defaultValue": {"daily": 1, "minute": 5}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
@@ -285,7 +292,7 @@ export const indicators = {
     "LagClose": {
         "label": "Lagged Close",
         "options":[{
-            "key": "period", 
+            "key": "period", "type": "Integer",
             "label": "Lag Period",
             "defaultValue": {"daily": 1, "minute": 5}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
@@ -296,7 +303,7 @@ export const indicators = {
     "LagVolume": {
         "label": "Lagged Volume",
         "options":[{
-            "key": "period", 
+            "key": "period", "type": "Integer",
             "label": "Lag Period",
             "defaultValue": {"daily": 1, "minute": 5}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
@@ -443,4 +450,4 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         }]    
     }
-};
+}
