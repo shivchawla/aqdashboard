@@ -142,7 +142,7 @@ function Option(props) {
                         alignItems: 'flex-start'
                     }}
             >
-                <Value>{value.toUpperCase()}</Value>
+                <Value>{value}</Value>
                 <Label>{label}</Label>
             </div>
         </MenuItem>
@@ -181,4 +181,8 @@ const Label = styled.h3`
     font-weight: 400;
     color: #444;
     margin-top: -3px;
+    width: 190px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 `;

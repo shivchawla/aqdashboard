@@ -110,7 +110,7 @@ const getCondition = condition => {
 }
 
 const getIndicatorValue = indicatorValue => {
-    const methodName = _.get(indicatorValue, 'key', 'sma').toUpperCase();
+    const methodName = _.get(indicatorValue, 'key', 'sma');
     const options = _.get(indicatorValue, 'options', []);
     let argumentString = [];
     options.forEach(optionItem => {

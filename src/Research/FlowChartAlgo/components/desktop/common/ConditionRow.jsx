@@ -55,7 +55,7 @@ class ConditionRow extends React.Component {
         if (edit) {
             const node = ReactDOM.findDOMNode(this.containerEl);
             this.setState({
-                popoverWidth: node.clientWidth,
+                popoverWidth: node.clientWidth + 20,
                 fristValueAnchorEl: ReactDOM.findDOMNode(node)
             });
         }
@@ -113,8 +113,8 @@ class ConditionRow extends React.Component {
         const firstValue = _.get(conditionProp, 'firstValue', {});
         const secondValue = _.get(conditionProp, 'secondValue', {});
 
-        const selectedFirstValue = _.get(firstValue, 'key', '').toUpperCase();
-        const selectedSecondValue = _.get(secondValue, 'key', '').toUpperCase();
+        const selectedFirstValue = _.get(firstValue, 'key', '');
+        const selectedSecondValue = _.get(secondValue, 'key', '');
 
         const selectedFirstValueLabel = _.get(firstValue, 'label', '');
         const selectedSecondValueLabel = _.get(secondValue, 'label', '');
@@ -321,91 +321,6 @@ class ConditionRow extends React.Component {
                                 <OptionItems options={secondValueOptions} />
                             </div>
                         </Grid>
-                        {/* <Grid 
-                                item 
-                                xs={4}
-                                style={{
-                                    ...verticalBox,
-                                    alignItems: 'flex-start'
-                                }}
-                        >
-                            <div style={{...verticalBox, alignItems: 'flex=start'}}>
-                                <ValueHeader>{selectedFirstValue}</ValueHeader>
-                                <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
-                            </div>
-                            <OptionItems options={firstValueOptions} />
-                        </Grid> */}
-                        {/* <Grid 
-                                item 
-                                xs={3}
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center'
-                                }}
-                        >
-                            <Comparator>{comparatorObj.label}</Comparator>
-                        </Grid> */}
-                        {/* <Grid 
-                                item 
-                                xs={5}
-                                style={{
-                                    ...verticalBox,
-                                    alignItems: 'flex-start'
-                                }}
-                        >
-                            <div 
-                                    style={{
-                                        ...horizontalBox, 
-                                        justifyContent: 'space-between',
-                                        width: '100%'
-                                    }}
-                            >
-                                <div 
-                                        style={{
-                                            ...verticalBox, 
-                                            alignItems: 'flex-start',
-                                            width: '100%'
-                                        }}
-                                >
-                                    <div 
-                                            style={{
-                                                ...horizontalBox, 
-                                                justifyContent: 'space-between',
-                                                width: '100%',
-                                                position: 'relative'
-                                            }}
-                                    >
-                                        <ValueHeader>{selectedSecondValue}</ValueHeader>
-                                        {
-                                            edit &&
-                                            <div
-                                                    style={{
-                                                        ...horizontalBox, 
-                                                        justifyContent: 'flex-end',
-                                                        position: 'absolute',
-                                                        right: 0
-                                                    }}
-                                            >
-                                                <ActionIcon 
-                                                    type='edit' 
-                                                    onClick={this.firstOpenPopover} 
-                                                />
-                                                {
-                                                    (index > 0 || requiredConditionsKey === 'exit') &&
-                                                    <ActionIcon 
-                                                        type='cancel'
-                                                        onClick={() => deleteCondition(index)}
-                                                        color='#ff5d5d'
-                                                    />
-                                                }
-                                            </div>
-                                        }
-                                    </div>
-                                    <IndicatorLabel>{selectedSecondValueLabel}</IndicatorLabel>
-                                </div>
-                            </div>
-                            <OptionItems options={secondValueOptions} />
-                        </Grid> */}
                     </Grid>
                 </Grid>
             </Grid>

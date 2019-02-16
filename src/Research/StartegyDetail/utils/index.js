@@ -6,8 +6,8 @@ export const processAlgoConditions = (conditions = []) => {
     return conditions.map((condition, index) => {
         const operator = _.get(condition, 'comparator', 'ht').toUpperCase();
 
-        const indicatorOneName = _.get(condition, 'firstValue.key', 'sma').toUpperCase();
-        const indicatorTwoName = _.get(condition, 'secondValue.key', 'sma').toUpperCase();
+        const indicatorOneName = _.get(condition, 'firstValue.key', 'sma');
+        const indicatorTwoName = _.get(condition, 'secondValue.key', 'sma');
 
         const inidcatorOneOptions = _.get(condition, 'firstValue.options', []);
         const inidcatorTwoOptions = _.get(condition, 'secondValue.options', []);
@@ -65,12 +65,13 @@ export const constructLogic = (conditions = []) => {
 }
 
 export const processConditionsToAlgo = (conditions = [], logic = '') => {
+    const clonedConditions = _.map(conditions, _.cloneDeep);
     let requiredLogic = logic.split(' ').filter(item => {
         return (item === 'and' || item === 'or');
     });
     requiredLogic = [null, ...requiredLogic];
 
-    return conditions.map((condition, index) => {
+    return clonedConditions.map((condition, index) => {
         let comparator = _.get(condition, 'operator', 'GT').toLowerCase();
 
         const indicator1 = _.get(condition, 'indicator1', {});
@@ -110,7 +111,7 @@ const getIndicatorValueObj = indicator => {
         indicatorKey = 'SMA'
     }   
 
-    let options = indicatorObj.options;
+    let options = _.get(indicatorObj, 'options', []);
     options = options.map(optionItem => {
         const optionItemKey = optionItem.key;
         const paramObjValue = indicatorParams[optionItemKey] || 10;

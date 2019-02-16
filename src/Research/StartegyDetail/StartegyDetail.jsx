@@ -148,7 +148,6 @@ class StartegyDetail extends Component {
 
         this.updateAlgo = modifiedAlgo => {
             const objectCode = parseObjectToCode(modifiedAlgo);
-            console.log(objectCode);
             this.updateState({algo: modifiedAlgo});
             this.setState({strategy: {
                 ...this.state.strategy,
@@ -170,7 +169,8 @@ class StartegyDetail extends Component {
                     let exitLogic = _.get(response.data, 'exitLogic', '');
                     let entryConditions = _.get(response.data, 'entryConditions', []);
                     let exitConditions = _.get(response.data, 'exitConditions', []);
-                    
+                    console.log('entryConditions', entryConditions);
+                    console.log('exitConditions', exitConditions);
                     entryConditions = entryConditions.length > 0  
                         ? processConditionsToAlgo(entryConditions, entryLogic)
                         : [defaultFirstRowEntryCondition];
@@ -187,7 +187,7 @@ class StartegyDetail extends Component {
                         :_.get(response.data, 'code', '')
 
                     const viewType = _.get(response.data, 'type', 'GUI');
-                    this.updateState({ 
+                    this.setState({ 
                         strategy: {
                             ...response.data,
                             code
@@ -196,9 +196,12 @@ class StartegyDetail extends Component {
                         algo,
                         codeEditorReadOnly: viewType === 'GUI',
                         codeViewSelected: !(viewType === 'GUI')
+                    }, () => {
+                        console.log(this.state.strategy);
                     });
                 })
                 .catch((error) => {
+                    console.log(error);
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         if (error.response.status === 400 || error.response.status === 403) {
@@ -1842,7 +1845,7 @@ class StartegyDetail extends Component {
                                 />
                                 {
                                     !this.state.isBacktestRunning &&
-                                    this.state.strategy.type.toLowerCase() === 'gui' &&
+                                    _.get(this.state, 'strategy.type', 'CODE').toLowerCase() === 'gui' &&
                                     <RadioGroup 
                                         items={['GUI', 'CODE']}
                                         defaultSelected={this.state.codeViewSelected ? 1 : 0}
@@ -1912,7 +1915,7 @@ class StartegyDetail extends Component {
                                 {
                                     !this.state.isBacktestRunning &&
                                     this.state.codeViewSelected &&
-                                    this.state.strategy.type.toLowerCase() === 'gui' &&
+                                    _.get(this.state, 'strategy.type', '').toLowerCase() === 'gui' &&
                                     <Button
                                             style={{
                                                 position: 'absolute',
