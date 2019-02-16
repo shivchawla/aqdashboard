@@ -152,7 +152,7 @@ class BackTests extends React.Component {
                                         }}
                                         style={{
                                             color: isException ? '#ff3737' : '#595959',
-                                            fontWeight: isException ? 700 : 500
+                                            fontWeight: isException ? 500 : 500
                                         }}
                                 >
                                     {dataItem.status}
