@@ -250,7 +250,7 @@ class BacktestDetail extends Component {
             backtestProgress: 0,
             progressCounter: 0,
             defaultSelectedPortfolio: 0,
-            selectedTab: 2,
+            selectedTab: 0,
             selectedAlgoView: 0,
             universeDialogOpen: false
         };
@@ -1140,9 +1140,9 @@ class BacktestDetail extends Component {
                                     Resolution:
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
+                                    {/* <p className="attached-backtest-settings-value"> */}
                                         {advancedSummary.resolution}
-                                    </p>
+                                    {/* </p> */}
                                 </Grid>
                             </Grid>
                             <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
@@ -1176,11 +1176,11 @@ class BacktestDetail extends Component {
                                     <h3
                                             style={{
                                                 fontFamily: 'Lato, sans-serif',
-                                                fontSize: '14px',
+                                                fontSize: '12px',
                                                 color: primaryColor,
                                                 marginLeft: '5px',
                                                 cursor: 'pointer',
-                                                fontWeight: 400
+                                                fontWeight: 700
                                             }}
                                             onClick={this.toggleUniverseDialog}
                                     >
@@ -1223,7 +1223,7 @@ class BacktestDetail extends Component {
                             </Grid>
                             <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
                                 <Grid item xs={4} style={{textAlign: 'start'}}>
-                                    Target:
+                                    Target (%):
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
@@ -1233,7 +1233,7 @@ class BacktestDetail extends Component {
                             </Grid>
                             <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
                                 <Grid item xs={4} style={{textAlign: 'start'}}>
-                                    Stop Loss:
+                                    Stop Loss (%):
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
