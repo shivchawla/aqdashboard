@@ -96,7 +96,7 @@ class CustomHighCharts extends React.Component {
             xDateFormat: '%B %e, %Y'
         },
         series: [],
-        colors: [ "#cc6666", "#0375b4", "#6e2667", "#FFAA1D", "#007849", "#fc4a1a"]
+        colors: ["#0375b4", "#cc6666", "#6e2667", "#FFAA1D", "#007849", "#fc4a1a"]
     };
     dataBarXAxis = [];
     chart = undefined;
