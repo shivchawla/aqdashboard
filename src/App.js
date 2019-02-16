@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Route from 'react-router/Route';
+import Media from 'react-media';
 import Switch from 'react-router-dom/Switch';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -30,34 +31,43 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
-  render() {
-    return (
-		<MuiThemeProvider theme={theme}>
-			<MuiPickersUtilsProvider utils={MomentUtils}>
-				<div className="App">
-					<Switch>
-						<Route exact={true} path='/research' component={Research} />
-						<Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
-						<Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
-						<Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
-						<Route exact={true} path='/community' component={Community}/>
-						<Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
-						<Route exact={true} path='/community/newPost' component={NewPost} />
-						<Route exact={true} path='/help' component={Help}/>
-						<Route exact={true} path='/tutorial' component={Tutorial}/>
-						<Route exact={true} path='/home' component={Home}/>
-						<Route exact={true} path='/' component={Home}/>
-						<Route exact={true} path='/forbiddenAccess' component={ForbiddenAccess} />
-            <Route exact={true} path='/errorPage' component={NoIternetAccess} />
-            <Route exact={true} path='/badRequest' component={BadRequest} />
-						<Route exact={true} path='/algo' component={FlowChartAlgo} />
-						<Route component={PageNotFound} />
-					</Switch>
-				</div>
-			</MuiPickersUtilsProvider>
-		</MuiThemeProvider>
-    );
-  }
+    render() {
+        return (
+            <MuiThemeProvider theme={theme}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <div className="App">
+                        <Media 
+                            query="(max-width: 800px)"
+                            render={() => <PageNotFound />}
+                        />
+                        <Media 
+                            query="(min-width: 801px)"
+                            render={() => (
+                                <Switch>
+                                    <Route exact={true} path='/research' component={Research} />
+                                    <Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
+                                    <Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
+                                    <Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
+                                    <Route exact={true} path='/community' component={Community}/>
+                                    <Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
+                                    <Route exact={true} path='/community/newPost' component={NewPost} />
+                                    <Route exact={true} path='/help' component={Help}/>
+                                    <Route exact={true} path='/tutorial' component={Tutorial}/>
+                                    <Route exact={true} path='/home' component={Home}/>
+                                    <Route exact={true} path='/' component={Home}/>
+                                    <Route exact={true} path='/forbiddenAccess' component={ForbiddenAccess} />
+                                    <Route exact={true} path='/errorPage' component={NoIternetAccess} />
+                                    <Route exact={true} path='/badRequest' component={BadRequest} />
+                                    <Route exact={true} path='/algo' component={FlowChartAlgo} />
+                                    <Route component={PageNotFound} />
+                                </Switch>
+                            )}
+                        />
+                    </div>
+                </MuiPickersUtilsProvider>
+            </MuiThemeProvider>
+        );
+    }
 }
 
 export default App;
