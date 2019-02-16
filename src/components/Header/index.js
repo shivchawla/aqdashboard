@@ -11,6 +11,8 @@ import Utils from '../../Utils';
 import {horizontalBox} from '../../constants';
 import logo from '../../assets/logo-advq-new.png';
 
+import {dailyContestDomain} from '../../localConfig';
+
 const styles = {
     appbar: {
         boxShadow: 'none',
@@ -137,12 +139,17 @@ const HeaderLinks = ({activeIndex = 0, history, isLoggedIn = null, renderQuantRe
                 ?   <NavLink
                         onClick={() => {
                             Utils.logoutUser();
-                            history.push('/login');
+                            window.location.href = `${dailyContestDomain}/login`
                         }}
                     >
                         Logout
                     </NavLink>
-                :   <NavLink onClick={() => {history.push('/login');}}>
+                :   <NavLink 
+                        onClick={
+                            () => {
+                                window.location.href = `${dailyContestDomain}/login`
+                            }}
+                    >
                         Login
                     </NavLink>
             } 
