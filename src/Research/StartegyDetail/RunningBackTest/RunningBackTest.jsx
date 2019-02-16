@@ -47,12 +47,12 @@ class RunningBackTest extends Component {
         const startDate = _.get(backTestData, 'settings.startDate', null);
         const endDate = _.get(backTestData, 'settings.endDate', null);
         const status = _.get(backTestData, 'status', 'undefined');
-        const totalReturn = _.get(backTestData, 'output.summary.totalreturn', null);
-        const annualReturn = _.get(backTestData, 'output.summary.annualreturn', null);
-        const standardDeviation = _.get(backTestData.output, 'summary.annualstandarddeviation', null);
-        const sharpeRatio = _.get(backTestData, 'output.summary.sharperatio', null);
-        const informationRatio = _.get(backTestData, 'output.summary.informationratio', null);
-        const maxDrawDown = _.get(backTestData, 'output.summary.maxdrawdown', null);
+        const totalReturn = _.get(backTestData, 'output.summary.totalreturn', 0).toFixed(2);
+        const annualReturn = _.get(backTestData, 'output.summary.annualreturn', 0).toFixed(2);
+        const standardDeviation = _.get(backTestData.output, 'summary.annualstandarddeviation', 0).toFixed(2);
+        const sharpeRatio = _.get(backTestData, 'output.summary.sharperatio', 0).toFixed(2);
+        const informationRatio = _.get(backTestData, 'output.summary.informationratio', 0).toFixed(2);
+        const maxDrawDown = _.get(backTestData, 'output.summary.maxdrawdown', 0).toFixed(2);
 
         const getLoadingDiv = () => {
             if (this.state.loading) {
@@ -219,7 +219,7 @@ class RunningBackTest extends Component {
                                 }}>
                                     <h2 id="sharpeRatioTextElem" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            sharpeRatio !== null ? `${sharpeRatio}%` : '-'
+                                            sharpeRatio !== null ? `${sharpeRatio}` : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
@@ -234,7 +234,7 @@ class RunningBackTest extends Component {
                                 }}>
                                     <h2 id="infoRatioTextElem" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
-                                            informationRatio !== null ? `${informationRatio}%` : '-'
+                                            informationRatio !== null ? `${informationRatio}` : '-'
                                         }
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
