@@ -9,6 +9,7 @@ import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
 import Utils from './../../../Utils';
 import axios from 'axios';
 import 'react-web-tabs/dist/react-web-tabs.css';
+import { horizontalBox } from '../../../constants/index.js';
 
 class AvailableBackTests extends React.Component {
 
@@ -172,7 +173,26 @@ class AvailableBackTests extends React.Component {
             } else if (!this.state.loadingStrategy) {
                 return (
                     <React.Fragment>
-                        <h1 style={{ 'fontSize': '16px', 'fontWeight': 'bold'}}>Backtests for {this.selectedStrategyName}</h1>
+                        <div style={{...horizontalBox, justifyContent: 'space-between'}}>
+                            <h1 
+                                    style={{ 
+                                        fontSize: '14px', 
+                                        fontWeight: '700', 
+                                        fontFamily: 'Lato, sans-serif'
+                                    }}
+                            >
+                                Backtests for {this.selectedStrategyName}
+                            </h1>
+                            <Button
+                                color="primary"
+                                disabled={!this.state.selectedBacktestId}
+                                onClick={this.onBackTestClicked}
+                                variant='contained'
+                                size='small'
+                            >
+                                Attach
+                            </Button>
+                        </div>
                         <BackTests
                             backtests={this.state.backtests}
                             onBackTestClicked={(backtestId) => this.updateState({ 'selectedBacktestId': backtestId })}
@@ -187,27 +207,42 @@ class AvailableBackTests extends React.Component {
             <div
                 style={{
                     width: '100%',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    ...this.props.style
                 }}
             >
-                <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                    <Button
-                        color="primary"
-                        disabled={!this.state.selectedBacktestId}
-                        onClick={this.onBackTestClicked}
-                        variant='contained'
+                <Grid 
+                        container
+                        style={{
+                            height: '100%'
+                        }}
+                >
+                    <Grid 
+                            item 
+                            xs={3} 
+                            style={{ 
+                                height: '100%',
+                                overflow: 'hidden',
+                                overflowY: 'scroll'
+                            }}
                     >
-                        Attach
-                    </Button>
-                </div>
-                <Grid container>
-                    <Grid item xs={3} style={{ 'height': '100%' }}>
-                        <h1 style={{ 'fontSize': '16px', 'fontWeight': 'bold' }}>Strategy</h1>
+                        <h1 
+                                style={{ 
+                                    fontSize: '14px', 
+                                    fontWeight: '700', 
+                                    fontFamily: 'Lato, sans-serif'
+                                }}
+                        >
+                            Strategy
+                        </h1>
                         <div style={{overflowY: 'auto' }}>
                             {getStrategyDiv()}
                         </div>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid 
+                            item 
+                            xs={9}
+                    >
                         {getBackTestsDiv()}
                     </Grid>
                 </Grid>

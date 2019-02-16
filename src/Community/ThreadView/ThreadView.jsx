@@ -212,7 +212,7 @@ class ThreadView extends Component {
                         onClose={() => this.updateState({ 'attachBackTestModalVisible': false })}
                         style={{
                             width: '90vw',
-                            height: '100vh',
+                            height: '76vh',
                             boxSizing: 'border-box'
                         }}
                         maxWidth='xl'

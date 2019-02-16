@@ -466,7 +466,7 @@ class Community extends Component {
                                     color = "primary"
                                     variant="contained"
                                     onClick={() => this.props.history.push('/community/newPost')}
-                                    style={{marginLeft: 'auto' }}
+                                    style={{marginLeft: 'auto', height: '35px'}}
                             >
                                 New Post
                             </Button>
