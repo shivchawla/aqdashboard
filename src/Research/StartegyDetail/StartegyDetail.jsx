@@ -172,7 +172,6 @@ class StartegyDetail extends Component {
                 'headers': Utils.getAuthTokenHeader()
             })
                 .then((response) => {
-                    console.log(response.data);
                     this.cancelGetStrategy = undefined;
                     let entryLogic = _.get(response.data, 'entryLogic', '');
                     let exitLogic = _.get(response.data, 'exitLogic', '');
@@ -181,7 +180,7 @@ class StartegyDetail extends Component {
                     const type = _.get(response.data, 'type', 'CODE').toLowerCase();
                     const selectedResolution = type === 'code' 
                         ?   'Day'
-                        :   'Minute';
+                        :   this.state.selectedResolution;
                     entryConditions = entryConditions.length > 0  
                         ? processConditionsToAlgo(entryConditions, entryLogic)
                         : [defaultFirstRowEntryCondition];
