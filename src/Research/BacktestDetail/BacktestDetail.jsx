@@ -1410,6 +1410,15 @@ class BacktestDetail extends Component {
         }
 
         const getBackTestDiv = () => {
+            const metricContainerStyle = {
+                ...verticalBox,
+                border: '1px solid #e1e1e1', 
+                minWidth: '130px', 
+                padding: '10px',
+                alignItems: 'flex-start',
+                boxSizing: 'border-box'
+            };
+
             if (this.state.loading) {
                 return (
                     <div style={{
@@ -1562,11 +1571,15 @@ class BacktestDetail extends Component {
                         </h3>
 
                         <Grid container style={{ 'marginTop': '10px' }}>
-                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
+                            <Grid 
+                                    item 
+                                    xs={12}
+                                    style={{
+                                        ...horizontalBox,
+                                        justifyContent: 'space-between'
+                                    }}
+                            >
+                                <div style={metricContainerStyle}>
                                     <h2 id="total_return" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary &&
                                             this.state.backTestData.output.summary.totalreturn) ?
@@ -1576,12 +1589,7 @@ class BacktestDetail extends Component {
                                         Total Return
                                     </p>
                                 </div>
-                            </Grid>
-                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
+                                <div style={metricContainerStyle}>
                                     <h2 id="annual_return" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary &&
                                             this.state.backTestData.output.summary.annualreturn) ?
@@ -1591,12 +1599,7 @@ class BacktestDetail extends Component {
                                         Annual Return
                                     </p>
                                 </div>
-                            </Grid>
-                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
+                                <div style={metricContainerStyle}>
                                     <h2 id="volatility" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.annualstandarddeviation) ?
@@ -1606,12 +1609,7 @@ class BacktestDetail extends Component {
                                         Volatility
                                     </p>
                                 </div>
-                            </Grid>
-                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
+                                <div style={metricContainerStyle}>
                                     <h2 id="sharpe_ratio" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.sharperatio) ?
@@ -1621,12 +1619,7 @@ class BacktestDetail extends Component {
                                         Sharpe Ratio
                                     </p>
                                 </div>
-                            </Grid>
-                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
+                                <div style={metricContainerStyle}>
                                     <h2 id="information_ratio" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.informationratio) ?
@@ -1636,12 +1629,7 @@ class BacktestDetail extends Component {
                                         Information Ratio
                                     </p>
                                 </div>
-                            </Grid>
-                            <Grid item sm={3} md={2} style={{ 'display': 'flex', marginBottom: '10px'}}>
-                                <div style={{
-                                    'border': '1px solid #e1e1e1', 'minWidth': '130px', 'padding': '10px',
-                                    'textAlign': 'left'
-                                }}>
+                                <div style={metricContainerStyle}>
                                     <h2 id="max_drawdown" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {(this.state.backTestData.output && this.state.backTestData.output.summary
                                             && this.state.backTestData.output.summary.maxdrawdown) ?
@@ -1649,6 +1637,26 @@ class BacktestDetail extends Component {
                                     </h2>
                                     <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
                                         Max Drawdown
+                                    </p>
+                                </div>
+                                <div style={metricContainerStyle}>
+                                    <h2 id="max_drawdown" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
+                                        {(this.state.backTestData.output && this.state.backTestData.output.summary
+                                            && this.state.backTestData.output.summary.calmarratio) ?
+                                            this.state.backTestData.output.summary.calmarratio.toFixed(2) : '-'}
+                                    </h2>
+                                    <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
+                                        Calmar Ratio
+                                    </p>
+                                </div>
+                                <div style={metricContainerStyle}>
+                                    <h2 id="max_drawdown" style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
+                                        {(this.state.backTestData.output && this.state.backTestData.output.summary
+                                            && this.state.backTestData.output.summary.beta) ?
+                                            this.state.backTestData.output.summary.beta.toFixed(2) : '-'}
+                                    </h2>
+                                    <p style={{ 'fontSize': '12px', 'fontWeight': '400', 'margin': '0px' }}>
+                                        Beta
                                     </p>
                                 </div>
                             </Grid>
