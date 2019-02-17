@@ -98,7 +98,7 @@ const getCondition = condition => {
 
     comparator = comparators.filter(comparatorItem => comparatorItem.value === comparator)[0];
     comparator = comparator ? comparator.codeOperator : null;
-    
+
     let conditionString = '';
     if (comparator === 'crossAbove' || comparator === 'crossBelow') {
         conditionString = ` ${isValuePresent(conditionOperator) ? conditionOperator : ''} ${comparator}(${getIndicatorValue(firstValue)}, ${getIndicatorValue(secondValue)})\n`;
@@ -113,11 +113,17 @@ const getIndicatorValue = indicatorValue => {
     const methodName = _.get(indicatorValue, 'key', 'sma');
     const options = _.get(indicatorValue, 'options', []);
     let argumentString = [];
-    options.forEach(optionItem => {
-        argumentString.push(`${optionItem.key} = ${optionItem.value}`);
-    });
-
-    return `${methodName}(${argumentString.join(',')})`;
+    if (methodName.toUpperCase() === 'CONSTANT') {
+        options.forEach(optionItem => {
+            argumentString.push(`${optionItem.value}`);
+        });
+        return `${argumentString.join(',')}`;
+    } else {
+        options.forEach(optionItem => {
+            argumentString.push(`${optionItem.key} = ${optionItem.value}`);
+        });
+        return `${methodName}(${argumentString.join(',')})`;
+    }
 }
 
 const isValuePresent = value => {

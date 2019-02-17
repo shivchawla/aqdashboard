@@ -222,8 +222,7 @@ class EditDialog extends React.Component {
                                 firstOptions.map((optionItem, index) => {
                                     const items = this.processRadioGroupOptions(_.get(optionItem, `values[${resolution}]`, []));
                                     const type = _.get(optionItem, 'type', '');
-
-                                    return (type.toUpperCase() === 'INTEGER')
+                                    return (type.toUpperCase() === 'INTEGER' || type.toUpperCase() === 'CONSTANT')
                                     ?   (
                                             <StockCardRadioGroup 
                                                 label={optionItem.label}
@@ -282,7 +281,7 @@ class EditDialog extends React.Component {
                                 secondOptions.map((optionItem, index) => {
                                     const type = _.get(optionItem, 'type', '');
 
-                                    return (type.toUpperCase() === 'INTEGER')
+                                    return (type.toUpperCase() === 'INTEGER' || type.toUpperCase() === 'CONSTANT')
                                     ?   (
                                             <StockCardRadioGroup 
                                                 defaultSelected={this.getRadioOptionsSelectedItem(optionItem, secondValueOptions)}

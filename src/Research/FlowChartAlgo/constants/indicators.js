@@ -13,6 +13,8 @@ export const indicators = {
         "label": "Constant Value",
         "options": [{
             "defaultValue": {"daily": 10, "minute": 30}, 
+            "type": "Constant",
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]}
         }]    
     },
 
