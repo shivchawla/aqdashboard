@@ -642,7 +642,7 @@ class StartegyDetail extends Component {
 
     toggleEditMode = value => {
         const resolution = value === 1 ? 'Day' : this.state.selectedResolution;
-        this.setState({codeViewSelected: value === 1, selectedResolution: resolution});
+        this.setState({codeViewSelected: value === 1});
     }
 
     checkAndGoToBacktestPageIfNoData(backtestId) {
@@ -1055,6 +1055,7 @@ class StartegyDetail extends Component {
         this.setState({
             codeEditorReadOnly: false, 
             editCodeDialogOpen: false,
+            selectedResolution: 'Day',
             strategy: {
                 ...this.state.strategy,
                 type: 'CODE'
