@@ -33,6 +33,7 @@ class StockCardRadioGroup extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
         if (!_.isEqual(nextProps.defaultSelected, this.props.defaultSelected)) {
             const value = nextProps.defaultSelected === 0 ? null : nextProps.defaultSelected;
             this.setState({
@@ -74,7 +75,7 @@ class StockCardRadioGroup extends React.Component {
             const requiredValue = value.length === 0 ? null : value;
             clearTimeout(sliderInputTimeout);
             sliderInputTimeout = setTimeout(() => {
-                this.props.onChange && this.props.onChange(requiredValue);
+                this.props.onChange && this.props.onChange(requiredValue, true);
             }, 300);
         } else {}
     }
