@@ -239,27 +239,27 @@ export const indicators = {
         }]    
     },
 
-    "PrevOpen": {
+    "PrevOPEN": {
         "label": "Previous Open"
     },
 
-    "PrevHigh": {
+    "PrevHIGH": {
         "label": "Previous High"
     },
 
-    "PrevLow": {
+    "PrevLOW": {
         "label": "Previous Low"
     },
 
-    "PrevClose": {
+    "PrevCLOSE": {
         "label": "Previous Close"
     },
 
-    "PrevVolume": {
+    "PrevVOLUME": {
         "label": "Previous Volume"
     },
 
-    "LagOpen": {
+    "LagOPEN": {
         "label": "Lagged Open",
         "options":[{
             "key": "period", "type": "Integer",
@@ -270,7 +270,7 @@ export const indicators = {
         }]
     },
 
-    "LagHigh": {
+    "LagHIGH": {
         "label": "Lagged High",
         "options":[{
             "key": "period", "type": "Integer",
@@ -281,7 +281,7 @@ export const indicators = {
         }]
     },
 
-    "LagLow": {
+    "LagLOW": {
         "label": "Lagged Low",
         "options":[{
             "key": "period", "type": "Integer",
@@ -292,7 +292,7 @@ export const indicators = {
         }]
     },
 
-    "LagClose": {
+    "LagCLOSE": {
         "label": "Lagged Close",
         "options":[{
             "key": "period", "type": "Integer",
@@ -303,7 +303,7 @@ export const indicators = {
         }]
     },
 
-    "LagVolume": {
+    "LagVOLUME": {
         "label": "Lagged Volume",
         "options":[{
             "key": "period", "type": "Integer",

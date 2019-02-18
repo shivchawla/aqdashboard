@@ -741,8 +741,6 @@ class StartegyDetail extends Component {
 
                     for (let i = 0; i < data.data.length; i++) {
                         let dataLocal = data.data[i];
-                        // console.log(dataLocal);
-
                         try {
                             dataLocal = JSON.parse(data.data[i]);
                         } catch (e) { }
