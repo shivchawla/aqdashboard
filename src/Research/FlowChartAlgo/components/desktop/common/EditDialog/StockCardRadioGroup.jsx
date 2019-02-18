@@ -50,9 +50,12 @@ class StockCardRadioGroup extends React.Component {
         return false;
     }
 
-    handleChange = value => {
-        this.setState({selected: this.props.getValue ? this.props.getValue(value) : value})
-        this.props.onChange && this.props.onChange(value);
+    handleChange = (value, itemValue) => {
+        if (!_.isEqual(itemValue, this.state.selected)) {
+            const requiredValue = this.props.getValue ? this.props.getValue(value) : value;
+            this.setState({selected: requiredValue})
+            this.props.onChange && this.props.onChange(value);
+        }
     }
 
     handleSliderChange = (e, value) => {
@@ -71,9 +74,19 @@ class StockCardRadioGroup extends React.Component {
             const requiredValue = value.length === 0 ? null : value;
             clearTimeout(sliderInputTimeout);
             sliderInputTimeout = setTimeout(() => {
-                this.props.onChange && this.props.onChange(requiredValue, true);
+                this.props.onChange && this.props.onChange(requiredValue);
             }, 300);
         } else {}
+    }
+
+    checkIfCustom = () => {
+        let {items = []} = this.props;
+        const {selected = 0} = this.state;
+        items = items.map(item => item.key);
+        // Checking if the text is same as the options or custom
+        const isCustomValue = _.findIndex(items, item => item === Number(selected)) === -1;
+
+        return isCustomValue;
     }
 
     render() {
@@ -121,8 +134,8 @@ class StockCardRadioGroup extends React.Component {
                                             key={index}
                                             label={item.key}
                                             secondaryLabel={item.label}
-                                            checked={this.state.selected === item.key}
-                                            onChange={() => this.handleChange(index)}
+                                            checked={Number(this.state.selected) === item.key}
+                                            onChange={() => this.handleChange(index, item.key)}
                                             hideLabel={this.props.hideLabel}
                                             formatValue={this.props.formatValue}
                                         />
@@ -137,8 +150,7 @@ class StockCardRadioGroup extends React.Component {
                                     }}
                             >
                                 {
-                                    this.props.checkIfCustom && 
-                                    this.props.checkIfCustom(this.props.defaultSelected) && 
+                                    this.checkIfCustom() &&
                                     typeof(this.props.defaultSelected) !== 'boolean' &&
                                     this.props.defaultSelected !== null &&
                                     this.props.defaultSelected !== 0 &&
