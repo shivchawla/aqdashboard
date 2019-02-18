@@ -1,4 +1,5 @@
 import React from 'react';
+import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
 const {helpUrl = 'https://static.adviceqube.com/quant'} = require('../localConfig');
 
 export default class HelpFrame extends React.Component {
@@ -11,10 +12,12 @@ export default class HelpFrame extends React.Component {
     
     render() {
         return (
-            <div 
-                dangerouslySetInnerHTML={this.iframe()} 
-                style={{width: '100vw', height: 'calc(100vh - 64px)'}}
-            />
+            <AqDesktopLayout>
+                <div 
+                    dangerouslySetInnerHTML={this.iframe()} 
+                    style={{width: '100vw', height: 'calc(100vh - 64px)'}}
+                />
+            </AqDesktopLayout>
         );
     }
 }
