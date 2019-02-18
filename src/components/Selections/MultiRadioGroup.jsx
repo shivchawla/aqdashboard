@@ -23,7 +23,6 @@ export default class MultiRadioGroup extends React.Component {
         } else  {
             selectedArray.push(value);
         }
-        console.log('Selected Array ', selectedArray);
         this.setState({selected: selectedArray});
         this.props.onChange && this.props.onChange(selectedArray);
     }

@@ -207,9 +207,9 @@ class Community extends Component {
 
         this.categorySelectionChange = (selectedItems) => {
             let categoryCheckBoxOptions = ['All', 'Ideas', 'Questions', 'News'];
-            const checkedList = categoryCheckBoxOptions.filter((item, index) => {
-                return _.findIndex(selectedItems, (selectedItem, selectedItemIndex) => selectedItemIndex === index) > -1;
-            });
+            const checkedList = selectedItems.map(item => {
+                return categoryCheckBoxOptions[item];
+            })
             let category = '';
             if (checkedList.indexOf('All') === -1 && checkedList.length < 3) {
                 if (checkedList.indexOf('Ideas') > -1) {
@@ -234,6 +234,7 @@ class Community extends Component {
                     }
                 }
                 Utils.saveCommunityCheckBox(category);
+                console.log(category);
                 this.getThreads({ 'category': category });
             } else {
                 Utils.saveCommunityCheckBox('');
