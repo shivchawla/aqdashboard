@@ -15,7 +15,7 @@ class Utils{
 	}
 
 	static goToDailyContestPage = url => {
-		window.location.href = `${dailyContestDomain}${url}`;
+		window.location.href = `${dailyContestDomain}/${url}`;
 	}
 
 	static setShouldUpdateToken(status){
@@ -81,7 +81,7 @@ class Utils{
 					history.push(fromUrl);
 				}else{
 					this.setShouldUpdateToken(true);
-					history.push('/tokenUpdate?redirectUrl='+encodeURIComponent(fromUrl));
+					window.location.href = dailyContestDomain + '/tokenUpdate?redirectUrl='+encodeURIComponent(fromUrl);
 				}
 			}
 		}
