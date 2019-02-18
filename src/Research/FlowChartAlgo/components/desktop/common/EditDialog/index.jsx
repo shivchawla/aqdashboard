@@ -95,7 +95,9 @@ class EditDialog extends React.Component {
     }
 
     onOptionsRadioChanged = (itemKey, key, value, type = 'firstValue', custom = false) => {
-        const selectedValue = custom ? value : getIndicatorValue(itemKey, key, value);
+        let {resolution = 'Day'} = this.props;
+        resolution = resolution.toLowerCase() === 'day' ? 'daily' : 'minute';
+        const selectedValue = custom ? value : getIndicatorValue(itemKey, key, value, resolution);
         const selectedIndex = _.get(this.props, 'selectedIndex', 0);
         const {requiredConditionsKey} = this.props;
         const algo = _.get(this.props, 'algo', {});
