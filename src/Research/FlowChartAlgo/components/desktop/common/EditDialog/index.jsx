@@ -57,7 +57,8 @@ class EditDialog extends React.Component {
         options = options.map(option => ({
             key: option.key, 
             value: _.get(option, `defaultValue[${resolution}]`, null),
-            label: option.label
+            label: option.label,
+            type: _.get(option, 'type', 'Integer')
         }));
         conditions[selectedIndex][type] = {
             label: nIndicators[key].label,
