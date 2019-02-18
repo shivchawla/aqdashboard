@@ -521,16 +521,16 @@ class Compare extends Component {
                 if (this.state.summaryTimePeriod === 0) {
 
                     var summary = this.state.backtests[i].output.summary;
-					var totalReturn = _.get(summary, 'totalreturn', 0).toFixed(2);
-					var annualReturn = _.get(summary, 'annualreturn', 0).toFixed(2);
-					var annualstandarddeviation = _.get(summary, 'annualstandarddeviation', 0).toFixed(2);
-					var sharperatio = _.get(summary, 'sharperatio', 0).toFixed(2);
-					var informationratio = _.get(summary, 'informationratio', 0).toFixed(2);
-					var maxdrawdown = _.get(summary, 'maxdrawdown', 0).toFixed(2);
-					var calmarratio = _.get(summary, 'calmarratio', 0).toFixed(2);
-					var beta = _.get(summary, 'beta', 0).toFixed(2);
-					var stability = _.get(summary, 'stability', 0).toFixed(2);
-                    var alpha = _.get(summary, 'alpha', 0).toFixed(2);
+					var totalReturn = (_.get(summary, 'totalreturn', 0) || 0).toFixed(2);
+					var annualReturn = (_.get(summary, 'annualreturn', 0) || 0).toFixed(2);
+					var annualstandarddeviation = (_.get(summary, 'annualstandarddeviation', 0) || 0).toFixed(2);
+					var sharperatio = (_.get(summary, 'sharperatio', 0) || 0).toFixed(2);
+					var informationratio = (_.get(summary, 'informationratio', 0) || 0).toFixed(2);
+					var maxdrawdown = (_.get(summary, 'maxdrawdown', 0) || 0).toFixed(2);
+					var calmarratio = (_.get(summary, 'calmarratio', 0) || 0).toFixed(2);
+					var beta = (_.get(summary, 'beta', 0) || 0).toFixed(2);
+					var stability = (_.get(summary, 'stability', 0) || 0).toFixed(2);
+                    var alpha = (_.get(summary, 'alpha', 0) || 0).toFixed(2);
                     
                     result.push({
                         'backtest': _.get(this.state, `backtests[${i}].fullBacktestName`, null),
