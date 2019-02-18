@@ -280,9 +280,7 @@ class BacktestDetail extends Component {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
                     Utils.checkForInternet(error, this.props.history);
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
+                    Utils.goToErrorPage(error, this.props.history);
                     Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                 }
                 this.updateState({
@@ -308,9 +306,7 @@ class BacktestDetail extends Component {
             .catch((error) => {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
+                    Utils.goToErrorPage(error, this.props.history);
                     Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                 }
                 this.cancelGetBacktest = undefined;
@@ -344,9 +340,7 @@ class BacktestDetail extends Component {
             .catch((error) => {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
+                    Utils.goToErrorPage(error, this.props.history);
                     Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                 }
                 this.cancelGetLogs = undefined;
@@ -464,9 +458,7 @@ class BacktestDetail extends Component {
             .catch((error) => {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
+                    Utils.goToErrorPage(error, this.props.history);
                     Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                 }
                 this.cancelGetTransactionHistory = undefined;
@@ -571,9 +563,7 @@ class BacktestDetail extends Component {
             .catch((error) => {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
-                    if (error.response.status === 400 || error.response.status === 403) {
-                        this.props.history.push('/forbiddenAccess');
-                    }
+                    Utils.goToErrorPage(error, this.props.history);
                     Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                 }
                 this.cancelGetPortfolioHistory = undefined;

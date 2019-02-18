@@ -48,9 +48,7 @@ class ThreadPost extends Component {
                             })
                             if (error.response) {
                                 Utils.checkForInternet(error, this.props.history);
-                                if (error.response.status === 400 || error.response.status === 403) {
-                                    this.props.history.push('/forbiddenAccess');
-                                }
+                                Utils.goToErrorPage(error, this.props.history);
                                 Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                             }
                         });

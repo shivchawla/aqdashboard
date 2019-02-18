@@ -134,9 +134,7 @@ class Compare extends Component {
 						this.totalBacktestrequests = this.totalBacktestrequests + 1;
 						Utils.checkForInternet(error, this.props.history);
 						if (error.response) {
-							if (error.response.status === 400 || error.response.status === 403) {
-								this.props.history.push('/forbiddenAccess');
-							}
+							Utils.goToErrorPage(error, this.props.history);
 							Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
 						}
 						if (this.totalBacktestrequests === Object.keys(this.props.selectedBacktests).length) {

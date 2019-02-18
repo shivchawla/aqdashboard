@@ -438,6 +438,16 @@ class Utils{
 	static getTime(date) {
 		return (new Date(date)).getTime();
 	}
+
+	static goToErrorPage(error, history) {
+		if (error.response.status === 400) {
+			history.push('/forbiddenAccess');
+		} else if (error.response.status === 403) {
+			history.push('/forbiddenAccess');
+		} else {
+			history.push('/errorPage');
+		}
+	}
 }
 
 export default Utils;

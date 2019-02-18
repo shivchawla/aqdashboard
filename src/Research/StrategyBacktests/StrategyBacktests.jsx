@@ -66,9 +66,7 @@ class StrategyBacktests extends Component {
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
+                        Utils.goToErrorPage(error, this.props.history);
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
                     this.updateState({
@@ -95,9 +93,7 @@ class StrategyBacktests extends Component {
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
+                        Utils.goToErrorPage(error, this.props.history);
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
                     this.updateState({
@@ -124,9 +120,7 @@ class StrategyBacktests extends Component {
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
+                        Utils.goToErrorPage(error, this.props.history);
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
                     this.removeAllLoading();
@@ -212,9 +206,7 @@ class StrategyBacktests extends Component {
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
-                        if (error.response.status === 400 || error.response.status === 403) {
-                            this.props.history.push('/forbiddenAccess');
-                        }
+                        Utils.goToErrorPage(error, this.props.history);
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
                     this.deletesCompleted = this.deletesCompleted + 1;
