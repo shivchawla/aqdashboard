@@ -33,7 +33,6 @@ class StockCardRadioGroup extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         if (!_.isEqual(nextProps.defaultSelected, this.props.defaultSelected)) {
             const value = nextProps.defaultSelected === 0 ? null : nextProps.defaultSelected;
             this.setState({
