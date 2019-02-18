@@ -281,7 +281,11 @@ class EditDialog extends React.Component {
                                 secondOptions.map((optionItem, index) => {
                                     const type = _.get(optionItem, 'type', '');
 
-                                    return (type.toUpperCase() === 'INTEGER' || type.toUpperCase() === 'CONSTANT')
+                                    return (
+                                        type.toUpperCase() === 'INTEGER' || 
+                                        type.toUpperCase() === 'CONSTANT' ||
+                                        type.toUpperCase() === 'FLOAT' 
+                                    )
                                     ?   (
                                             <StockCardRadioGroup 
                                                 defaultSelected={this.getRadioOptionsSelectedItem(optionItem, secondValueOptions)}

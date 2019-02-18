@@ -121,7 +121,12 @@ const getIndicatorValueObj = indicator => {
                         ?   10
                         :   false;
         
-        return {key: optionItemKey, value: paramObjValue, label: optionItem.label};
+        return {
+            key: optionItemKey, 
+            value: paramObjValue, 
+            label: optionItem.label,
+            type: optionItem.type
+        };
     })
 
     return {

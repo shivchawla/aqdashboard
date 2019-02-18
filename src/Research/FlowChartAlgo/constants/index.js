@@ -88,13 +88,23 @@ export const defaultFirstRowEntryCondition = {
     firstValue: {
         key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
+        options: [{
+            key: nIndicators.SMA.options[0].key, 
+            value: 10, 
+            label: nIndicators.SMA.options[0].label,
+            type: 'Integer'
+        }]
     },
     comparator: comparators[0].value, 
     secondValue: {
         key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
+        options: [{
+            key: nIndicators.SMA.options[0].key, 
+            value: 10, 
+            label: nIndicators.SMA.options[0].label,
+            type: 'Integer'
+        }]
     }
 };
 
@@ -103,13 +113,23 @@ export const defaultSecondRowEntryCondition = {
     firstValue: {
         key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
+        options: [{
+            key: nIndicators.SMA.options[0].key, 
+            value: 10, 
+            label: nIndicators.SMA.options[0].label,
+            type: 'Integer'
+        }]
     },
     comparator: comparators[0].value, 
     secondValue: {
         key: 'SMA',
         label: 'Simple Moving Average',
-        options: [{key: indicators.SMA.options[0].key, value: 10, label: indicators.SMA.options[0].label}]
+        options: [{
+            key: nIndicators.SMA.options[0].key, 
+            value: 10, 
+            label: nIndicators.SMA.options[0].label,
+            type: 'Integer'
+        }]
     }
 }
 
