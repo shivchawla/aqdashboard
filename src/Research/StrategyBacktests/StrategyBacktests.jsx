@@ -322,7 +322,12 @@ class StrategyBacktests extends Component {
             })
         }
 
-        this.setState({backtests: clonedBacktests});
+        this.setState({
+            backtests: clonedBacktests,
+            selectedBacktests: clonedBacktests
+                    .filter(backtest => backtest.selected === true)
+                    .map(backtest => backtest._id)
+        });
     }
 
     render() {
