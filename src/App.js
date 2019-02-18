@@ -30,6 +30,7 @@ const ForbiddenAccess = React.lazy(() => import('./ErrorPages/ForbiddenAccess'))
 const NoIternetAccess = React.lazy(() => import('./ErrorPages/NoIternetAccess'));
 const BadRequest = React.lazy(() => import('./ErrorPages/BadRequest'));
 const PageNotFound = React.lazy(() => import('./ErrorPages/PageNotFound'));
+const UnderDevelopment = React.lazy(() => import('./ErrorPages/UnderDevelopment'));
 const FlowChartAlgo = React.lazy(() => import('./Research/FlowChartAlgo'));
 
 
@@ -64,7 +65,11 @@ class App extends Component {
                     <div className="App">
                         <Media 
                             query="(max-width: 800px)"
-                            render={() => <PageNotFound />}
+                            render={() => (
+                                <React.Suspense fallback={<ChunkingLoader />}>
+                                    <UnderDevelopment />
+                                </React.Suspense>
+                            )}
                         />
                         <Media 
                             query="(min-width: 801px)"
