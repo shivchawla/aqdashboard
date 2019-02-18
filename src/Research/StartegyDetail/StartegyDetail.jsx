@@ -1804,6 +1804,7 @@ class StartegyDetail extends Component {
                         <FlowChartAlgo 
                             updateAlgo={this.updateAlgo}
                             algo={this.state.algo}
+                            resolution={this.state.selectedResolution}
                         />
                     );
                 }

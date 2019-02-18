@@ -18,8 +18,11 @@ export default class Exit extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.exit', {})) 
-                || !_.isEqual(this.state, nextState)) {
+        if (
+            !_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.exit', {})) 
+            || !_.isEqual(_.get(this.props, 'resolution', 'Day'), _.get(nextProps, 'resolution', 'Day')) 
+            || !_.isEqual(this.state, nextState)
+        ) {
             return true;
         }
 
@@ -112,7 +115,7 @@ export default class Exit extends React.Component {
     }
 
     render() {
-        const {algo, updateAlgo, edit = true} = this.props;
+        const {algo, updateAlgo, edit = true, resolution = 'Day'} = this.props;
         const conditions = _.get(algo, 'exit', []);
         const rowProps = {
             onComparatorChange: this.onComparatorChange,
@@ -165,6 +168,7 @@ export default class Exit extends React.Component {
                                 index={index}
                                 condition={condition}
                                 requiredConditionsKey='exit'
+                                resolution={resolution}
                                 {...rowProps}
                             />
                         ))

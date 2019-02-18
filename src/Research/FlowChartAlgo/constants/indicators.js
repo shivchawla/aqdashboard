@@ -14,7 +14,8 @@ export const indicators = {
         "options": [{
             "defaultValue": {"daily": 10, "minute": 30}, 
             "type": "Constant",
-            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]}
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  1000000, "minute": 1000000}
         }]    
     },
 

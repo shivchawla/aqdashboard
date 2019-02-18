@@ -22,8 +22,8 @@ class StockCardRadioGroup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: props.defaultSelected || 0,
-            sliderValue: props.defaultSelected || 0,
+            selected: props.defaultSelected,
+            sliderValue: props.defaultSelected,
             showSlider: false,
         };
     }
@@ -34,9 +34,10 @@ class StockCardRadioGroup extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!_.isEqual(nextProps.defaultSelected, this.props.defaultSelected)) {
+            const value = nextProps.defaultSelected === 0 ? null : nextProps.defaultSelected;
             this.setState({
-                selected: nextProps.defaultSelected || 0,
-                sliderValue: nextProps.defaultSelected || 0
+                selected: value,
+                sliderValue: value
             })
         }
     }
@@ -64,9 +65,10 @@ class StockCardRadioGroup extends React.Component {
 
     handleTextChange = (e) => {
         const value = e.target.value;
-        if (Number(value) >=0 && Number(value) <= 100) {
+        const {max = 10000} = this.props;
+        if (Number(value) >=0 && Number(value) <= max) {
             this.setState({sliderValue: value});
-            const requiredValue = value.length === 0 ? null : Number(value);
+            const requiredValue = value.length === 0 ? null : value;
             clearTimeout(sliderInputTimeout);
             sliderInputTimeout = setTimeout(() => {
                 this.props.onChange && this.props.onChange(requiredValue, true);
@@ -137,6 +139,9 @@ class StockCardRadioGroup extends React.Component {
                                 {
                                     this.props.checkIfCustom && 
                                     this.props.checkIfCustom(this.props.defaultSelected) && 
+                                    typeof(this.props.defaultSelected) !== 'boolean' &&
+                                    this.props.defaultSelected !== null &&
+                                    this.props.defaultSelected !== 0 &&
                                     <div 
                                             style={{
                                                 ...verticalBox,
@@ -197,7 +202,7 @@ class StockCardRadioGroup extends React.Component {
                                     isDesktop &&
                                     <TextField
                                         id="standard-name"
-                                        label={`Value (${textFieldLabel})`}
+                                        label={`Value (${textFieldLabel !== null ? textFieldLabel : ''})`}
                                         value={this.state.sliderValue}
                                         onChange={this.handleTextChange}
                                         type="number"
@@ -236,10 +241,10 @@ class StockCardRadioGroup extends React.Component {
 export default withStyles(styles)(windowWidth(StockCardRadioGroup));
 
 const ValueContainer = styled.div`
-    width: 35px;
-    height: 36px;
-    min-width: 35px;
-    min-height: 36px;
+    width: 32px;
+    height: 27px;
+    min-width: 32px;
+    min-height: 27px;
     display: flex;
     justify-content: center;
     align-items: center;

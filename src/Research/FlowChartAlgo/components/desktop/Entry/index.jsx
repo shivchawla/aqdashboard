@@ -17,8 +17,11 @@ export default class Entry extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!_.isEqual(_.get(this.props, 'algo.entry', {}), _.get(nextProps, 'algo.entry', {})) 
-                || !_.isEqual(this.state, nextState)) {
+        if (
+            !_.isEqual(_.get(this.props, 'algo.entry', {}), _.get(nextProps, 'algo.entry', {}))
+            || !_.isEqual(_.get(this.props, 'resolution', 'Day'), _.get(nextProps, 'resolution', 'Day')) 
+            || !_.isEqual(this.state, nextState)
+        ) {
             return true;
         }
 
@@ -112,7 +115,7 @@ export default class Entry extends React.Component {
     }
 
     render() {
-        const {algo, updateAlgo, edit = true} = this.props;
+        const {algo, updateAlgo, edit = true, resolution = 'Day'} = this.props;
         const conditions = _.get(algo, 'entry', []);
         const rowProps = {
             onComparatorChange: this.onComparatorChange,
@@ -166,6 +169,7 @@ export default class Entry extends React.Component {
                                 index={index}
                                 condition={condition}
                                 requiredConditionsKey='entry'
+                                resolution={resolution}
                                 {...rowProps}
                             />
                         ))

@@ -99,7 +99,8 @@ class ConditionRow extends React.Component {
             deleteCondition,
             requiredConditionsKey,
             classes,
-            edit = true
+            edit = true,
+            resolution = 'Day'
         } = this.props;
         this.checkIfConditionsEqual();
         const conditionProp = _.get(this.props, 'condition', {});
@@ -161,6 +162,7 @@ class ConditionRow extends React.Component {
                             borderRadius: '4px'
                         }}
                         requiredConditionsKey={this.props.requiredConditionsKey}
+                        resolution={resolution}
                     />
                 </Popover>
                 {
@@ -352,8 +354,8 @@ const OptionItems = ({options}) => {
     );
 }
 
-const OptionItem = ({label, value}) => {
-    value = typeof(value) === 'number'
+const OptionItem = ({label, value, type = 'Integer'}) => {
+    value = type.toUpperCase() !== 'BOOLEAN'
         ?   value
         :   value === true
                 ?   'True'
@@ -367,7 +369,7 @@ const OptionItem = ({label, value}) => {
                     marginRight: '15px'
                 }}
         >
-            <OptionValue>{value}</OptionValue>
+            <OptionValue>{value || '-'}</OptionValue>
             <OptionLabel>{label}</OptionLabel>
         </div>
     );

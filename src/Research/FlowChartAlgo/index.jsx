@@ -8,7 +8,7 @@ import SectionHeader from './components/desktop/common/SectionHeader';
 
 export default class FlowChartAlgo extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
-        if (!_.isEqual(this.props.algo, nextProps.algo) || !_.isEqual(this.state, nextState)) {
+        if (!_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState)) {
             return true;
         }
 
@@ -20,11 +20,12 @@ export default class FlowChartAlgo extends React.Component {
     }
 
     render() {
-        const {edit = true} = this.props;
+        const {edit = true, resolution = 'Day'} = this.props;
         const commonProps = {
             algo: this.props.algo,
             updateAlgo: this.updateAlgo,
-            edit
+            edit,
+            resolution
         };
         const commonStyle = {
             borderLeft: '2px dotted #979797',

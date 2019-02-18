@@ -114,8 +114,8 @@ const getIndicatorValueObj = indicator => {
     let options = _.get(indicatorObj, 'options', []);
     options = options.map(optionItem => {
         const optionItemKey = optionItem.key;
-        const isInteger = _.get(optionItem, 'type', '').toLowerCase() === 'Integer';
-        const paramObjValue = _.get(indicatorParams, `${optionItemKey}`, null) !== null
+        const isInteger = _.get(optionItem, 'type', '').toLowerCase() === 'integer';
+        const paramObjValue = _.get(indicatorParams, `${optionItemKey}`, undefined) !== undefined
                 ?   indicatorParams[optionItemKey]
                 :   isInteger
                         ?   10
