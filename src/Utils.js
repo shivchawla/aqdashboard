@@ -441,7 +441,7 @@ class Utils{
 
 	static goToErrorPage(error, history) {
 		if (error.response.status === 400) {
-			history.push('/forbiddenAccess');
+			history.push('/badRequest');
 		} else if (error.response.status === 403) {
 			history.push('/forbiddenAccess');
 		} else {
