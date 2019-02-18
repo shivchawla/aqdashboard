@@ -1149,9 +1149,9 @@ class BacktestDetail extends Component {
                                     Resolution:
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    {/* <p className="attached-backtest-settings-value"> */}
+                                    <p className="attached-backtest-settings-value">
                                         {advancedSummary.resolution}
-                                    {/* </p> */}
+                                    </p>
                                 </Grid>
                             </Grid>
                             <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
