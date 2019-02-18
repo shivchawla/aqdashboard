@@ -1,7 +1,7 @@
 {
 	"announcements": [
 		{
-			"announcement":["<h3 style='font-size: 16px; font-weight: 500; margin-top: 5px'>Codeless Backtesting/Minute Data</h3><p style='font-weight: 500; font-size: 14px'><br></p><p style='font-weight: 500; font-size: 14px'>We have added UI driven backtesting to expedite backesting process. Now, you can choose trading conditions, resolution and other settings with just a few clicks. </p><ol><li style='font-weight: 500; font-size: 14px'>Multiple Technical Indicators</li><li style='font-weight: 500; font-size: 14px'>Minute Resolution Data</li><li style='font-weight: 500; font-size: 14px'>Free 20 Backtests Everyday</li></ol><p><br></p><p style='font-weight: 500; font-size: 14px'>We hope you enjoy the new backtester. If you need any help, face any issues case or have any feature request, write us at shiv.chawla@aimsquant.com</p>"]
+			"announcement":["<h3 style='font-size: 16px; font-weight: 500; margin-top: 5px'>Codeless Backtesting/Minute Data</h3><p style='font-weight: 500; font-size: 14px'><br></p><p style='font-weight: 500; font-size: 14px'>We have added UI driven backtesting to expedite backesting process. Now, you can choose trading conditions, resolution and other settings with just a few clicks. </p><ol><li style='font-weight: 500; font-size: 14px'>Multiple Technical Indicators</li><li style='font-weight: 500; font-size: 14px'>Minute Resolution Data</li><li style='font-weight: 500; font-size: 14px'>Free 20 Backtests Everyday</li></ol><p><br></p><p style='font-weight: 500; font-size: 14px'>We hope you enjoy the new backtester. If you need any help, face any issues or have any feature request, write us at shiv.chawla@aimsquant.com</p>"]
 		}
 	]
 }
