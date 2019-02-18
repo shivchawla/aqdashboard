@@ -1460,7 +1460,7 @@ class StartegyDetail extends Component {
                                     value={this.state.algo.target}
                                     onChange={e => {
                                         const numValue = Number(e.target.value);
-                                        if (numValue < 0 || numValue > 100) {
+                                        if (numValue < 0) {
                                             return;
                                         }
                                         const modifiedAlgo = {
