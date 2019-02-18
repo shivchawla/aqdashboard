@@ -26,7 +26,7 @@ class Pagination extends Component {
         this.clickedOnLastPage = () => {
             if (Utils.isLoggedIn()) {
                 let currentPage = parseInt(JSON.stringify(this.props.page), 10);
-                if (currentPage !== this.props.numberOfPages) {
+                if (currentPage * 10 < this.props.dataCount) {
                     this.props.onpageChanged(this.props.numberOfPages);
                 }
             } else {
@@ -48,7 +48,7 @@ class Pagination extends Component {
         this.clickedOnNextPage = () => {
             if (Utils.isLoggedIn()) {
                 let currentPage = parseInt(JSON.stringify(this.props.page), 10);
-                if ((currentPage + 1) <= this.props.numberOfPages) {
+                if (currentPage * 10 < this.props.dataCount) {
                     this.props.onpageChanged(currentPage + 1);
                 }
             } else {
@@ -117,7 +117,7 @@ class Pagination extends Component {
                 <ActionIcon 
                     onClick={this.clickedOnNextPage} 
                     type="chevron_right"
-                    color={this.props.numberOfPages <= this.props.page ? '#9b9b9b' : 'black'}
+                    color={this.props.dataCount <= (this.props.page * 10) ? '#9b9b9b' : 'black'}
                     style={{
                         fontWeight: 'bold',
                         fontSize: '20px', 
@@ -128,7 +128,7 @@ class Pagination extends Component {
                 <ActionIcon 
                     onClick={this.clickedOnLastPage}
                     type="last_page"
-                    color={this.props.numberOfPages <= this.props.page ? '#9b9b9b' : 'black'}
+                    color={this.props.dataCount <= (this.props.page * 10) ? '#9b9b9b' : 'black'}
                     style={{
                         fontWeight: 'bold',
                         fontSize: '20px', 

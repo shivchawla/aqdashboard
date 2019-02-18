@@ -50,6 +50,7 @@ class Community extends Component {
             'loading': true,
             'mainLoading': true,
             'numberOfPages': 1,
+            dataCount: 0,
             'page': 1
         };
 
@@ -193,12 +194,13 @@ class Community extends Component {
                     if (dataCount) {
                         numberOfPages = Math.floor(dataCount / 10);
                     }
-                    numberOfPages++;
-                    if (numberOfPages) {
-                        this.updateState({ 'threads': threads, 'loading': false, 'mainLoading': false, 'numberOfPages': numberOfPages });
-                    } else {
-                        this.updateState({ 'threads': threads, 'loading': false, 'mainLoading': false, 'numberOfPages': 1 });
-                    }
+                    // numberOfPages++;
+                    this.updateState({ 'threads': threads, 'loading': false, 'mainLoading': false, 'numberOfPages': numberOfPages, dataCount});
+                    // if (numberOfPages) {
+                        
+                    // } else {
+                    //     this.updateState({ 'threads': threads, 'loading': false, 'mainLoading': false, 'numberOfPages': 1, dataCount});
+                    // }
                 } else {
                     this.updateState({ 'loading': false, 'mainLoading': false });
                 }
@@ -234,7 +236,6 @@ class Community extends Component {
                     }
                 }
                 Utils.saveCommunityCheckBox(category);
-                console.log(category);
                 this.getThreads({ 'category': category });
             } else {
                 Utils.saveCommunityCheckBox('');
@@ -517,6 +518,7 @@ class Community extends Component {
                                             page={this.state.page} 
                                             onpageChanged={this.pageChanged} 
                                             numberOfPages={this.state.numberOfPages} 
+                                            dataCount={this.state.dataCount}
                                         />
                                     </div>
                                 </Grid>
