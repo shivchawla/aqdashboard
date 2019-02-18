@@ -11,12 +11,14 @@ import Moment from 'react-moment';
 import AceEditor from 'react-ace';
 import 'brace/mode/julia';
 import 'brace/theme/xcode';
+import Chip from '../../../components/DataDisplay/Chip';
 import RadioGroup from '../../../components/Selections/RadioGroup';
 import CustomRadio from '../../../components/Selections/CardCustomRadio';
 import CustomHighCharts from './../../../CustomHighCharts/CustomHighCharts.jsx';
+import DialogComponent from '../../../components/Alerts/DialogComponent';
 import { processConditionsToAlgo } from '../../../Research/StartegyDetail/utils';
 import FlowChartAlgo from '../../../Research/FlowChartAlgo';
-import { verticalBox, horizontalBox } from '../../../constants';
+import { verticalBox, horizontalBox, primaryColor } from '../../../constants';
 
 class AttachedBackTest extends Component {
 
@@ -31,7 +33,8 @@ class AttachedBackTest extends Component {
             selectedTab: 0,
             algo: {},
             type: 'GUI', // this should not be used, type should be obtained from the N/W call
-            selectedAlgoView: 0
+            selectedAlgoView: 0,
+            universeDialogOpen: false
         };
 
         this.getBacktestData = () => {
@@ -103,6 +106,10 @@ class AttachedBackTest extends Component {
 
     onTabChanged = (event, value) => {
         this.setState({ selectedTab: value });
+    }
+
+    toggleUniverseDialog = () => {
+        this.setState({universeDialogOpen: !this.state.universeDialogOpen});
     }
 
     render() {
@@ -187,10 +194,46 @@ class AttachedBackTest extends Component {
                                 <Grid item xs={4}>
                                     Universe:
                                 </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {(this.state.backTestData.settings) ? this.state.backTestData.settings.universeIndex : '-'}
-                                    </p>
+                                <Grid 
+                                        item xs={8} 
+                                        style={{ 
+                                            ...horizontalBox,
+                                            justifyContent: 'flex-start',
+                                            alignItems: 'center'
+                                        }}
+                                >
+                                    {
+                                        _.get(this.state, 'backTestData.settings.universe', '').length > 0
+                                            ?   _.get(this.state, 'backTestData.settings.universe', '')
+                                                .split(',')
+                                                .splice(0, 3)
+                                                .map((item, index) => {
+                                                    return (
+                                                        <Chip 
+                                                            label={item}
+                                                            key={index}
+                                                            style={{marginRight: '3px'}}
+                                                        />
+                                                    );
+                                                })
+                                            :   '-'
+                                    }
+                                    {
+                                        _.get(this.state, 'backTestData.settings.universe', '').length > 0 &&
+                                        <h3
+                                                style={{
+                                                    fontFamily: 'Lato, sans-serif',
+                                                    fontSize: '12px',
+                                                    color: primaryColor,
+                                                    marginLeft: '5px',
+                                                    cursor: 'pointer',
+                                                    fontWeight: 700
+                                                }}
+                                                onClick={this.toggleUniverseDialog}
+                                        >
+                                            more
+                                        </h3>
+                                    }
                                 </Grid>
                             </Grid>
                             <Grid container align="middle" style={{ 'marginTop': '10px' }}>
@@ -553,6 +596,30 @@ class AttachedBackTest extends Component {
 
         return (
             <div >
+                <DialogComponent 
+                        open={this.state.universeDialogOpen}
+                        onClose={this.toggleUniverseDialog}
+                        title="Universe"
+                >
+                    <div 
+                            style={{...horizontalBox}}
+                    >
+                        {
+                            _.get(this.state, 'backTestData.settings.universe', '')
+                            .split(',')
+                            .map((item, index) => {
+                                return (
+                                    <Chip 
+                                        title="Universe"
+                                        key={index}
+                                        label={item}
+                                        style={{margin: '5px'}}
+                                    />
+                                );
+                            })
+                        }
+                    </div>
+                </DialogComponent>
                 {getLoadingDiv()}
                 {getBackTestBody()}
             </div>
