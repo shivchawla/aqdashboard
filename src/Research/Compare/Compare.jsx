@@ -785,6 +785,7 @@ class Compare extends Component {
                             <FlowChartAlgo 
                                 algo={_.get(backtests, `[${this.state.selectedFirstGUIBacktest}].algo`)}
                                 edit={false}
+                                mini={true}
                             />
                         </Grid>
                         <Grid 
@@ -804,6 +805,7 @@ class Compare extends Component {
                             <FlowChartAlgo 
                                 algo={_.get(backtests, `[${this.state.selectedSecondGUIBacktest}].algo`)}
                                 edit={false}
+                                mini={true}
                             />
                         </Grid>
                     </Grid>

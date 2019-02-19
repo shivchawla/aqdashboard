@@ -100,7 +100,8 @@ class ConditionRow extends React.Component {
             requiredConditionsKey,
             classes,
             edit = true,
-            resolution = 'Day'
+            resolution = 'Day',
+            mini = false
         } = this.props;
         this.checkIfConditionsEqual();
         const conditionProp = _.get(this.props, 'condition', {});
@@ -242,7 +243,9 @@ class ConditionRow extends React.Component {
                                     }}
                             >
                                 <Comparator onClick={this.firstOpenPopover}>
-                                    {comparatorObj.label}
+                                    {
+                                        mini ? comparatorObj.shortOperator : comparatorObj.label
+                                    }
                                 </Comparator>
                                 {
                                     this.checkIfConditionsEqual() &&

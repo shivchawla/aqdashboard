@@ -115,7 +115,7 @@ export default class Entry extends React.Component {
     }
 
     render() {
-        const {algo, updateAlgo, edit = true, resolution = 'Day'} = this.props;
+        const {algo, updateAlgo, edit = true, resolution = 'Day', mini = false} = this.props;
         const conditions = _.get(algo, 'entry', []);
         const rowProps = {
             onComparatorChange: this.onComparatorChange,
@@ -166,6 +166,7 @@ export default class Entry extends React.Component {
                     {
                         conditions.map((condition, index) => (
                             <ConditionRow 
+                                mini={mini}
                                 index={index}
                                 condition={condition}
                                 requiredConditionsKey='entry'

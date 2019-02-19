@@ -20,12 +20,13 @@ export default class FlowChartAlgo extends React.Component {
     }
 
     render() {
-        const {edit = true, resolution = 'Day'} = this.props;
+        const {edit = true, resolution = 'Day', mini = false} = this.props;
         const commonProps = {
             algo: this.props.algo,
             updateAlgo: this.updateAlgo,
             edit,
-            resolution
+            resolution,
+            mini
         };
         const commonStyle = {
             borderLeft: '2px dotted #979797',

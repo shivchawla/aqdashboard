@@ -20,13 +20,13 @@ export const intervals = [
 ];
 
 export const comparators = [
-    {label: 'Is Greater Than', value: 'gt', codeOperator: '>'},
-    {label: 'Is Greater Than or Equal To', value: 'gte', codeOperator: '>='},
-    {label: 'Is Lower Than', value: 'lt', codeOperator: '<'},
-    {label: 'Is Lower Than or Equal To', value: 'lte', codeOperator: '<='},
-    {label: 'Crosses Above', value: 'ca', codeOperator: 'crossAbove'},
-    {label: 'Crosses Below', value: 'cb', codeOperator: 'crossBelow'},
-    {label: 'Is Equal To', value: 'eq', codeOperator: '=='},
+    {label: 'Is Greater Than', value: 'gt', codeOperator: '>', shortOperator: 'GT'},
+    {label: 'Is Greater Than or Equal To', value: 'gte', codeOperator: '>=', shortOperator: 'GTE'},
+    {label: 'Is Lower Than', value: 'lt', codeOperator: '<', shortOperator: 'LT'},
+    {label: 'Is Lower Than or Equal To', value: 'lte', codeOperator: '<=', shortOperator: 'LTE'},
+    {label: 'Crosses Above', value: 'ca', codeOperator: 'crossAbove', shortOperator: 'CA'},
+    {label: 'Crosses Below', value: 'cb', codeOperator: 'crossBelow', shortOperator: 'CB'},
+    {label: 'Is Equal To', value: 'eq', codeOperator: '==', shortOperator: 'EQ'},
 ];
 
 export const conditionalOperators = [
