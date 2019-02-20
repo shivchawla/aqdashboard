@@ -128,6 +128,10 @@ class StartegyDetail extends Component {
                 open: false,
                 message: ''
             },
+            errorSnackbar: {
+                open: false,
+                message: ''
+            },
             codeViewSelected: false,
             codeEditorReadOnly: true,
             editCodeDialogOpen: false,
@@ -136,7 +140,8 @@ class StartegyDetail extends Component {
             editStocksLoading: false,
             selectedStocks: savedSelectedStocks, // contains the list of the stocks that are selected
             searchStocksList: [], // contains the list of the stocks that are obtained from the search response
-            universeSearchValue: ''// contains text field input when searching for a particular universe,
+            universeSearchValue: '',// contains text field input when searching for a particular universe,
+            openBacktestLimitExceededDialog: false
         };
 
         this.updateState = (data) => {
@@ -453,8 +458,9 @@ class StartegyDetail extends Component {
                     if (error.response) {
                         const status = _.get(error, 'response.status', null);
                         if (status === 400) {
-                            const errorMessage = _.get(error, 'response.message', {});
-                            this.openSnackbar(JSON.stringify(errorMessage));
+                            const errorMessage = _.get(error, 'response.data', {});
+                            this.openErrorSnackbar(JSON.stringify(`Error Occured - ${errorMessage}`));
+                            this.setState({isBacktestRunning: false});
                             return;
                         }
                         Utils.goToErrorPage(error, this.props.history);
@@ -580,6 +586,10 @@ class StartegyDetail extends Component {
 
     }
 
+    toggleBacktestLimitExceededDialog = () => {
+        this.setState({openBacktestLimitExceededDialog: !this.state.openBacktestLimitExceededDialog});
+    }
+
     fetchUniverseStocks = (search = '', selectDefaultStocks = false) => {
         this.setState({editStocksLoading: true});
         let selectedStocks = _.map(this.state.selectedStocks, _.cloneDeep);
@@ -628,9 +638,21 @@ class StartegyDetail extends Component {
         })
     }
 
+    openErrorSnackbar = (message = '') => {
+        this.setState({
+            errorSnackbar: {open: true, message}
+        });
+    }
+
     closeSnackbar = () => {
         this.setState({
             snackbar: {open: false, message: ''}
+        });
+    }
+
+    closeErrorSnackbar = () => {
+        this.setState({
+            errorSnackbar: {open: false, message: ''}
         });
     }
 
@@ -2033,6 +2055,13 @@ class StartegyDetail extends Component {
                     message={this.state.snackbar.message}
                     handleClose={this.closeSnackbar}
                     position='top'
+                />
+                <SnackbarComponent 
+                    openStatus={this.state.errorSnackbar.open}
+                    message={this.state.errorSnackbar.message}
+                    handleClose={this.closeErrorSnackbar}
+                    position='top'
+                    autoHideDuration={5000}
                 />
                 <div style={{ 'width': '100%', 'height': 'calc(100vh - 65px)' }}>
                     {getStrategyDiv()}

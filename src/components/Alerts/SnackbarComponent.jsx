@@ -3,13 +3,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-export default ({openStatus = true, message = 'Snackbar Data', handleClose = () => {}, position = 'bottom', autoHideDuration = 1500, renderAction = null}) => {
+export default ({openStatus = true, message = 'Snackbar Data', handleClose = () => {}, position = 'bottom', autoHideDuration = 1500, renderAction = null, style = {}}) => {
     return (
         <Snackbar
             anchorOrigin={{
                 vertical: position,
                 horizontal: 'center',
             }}
+            style={style}
             open={openStatus}
             autoHideDuration={autoHideDuration}
             ContentProps={{
