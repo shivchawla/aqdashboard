@@ -146,52 +146,32 @@ class AttachedBackTest extends Component {
                     <div style={{ 'padding': '20px', 'display': 'flex' }}>
                         <div style={{ 'border': '1px solid #e1e1e1', 'padding': '10px', 'minWidth': '450px' }}>
                             <h2 style={{ 'fontWeight': '700', 'fontSize': '18px' }}>Settings</h2>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Initial Cash:
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Initial Capital:
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
-                                        {(this.state.backTestData.settings) ? this.state.backTestData.settings.initialCash : '-'}
+                                        {
+                                            this.state.backTestData.settings
+                                            ? Utils.formatInvestmentValueNormal(this.state.backTestData.settings.initialCash) 
+                                            : '-'
+                                        }
                                     </p>
                                 </Grid>
                             </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Start Date:
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Resolution:
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
                                     <p className="attached-backtest-settings-value">
-                                        <Moment format="DD MMM YYYY">
-                                            {(this.state.backTestData.settings) ? this.state.backTestData.settings.startDate : undefined}
-                                        </Moment>
+                                        {advancedSummary.resolution}
                                     </p>
                                 </Grid>
                             </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    End Date:
-                                </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        <Moment format="DD MMM YYYY">
-                                            {(this.state.backTestData.settings) ? this.state.backTestData.settings.endDate : undefined}
-                                        </Moment>
-                                    </p>
-                                </Grid>
-                            </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Benchmark:
-                                </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {(this.state.backTestData.settings) ? this.state.backTestData.settings.benchmark : '-'}
-                                    </p>
-                                </Grid>
-                            </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
                                     Universe:
                                 </Grid>
                                 <Grid 
@@ -236,21 +216,81 @@ class AttachedBackTest extends Component {
                                     }
                                 </Grid>
                             </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Slippage:
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Date Range:
                                 </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
-                                        {(advancedSummary.slippage) ? advancedSummary.slippage.value : '-'}
+                                <Grid 
+                                        item xs={6} 
+                                        style={{ 
+                                            ...horizontalBox,
+                                            justifyContent: 'space-between'
+                                        }}
+                                >
+                                    <p className="attached-backtest-settings-value">
+                                        <Moment format="DD MMM YYYY">
+                                            {(this.state.backTestData.settings) ? this.state.backTestData.settings.startDate : undefined}
+                                        </Moment>
                                     </p>
-                                    <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
-                                        {(advancedSummary.slippage) ? advancedSummary.slippage.model : '-'}
+                                    <h3
+                                            style={{
+                                                fontFamily: 'Lato, sans-serif',
+                                                fontWeight: 500,
+                                                color: '#444',
+                                                fontSize: '13px'
+                                            }}
+                                    >
+                                        to
+                                    </h3>
+                                    <p className="attached-backtest-settings-value">
+                                        <Moment format="DD MMM YYYY">
+                                            {(this.state.backTestData.settings) ? this.state.backTestData.settings.endDate : undefined}
+                                        </Moment>
                                     </p>
                                 </Grid>
                             </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Target (%):
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                    <p className="attached-backtest-settings-value">
+                                        {advancedSummary ? advancedSummary.profitTarget : '-'}
+                                    </p>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Stop Loss (%):
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                    <p className="attached-backtest-settings-value">
+                                        {advancedSummary ? advancedSummary.stopLoss : '-'}
+                                    </p>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Benchmark:
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                    <p className="attached-backtest-settings-value">
+                                        {(this.state.backTestData.settings) ? this.state.backTestData.settings.benchmark : '-'}
+                                    </p>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Rebalance:
+                                </Grid>
+                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
+                                    <p className="attached-backtest-settings-value">
+                                        {advancedSummary.rebalance}
+                                    </p>
+                                </Grid>
+                            </Grid>
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
                                     Comission:
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
@@ -262,58 +302,22 @@ class AttachedBackTest extends Component {
                                     </p>
                                 </Grid>
                             </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Cancel Policy:
+                            <Grid container type="flex" align="middle" style={{ 'marginTop': '10px' }}>
+                                <Grid item xs={4} style={{textAlign: 'start'}}>
+                                    Slippage:
                                 </Grid>
                                 <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {advancedSummary.cancelPolicy}
+                                    <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
+                                        {(advancedSummary.slippage) ? advancedSummary.slippage.value : '-'}
                                     </p>
-                                </Grid>
-                            </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Execution Policy:
-                                </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {advancedSummary.executionPolicy}
-                                    </p>
-                                </Grid>
-                            </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Rebalance:
-                                </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {advancedSummary.rebalance}
-                                    </p>
-                                </Grid>
-                            </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Investment Plan:
-                                </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {advancedSummary.investmentPlan}
-                                    </p>
-                                </Grid>
-                            </Grid>
-                            <Grid container align="middle" style={{ 'marginTop': '10px' }}>
-                                <Grid item xs={4}>
-                                    Resolution:
-                                </Grid>
-                                <Grid item xs={8} style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                    <p className="attached-backtest-settings-value">
-                                        {advancedSummary.resolution}
+                                    <p className="attached-backtest-settings-value" style={{ 'margin': '0px 5px 0px 0px' }}>
+                                        {(advancedSummary.slippage) ? advancedSummary.slippage.model : '-'}
                                     </p>
                                 </Grid>
                             </Grid>
                         </div>
                     </div>
+                
                 </div>
             );
         }
@@ -567,7 +571,7 @@ class AttachedBackTest extends Component {
                                     <h2 style={{ 'fontSize': '20px', 'fontWeight': '400', 'margin': '0px' }}>
                                         {
                                             (this.state.backTestData.output && this.state.backTestData.output.summary)
-                                                ? this.state.backTestData.output.summary.maxdrawdown.toFixed(2)
+                                                ? `${this.state.backTestData.output.summary.maxdrawdown.toFixed(2)}%`
                                                 : '-'
                                         }
                                     </h2>
