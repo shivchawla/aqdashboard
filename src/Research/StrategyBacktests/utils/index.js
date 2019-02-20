@@ -3,6 +3,7 @@ import moment from 'moment';
 import Utils from '../../../Utils';
 
 export const processRowData = (backtest, index) => {
+    const dateFormat = 'DD/MM/YYYY';
     const name = `Backtest ${index + 1}`;
     const createdAt = moment(_.get(backtest, 'createdAt', null)).format('DD/MM/YYYY hh:mm A');
     const rawStatus = _.get(backtest, 'status', '');
@@ -14,7 +15,9 @@ export const processRowData = (backtest, index) => {
     let sharpeRatio = _.get(backtest, 'output.summary.sharperatio', null);
     sharpeRatio = sharpeRatio !== null ? `${sharpeRatio.toFixed(2)}` : '-';
     let startDate = _.get(backtest, 'settings.startDate', null);
+    startDate = startDate !== null ? moment(startDate).format(dateFormat) : startDate;
     let endDate = _.get(backtest, 'settings.endDate', null);
+    endDate = endDate !== null ? moment(endDate).format(dateFormat) : endDate;
     const dateRange = startDate + ' - ' + endDate; 
     const isLoading = _.get(backtest, 'isLoading', false);
 
