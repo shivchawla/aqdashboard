@@ -451,6 +451,12 @@ class StartegyDetail extends Component {
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
+                        const status = _.get(error, 'response.status', null);
+                        if (status === 400) {
+                            const errorMessage = _.get(error, 'response.message', {});
+                            this.openSnackbar(JSON.stringify(errorMessage));
+                            return;
+                        }
                         Utils.goToErrorPage(error, this.props.history);
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
