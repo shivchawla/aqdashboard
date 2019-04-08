@@ -5,7 +5,7 @@ export const CommunityMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: Community | Research Platform</title>
+            <title>Community | Quant Research - AdviceQube</title>
             <meta name="description" content="Share your investment ideas, backtests and learn from the community."/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
@@ -17,7 +17,7 @@ export const PostDetailMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: Post Detail | Research Platform</title>
+            <title>Post Detail | Quant Research - AdviceQube</title>
             <meta name="description" content="Learn what other have to share on community"/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
@@ -29,7 +29,7 @@ export const NewPostMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: New Post | Research Platform</title>
+            <title>New Post | Quant Research - AdviceQube</title>
             <meta name="description" content="Create community post, share your backtest and spread your ideas"/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
@@ -41,7 +41,7 @@ export const StrategiesMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: All Strategies | Research Platform</title>
+            <title>All Strategies | Quant Research - AdviceQube</title>
             <meta name="description" content="List of all strategies"/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
@@ -53,7 +53,7 @@ export const StrategyDetailMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: Strategy Editor | Research Platform</title>
+            <title>Strategy Editor | Quant Research - AdviceQube</title>
             <meta name="description" content="With UI driven strategy editor, create your strategy with just a few clicks"/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
@@ -65,7 +65,7 @@ export const BacktestListMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: All Backtests | Research Platform</title>
+            <title>All Backtests | Quant Research - AdviceQube</title>
             <meta name="description" content="Compare and screen all backtests of your strategy"/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
@@ -77,7 +77,7 @@ export const BacktestDetailMeta = props => {
     return (
         <Helmet>
             <meta charSet="utf-8" />
-            <title>AdviceQube: Backtest Detail | Research Platform</title>
+            <title>Backtest Detail | Quant Research - AdviceQube</title>
             <meta name="description" content="Performance Detail, Trasnsaction History and everything else about the backtest"/>
             <meta name="keywords" content="www.adviceqube.com, quant.adviceqube.com, Backtest, Backtesting, Quant, Quantitative, Indian markets, Investments, Community, Share, Equity, Stock market, Share Market, NSE stocks, Crowd, Crowd-sourced, returns, gain, Predict, Predictions, India, Trading Capital, Trade, Prizes"/>
             <meta name="robots" content="index, follow" />
