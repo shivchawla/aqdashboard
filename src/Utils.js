@@ -1,5 +1,6 @@
 import {reactLocalStorage} from 'reactjs-localstorage';
 import moment from 'moment';
+import _ from 'lodash';
 import axios from 'axios';
 import cookie from 'react-cookies';
 
@@ -19,11 +20,11 @@ class Utils{
 	}
 
 	static setShouldUpdateToken(status){
-		this.localStorageSave('SHOULDUPDATETOKEN', status);
+		this.cookieStorageSave('SHOULDUPDATETOKEN', status);
 	}
 
 	static getShouldUpdateToken(){
-		return this.getFromLocalStorage('SHOULDUPDATETOKEN');
+		return cookie.load('SHOULDUPDATETOKEN');
 	}
 
 	static getSocketUrl(){
@@ -73,6 +74,7 @@ class Utils{
 		if (error && error.response && error.response.data){
 			if(error.response.data.name==='TokenExpiredError' ||
 				error.response.data.message==='jwt expired'){
+					console.log('Token Expired Error ');
 				if (this.loggedInUserinfo.recentTokenUpdateTime
 					&& (moment().valueOf() < ((60*1000) + this.loggedInUserinfo.recentTokenUpdateTime)) ){
 					return;
@@ -80,8 +82,9 @@ class Utils{
 					this.logoutUser();
 					history.push(fromUrl);
 				}else{
+					console.log('Token Will be Updated ');
 					this.setShouldUpdateToken(true);
-					window.location.href = dailyContestDomain + '/tokenUpdate?redirectUrl='+encodeURIComponent(fromUrl);
+					window.location.href = `${dailyContestDomain}/tokenUpdate?redirectUrl=${encodeURIComponent(fromUrl)}&research=true`;
 				}
 			}
 		}
@@ -404,11 +407,30 @@ class Utils{
 		}
 		return '';
 	}
+
 	static checkForInternet (error, history) {
 		if (error.message === 'Network Error') {
 			history.push('/errorPage');
 		}
 	}
+
+	static checkForServerError(error, history, fromUrl) {
+		return new Promise((resolve, reject) => {
+			const errorCode = _.get(error, 'response.data.code', '');
+			const statusCode = _.get(error, 'response.data.statusCode', 0);
+			if (errorCode === 'server_error' && statusCode === 403) {
+				// Utils.goToLoginPage(history, fromUrl);
+				console.log('Error Code ', errorCode);
+				console.log('Server Error Happened');
+				history.push('/server_error');
+				reject(false);
+			} else {
+				console.log('No status error');
+				resolve(true);
+			}
+		})
+	}
+
 	static autoLogin(token, history, redirectUrl, callback) {
 		const headers = {
 			'aimsquant-token': token
