@@ -620,12 +620,16 @@ class StartegyDetail extends Component {
     }
 
     addOrDeleteSelectedStocks = stock => {
+        const selectedResolution = _.get(this.state, 'selectedResolution', 'Day');
+
+        const maxInstruments = selectedResolution.toLowerCase() === 'minute' ? 20 : 50;
         const selectedStocks = _.map(this.state.selectedStocks, _.cloneDeep);
         const requiredStockIndex = _.findIndex(selectedStocks, stockItem => stockItem === stock);
+        
         if (requiredStockIndex > -1) {
             selectedStocks.splice(requiredStockIndex, 1);
         } else {
-            if (selectedStocks.length < 20) {
+            if (selectedStocks.length < maxInstruments) {
                 selectedStocks.push(stock);
             }
         }
@@ -1054,7 +1058,7 @@ class StartegyDetail extends Component {
     }
 
     toggleEditStocksDialog = (disabledFetch = false) => {
-        this.setState({editStocksDialogOpen: !this.state.editStocksDialogOpen}, () => {
+        this.setState({editStocksDialogOpen: !this.state.editStocksDialogOpen,}, () => {
             if(this.state.editStocksDialogOpen && this.state.searchStocksList.length === 0) {
                 !disabledFetch && this.fetchUniverseStocks();
             }
@@ -1205,6 +1209,8 @@ class StartegyDetail extends Component {
 
     onResolutionChanged = selectedValue => { 
         let requiredStartDate = endDate, requiredEndDate = endDate;
+        let {selectedStocks = []} = this.state;
+
         const resolutionItems = ['Day', 'Minute'];
         const value = selectedValue >= resolutionItems.length 
             ? resolutionItems[0]
@@ -1213,11 +1219,13 @@ class StartegyDetail extends Component {
             requiredStartDate = _.cloneDeep(requiredEndDate).subtract(1, 'years');
         } else {
             requiredStartDate = _.cloneDeep(requiredEndDate).subtract(1, 'months');
+            selectedStocks = selectedStocks.slice(0, 20);
         }
         this.updateState({
             startDate: requiredStartDate,
             endDate: requiredEndDate,
             selectedResolution: value,
+            selectedStocks,
             selectedRebalance: selectedValue === 1
                 ?   'Daily'
                 :   this.state.selectedRebalance
