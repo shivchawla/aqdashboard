@@ -128,7 +128,7 @@ class ConditionRow extends React.Component {
         const firstValueOpen = Boolean(fristValueAnchorEl);
 
         return (
-            <Grid 
+            <Grid
                     container 
                     alignItems="center"
                     style={{marginBottom: '15px'}}
@@ -171,9 +171,7 @@ class ConditionRow extends React.Component {
                     <Grid 
                             item 
                             xs={12}
-                            style={{
-                                marginBottom: '10px'
-                            }}
+                            style={{marginBottom: '10px'}}
                     >
                         <Select
                                 value={condition}
@@ -199,7 +197,12 @@ class ConditionRow extends React.Component {
                         </Select>
                     </Grid>
                 }
-                <Grid item xs={12}>
+                <Grid 
+                        item 
+                        xs={12}
+                        style={{cursor: 'pointer'}}
+                        onClick={this.firstOpenPopover}
+                >
                     <Grid 
                             ref={el => this.containerEl = el}
                             container
@@ -228,9 +231,7 @@ class ConditionRow extends React.Component {
                                     }}
                             >
                                 <div style={{...verticalBox, alignItems: 'flex=start'}}>
-                                    <ValueHeader 
-                                            onClick={this.firstOpenPopover}
-                                    >
+                                    <ValueHeader>
                                         {selectedFirstValue}
                                     </ValueHeader>
                                     <IndicatorLabel>{selectedFirstValueLabel}</IndicatorLabel>
@@ -242,7 +243,7 @@ class ConditionRow extends React.Component {
                                         ...verticalBox
                                     }}
                             >
-                                <Comparator onClick={this.firstOpenPopover}>
+                                <Comparator>
                                     {
                                         mini ? comparatorObj.shortOperator : comparatorObj.label
                                     }
@@ -288,9 +289,7 @@ class ConditionRow extends React.Component {
                                                     // position: 'relative'
                                                 }}
                                         >
-                                            <ValueHeader
-                                                    onClick={this.firstOpenPopover}
-                                            >
+                                            <ValueHeader>
                                                 {selectedSecondValue}
                                             </ValueHeader>
                                             {

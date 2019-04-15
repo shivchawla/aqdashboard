@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import styled from 'styled-components';
 import Icon from '@material-ui/core/Icon';
 import Chip from '../../../components/DataDisplay/Chip';
@@ -37,7 +38,7 @@ class ThreadListItem extends Component {
     render() {
 
         const getInitials = () => {
-            return Utils.getInitials(this.props.threadData.user.firstName, this.props.threadData.user.lastName);
+            return Utils.getInitials(_.get(this.props, 'threadData.user.firstName', ''), _.get(this.props, 'threadData.user.lastName', ''));
         }
 
         const tags = [];
@@ -163,7 +164,7 @@ class ThreadListItem extends Component {
                             'margin': '0px', 'color': '#646464',
                             'fontWeight': '400', 'fontSize': '1.1em'
                         }}>
-                            {this.props.threadData.user.firstName + " " + this.props.threadData.user.lastName}
+                            {_.get(this.props, 'threadData.user.firstName', '') + " " + _.get(this.props, 'threadData.user.lastName', '')}
                         </p>
                         <p style={{
                             'margin': '0px', 'color': '#646464',

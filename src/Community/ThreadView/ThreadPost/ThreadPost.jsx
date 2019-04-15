@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
@@ -136,7 +137,7 @@ class ThreadPost extends Component {
         }
 
         const getInitials = () => {
-            return Utils.getInitials(this.props.threadData.user.firstName, this.props.threadData.user.lastName);
+            return Utils.getInitials(_.get(this.props, 'threadData.user.firstName', ''), _.get(this.props, 'threadData.user.lastName', ''));
         }
 
         const getAttachmentDiv = () => {
@@ -241,7 +242,7 @@ class ThreadPost extends Component {
                                         'margin': '0px', 'color': '#646464',
                                         'fontWeight': '400', 'fontSize': '1.1em'
                                     }}>
-                                        {this.props.threadData.user.firstName + " " + this.props.threadData.user.lastName}
+                                        {_.get(this.props, 'threadData.user.firstName', '') + " " + _.get(this.props, 'threadData.user.lastName', '')}
                                     </p>
                                     <p style={{
                                         'margin': '0px', 'color': '#646464',

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
@@ -34,7 +35,7 @@ class ThreadReply extends Component {
     render() {
 
         const getInitials = () => {
-            return Utils.getInitials(this.props.replyData.user.firstName, this.props.replyData.user.lastName);
+            return Utils.getInitials(_.get(this.props, 'replyData.user.firstName', ''), _.get(this.props, 'replyData.user.lastName', ''));
         }
 
         const getAttachmentDiv = () => {
@@ -82,7 +83,7 @@ class ThreadReply extends Component {
                                     'margin': '0px', 'color': '#646464',
                                     'fontWeight': '400', 'fontSize': '1.1em'
                                 }}>
-                                    {this.props.replyData.user.firstName + " " + this.props.replyData.user.lastName}
+                                    {_.get(this.props, 'replyData.user.firstName', '') + " " + _.get(this.props, 'replyData.user.lastName', '')}
                                 </p>
                                 <p style={{
                                     'margin': '0px', 'color': '#646464',
