@@ -747,6 +747,7 @@ class Research extends Component {
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
+                <h1>Checking Research</h1>
                 <StrategiesMeta />
                 {getTotalDiv()}
             </AqDesktopLayout>
