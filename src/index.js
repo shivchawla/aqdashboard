@@ -12,7 +12,7 @@ const event = new Event();
 ReactDOM.render(
     <CookiesProvider>
         <Router>
-            <App />
+            <App event={event}/>
         </Router>
     </CookiesProvider>
     , document.getElementById('root')
