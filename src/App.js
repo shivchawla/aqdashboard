@@ -63,6 +63,7 @@ class App extends Component {
     }
 
     captureSWEvent = payload => {
+        console.log('captureSWEvent called');
         this.toggleNewContentToast();
     }
 
