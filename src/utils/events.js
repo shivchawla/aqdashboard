@@ -2,6 +2,7 @@ const {EventEmitter} = require('events');
 
 export class Event {
     constructor() {
+        console.log('Event Initialized');
         this.eventEmitter = new EventEmitter();
     }
 
