@@ -233,6 +233,7 @@ class EditDialog extends React.Component {
                                                 key={index}
                                                 items={items}
                                                 max={_.get(optionItem, `maxValue[${resolution}]`, 0)}
+                                                min={_.get(optionItem, `minValue[${resolution}]`, 0)}
                                                 hideLabel={true}
                                                 checkIfCustom={target => this.checkIfCustomValue(_.get(optionItem, `values[${resolution}]`), target)}
                                                 showSlider={true}
@@ -296,6 +297,7 @@ class EditDialog extends React.Component {
                                                 items={this.processRadioGroupOptions(_.get(optionItem, `values[${resolution}]`, []))}
                                                 hideLabel={true}
                                                 max={_.get(optionItem, `maxValue[${resolution}]`, 0)}
+                                                min={_.get(optionItem, `minValue[${resolution}]`, 0)}
                                                 checkIfCustom={target => this.checkIfCustomValue(_.get(optionItem, `values[${resolution}]`), target)}
                                                 label={optionItem.label}
                                                 showSlider={true}
