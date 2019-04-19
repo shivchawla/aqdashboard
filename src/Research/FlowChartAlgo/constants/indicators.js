@@ -1,4 +1,4 @@
-{
+export const indicators = {
     "SMA": {
         "label": "Simple Moving Average",
         "options": [{
@@ -686,4 +686,4 @@
         }]    
     }
 
-}
+};
