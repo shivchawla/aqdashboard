@@ -1,4 +1,4 @@
-export const indicators = {
+{
     "SMA": {
         "label": "Simple Moving Average",
         "options": [{
@@ -13,9 +13,6 @@ export const indicators = {
         "label": "Constant Value",
         "options": [{
             "defaultValue": {"daily": 10, "minute": 30}, 
-            "type": "Constant",
-            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
-            "maxValue" : {"daily":  1000000, "minute": 1000000}
         }]    
     },
 
@@ -28,7 +25,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", "type": "Boolean",
+            "key": "wilder", "label": "Wilder", 
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
@@ -64,7 +61,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", "type": "Boolean",
+            "key": "wilder", "label": "Wilder", 
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
@@ -78,7 +75,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", "type": "Boolean",
+            "key": "wilder", "label": "Wilder", 
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
@@ -102,7 +99,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Float",
+            "key": "width", "label": "Width", "type": "Integer",
             "defaultValue": {"daily": 2, "minute": 2}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -118,7 +115,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Float",
+            "key": "width", "label": "Width", "type": "Integer",
             "defaultValue": {"daily": 2, "minute": 30}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -134,8 +131,40 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Float",
+            "key": "width", "label": "Width", "type": "Integer",
             "defaultValue": {"daily": 2, "minute": 2}, 
+            "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
+            "maxValue" : {"daily":  10, "minute": 10}
+        }]    
+    },
+
+    "UKB": {
+        "label": "Upper Keltner Band",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 5}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "width", "label": "Width", "type": "Integer",
+            "defaultValue": {"daily": 2, "minute": 2}, 
+            "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
+            "maxValue" : {"daily":  10, "minute": 10}
+        }]    
+    },
+
+    "LKB": {
+        "label": "Lower Keltner Band",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "width", "label": "Width", "type": "Integer",
+            "defaultValue": {"daily": 2, "minute": 30}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
         }]    
@@ -180,8 +209,58 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", "type": "Boolean",
+            "key": "wilder", "label": "Wilder", 
             "defaultValue": {"daily": false, "minute": false} 
+        }]    
+    },
+
+    "TSI": {
+        "label": "True Strength Index",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "MASSINDEX": {
+        "label": "Mass Index",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "TRIX": {
+        "label": "Trix",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "PlusVORTEX": {
+        "label": "Vortex Indicator (Plus)",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "MinusVORTEX": {
+        "label": "Vortex Indicator (Minus)",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
         }]    
     },
 
@@ -239,27 +318,27 @@ export const indicators = {
         }]    
     },
 
-    "PrevOPEN": {
+    "PrevOpen": {
         "label": "Previous Open"
     },
 
-    "PrevHIGH": {
+    "PrevHigh": {
         "label": "Previous High"
     },
 
-    "PrevLOW": {
+    "PrevLow": {
         "label": "Previous Low"
     },
 
-    "PrevCLOSE": {
+    "PrevClose": {
         "label": "Previous Close"
     },
 
-    "PrevVOLUME": {
+    "PrevVolume": {
         "label": "Previous Volume"
     },
 
-    "LagOPEN": {
+    "LagOpen": {
         "label": "Lagged Open",
         "options":[{
             "key": "period", "type": "Integer",
@@ -270,7 +349,7 @@ export const indicators = {
         }]
     },
 
-    "LagHIGH": {
+    "LagHigh": {
         "label": "Lagged High",
         "options":[{
             "key": "period", "type": "Integer",
@@ -281,7 +360,7 @@ export const indicators = {
         }]
     },
 
-    "LagLOW": {
+    "LagLow": {
         "label": "Lagged Low",
         "options":[{
             "key": "period", "type": "Integer",
@@ -292,7 +371,7 @@ export const indicators = {
         }]
     },
 
-    "LagCLOSE": {
+    "LagClose": {
         "label": "Lagged Close",
         "options":[{
             "key": "period", "type": "Integer",
@@ -303,7 +382,7 @@ export const indicators = {
         }]
     },
 
-    "LagVOLUME": {
+    "LagVolume": {
         "label": "Lagged Volume",
         "options":[{
             "key": "period", "type": "Integer",
@@ -332,6 +411,22 @@ export const indicators = {
         }]
     },
 
+    "CHAIKIN_VOL":{
+        "label":"Chaikin Volatility",
+         "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "smooth", "label": "Smooth", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]
+    },
+
     "VWAP": {
         "label": "Volume Weighted Average Price",
         "options": [{
@@ -351,6 +446,57 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         }]    
     },
+
+    "MONEYFLOWINDEX": {
+        "label": "Money Flow Index",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "FORCEINDEX": {
+        "label": "Force Index",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "CHAIKINMONEYFLOW": {
+        "label": "Chaikin Money Flow",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "EASEOFMOVEMENT": {
+        "label": "Ease of Movement",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "VOLUMEPRICETREND": {
+        "label": "Volume Price Trend",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
 
     "ADL": {
         "label": "Accumulation/Distribution Line",
@@ -386,16 +532,20 @@ export const indicators = {
         }]
     },
 
-    "CHAIKIN_VOL":{
-        "label":"Chaikin Volatility",
+    "WILLIAMSR":{
+        "label":"Williams R",
          "options": [{
             "key": "horizon", "label": "Horizon", "type": "Integer",
             "defaultValue": {"daily": 10, "minute": 30}, 
             "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
             "maxValue" : {"daily":  252, "minute": 9375}
-        },
-        {
-            "key": "smooth", "label": "Smooth", "type": "Integer",
+        }]
+    },
+
+    "DPO_OSC":{
+        "label":"Detrending Price Oscillator",
+         "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
             "defaultValue": {"daily": 10, "minute": 30}, 
             "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
             "maxValue" : {"daily":  252, "minute": 9375}
@@ -452,5 +602,88 @@ export const indicators = {
             "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
             "maxValue" : {"daily":  252, "minute": 9375}
         }]    
+    },
+
+    "AWESOME_OSC": {
+        "label": "Awesome Oscillator",
+        "options": [{
+            "key": "fast", "label": "Fast", "type": "Integer",
+            "defaultValue": {"daily": 5, "minute": 30}, 
+            "values": {"daily" : [5, 10, 15, 20, 25], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "slow", "label": "Slow", "type": "Integer",
+            "defaultValue": {"daily": 20, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "STOCHASTIC_OSC_FASTK": {
+        "label": "Stochastic Oscillator (Fast K)",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute":30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "fast", "label": "Fast", "type": "Integer",
+            "defaultValue": {"daily": 5, "minute": 30}, 
+            "values": {"daily" : [5, 10, 15, 20, 25], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "slow", "label": "Slow", "type": "Integer",
+            "defaultValue": {"daily": 20, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "STOCHASTIC_OSC_FASTD": {
+        "label": "Stochastic Oscillator (Fast D)",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute":30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "fast", "label": "Fast", "type": "Integer",
+            "defaultValue": {"daily": 5, "minute": 30}, 
+            "values": {"daily" : [5, 10, 15, 20, 25], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "slow", "label": "Slow", "type": "Integer",
+            "defaultValue": {"daily": 20, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
+    },
+
+    "STOCHASTIC_OSC_SLOWD": {
+        "label": "Stochastic Oscillator (Slow D)",
+        "options": [{
+            "key": "horizon", "label": "Horizon", "type": "Integer",
+            "defaultValue": {"daily": 10, "minute":30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "fast", "label": "Fast", "type": "Integer",
+            "defaultValue": {"daily": 5, "minute": 30}, 
+            "values": {"daily" : [5, 10, 15, 20, 25], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "slow", "label": "Slow", "type": "Integer",
+            "defaultValue": {"daily": 20, "minute": 30}, 
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]    
     }
+
 }
