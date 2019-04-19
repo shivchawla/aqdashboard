@@ -36,7 +36,6 @@ export default class FlowChartAlgo extends React.Component {
             paddingLeft: '20px',
             boxSizing: 'border-box'
         };
-        const entryConditions = _.get(this.props, 'algo.entry', []);
         const exitConditions = _.get(this.props, 'algo.exit', []);
 
         return (
