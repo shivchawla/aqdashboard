@@ -102,8 +102,8 @@ class App extends Component {
                     size="small" 
                     onClick={
                         () => {
-                            // window.location.reload(true);
-                            window.location = window.location.href+'?eraseCache=true';
+                            window.caches.delete();
+                            window.location.reload(true);
                         }
                     }
             >
