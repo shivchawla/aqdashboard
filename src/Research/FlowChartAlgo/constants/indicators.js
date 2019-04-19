@@ -13,6 +13,10 @@ export const indicators = {
         "label": "Constant Value",
         "options": [{
             "defaultValue": {"daily": 10, "minute": 30}, 
+            "type": "Constant",
+            "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
+            "maxValue" : {"daily":  1000000, "minute": 1000000}
+
         }]    
     },
 
@@ -25,7 +29,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", 
+            "key": "wilder", "label": "Wilder", "type": "Boolean",
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
@@ -61,7 +65,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", 
+            "key": "wilder", "label": "Wilder", "type": "Boolean",
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
@@ -75,7 +79,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", 
+            "key": "wilder", "label": "Wilder", "type": "Boolean",
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
@@ -99,7 +103,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Integer",
+            "key": "width", "label": "Width", "type": "Float",
             "defaultValue": {"daily": 2, "minute": 2}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -115,7 +119,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Integer",
+            "key": "width", "label": "Width", "type": "Float",
             "defaultValue": {"daily": 2, "minute": 30}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -131,7 +135,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Integer",
+            "key": "width", "label": "Width", "type": "Float",
             "defaultValue": {"daily": 2, "minute": 2}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -147,7 +151,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Integer",
+            "key": "width", "label": "Width", "type": "Float",
             "defaultValue": {"daily": 2, "minute": 2}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -163,7 +167,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "width", "label": "Width", "type": "Integer",
+            "key": "width", "label": "Width", "type": "Float",
             "defaultValue": {"daily": 2, "minute": 30}, 
             "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 2, 3, 4, 5]},
             "maxValue" : {"daily":  10, "minute": 10}
@@ -209,7 +213,7 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         },
         {
-            "key": "wilder", "label": "Wilder", 
+            "key": "wilder", "label": "Wilder", "type": "Boolean",
             "defaultValue": {"daily": false, "minute": false} 
         }]    
     },
