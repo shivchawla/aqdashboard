@@ -221,11 +221,17 @@ export const indicators = {
     "TSI": {
         "label": "True Strength Index",
         "options": [{
-            "key": "horizon", "label": "Horizon", "type": "Integer",
-            "defaultValue": {"daily": 10, "minute": 30}, 
+            "key": "fast", "label": "Fast", "type": "Integer",
+            "defaultValue": {"daily": 5, "minute": 10}, 
+            "values": {"daily" : [5, 10, 15, 20, 25], "minute": [10, 20, 30, 40, 50]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        },
+        {
+            "key": "slow", "label": "Slow", "type": "Integer",
+            "defaultValue": {"daily": 20, "minute": 30}, 
             "values": {"daily" : [10, 20, 30, 40, 50], "minute": [30, 60, 90, 120, 150]},
             "maxValue" : {"daily":  252, "minute": 9375}
-        }]    
+        }]
     },
 
     "MASSINDEX": {
