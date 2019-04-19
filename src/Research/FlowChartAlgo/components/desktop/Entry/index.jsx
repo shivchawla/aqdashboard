@@ -16,18 +16,18 @@ export default class Entry extends React.Component {
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (
-            !_.isEqual(_.get(this.props, 'algo.entry', {}), _.get(nextProps, 'algo.entry', {}))
-            || !_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.exit', {}))
-            || !_.isEqual(_.get(this.props, 'resolution', 'Day'), _.get(nextProps, 'resolution', 'Day')) 
-            || !_.isEqual(this.state, nextState)
-        ) {
-            return true;
-        }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (
+    //         !_.isEqual(_.get(this.props, 'algo.entry', {}), _.get(nextProps, 'algo.entry', {}))
+    //         || !_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.exit', {}))
+    //         || !_.isEqual(_.get(this.props, 'resolution', 'Day'), _.get(nextProps, 'resolution', 'Day')) 
+    //         || !_.isEqual(this.state, nextState)
+    //     ) {
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     onComparatorChange = (value, index) => {
         const {algo} = this.props;
