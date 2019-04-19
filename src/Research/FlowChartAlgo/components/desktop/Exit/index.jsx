@@ -19,7 +19,8 @@ export default class Exit extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (
-            !_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.exit', {})) 
+            !_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.entry', {}))
+            || !_.isEqual(_.get(this.props, 'algo.exit', {}), _.get(nextProps, 'algo.exit', {})) 
             || !_.isEqual(_.get(this.props, 'resolution', 'Day'), _.get(nextProps, 'resolution', 'Day')) 
             || !_.isEqual(this.state, nextState)
         ) {
@@ -41,6 +42,7 @@ export default class Exit extends React.Component {
     }
 
     onFirstValueChange = (value, index) => {
+        console.log('onFirstValueChange called');
         const {algo} = this.props;
         const exitConditions = _.map(_.get(algo, 'exit', []), _.cloneDeep);
         exitConditions[index]['firstValue'] = value;
@@ -52,6 +54,7 @@ export default class Exit extends React.Component {
     }
 
     onSecondValueChange = (value, index) => {
+        console.log('onSecondValueChange called');
         const {algo} = this.props;
         const exitConditions = _.map(_.get(algo, 'exit', []), _.cloneDeep);
         exitConditions[index]['secondValue'] = value;
@@ -63,9 +66,11 @@ export default class Exit extends React.Component {
     }
 
     onConditionChange = (value, index) => {
+        console.log('onConditionChange called');
         const {algo} = this.props;
         const exitConditions = _.map(_.get(algo, 'exit', []), _.cloneDeep);
         exitConditions[index]['condition'] = value;
+        console.log('Before ', algo);
         const modifiedScript = {
             ...algo,
             exit: exitConditions
