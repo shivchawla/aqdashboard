@@ -102,7 +102,6 @@ class App extends Component {
                     size="small" 
                     onClick={
                         () => {
-                            window.caches.delete();
                             window.location.reload(true);
                         }
                     }

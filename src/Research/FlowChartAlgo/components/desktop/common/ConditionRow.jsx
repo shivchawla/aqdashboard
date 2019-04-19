@@ -311,7 +311,7 @@ class ConditionRow extends React.Component {
                                                         <ActionIcon 
                                                             type='cancel'
                                                             onClick={(e) => {
-                                                                e.stopPropagation();
+                                                                // e.stopPropagation();
                                                                 deleteCondition(index)
                                                             }}
                                                             color='#ff5d5d'
