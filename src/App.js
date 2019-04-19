@@ -101,7 +101,10 @@ class App extends Component {
                     color="secondary" 
                     size="small" 
                     onClick={
-                        () => window.location.reload(true)
+                        () => {
+                            // window.location.reload(true);
+                            window.location = window.location.href+'?eraseCache=true';
+                        }
                     }
             >
               Reload
