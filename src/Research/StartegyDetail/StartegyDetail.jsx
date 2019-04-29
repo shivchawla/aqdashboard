@@ -1414,6 +1414,7 @@ class StartegyDetail extends Component {
                                         id="universe"
                                         margin="dense"
                                         labelWidth={60}
+                                        onClick={this.toggleEditStocksDialog}
                                         style={{width: '190px', display: 'block'}}
                                         value={
                                             _.get(this.state, 'selectedStocks', [])
