@@ -1092,7 +1092,7 @@ class BacktestDetail extends Component {
                     }}>
                         <RadioGroup
                             items={['Latest Portfolio', 'Portfolio History']}
-                            defaultSelected={this.state.defaultSelectedPortfolio}
+                            defaultSelected={this.state.portfolioMode === 'LatestPortfolio' ? 0 : 1}
                             onChange={this.handleModeChange}
                             CustomRadio={CardCustomRadio}
                         />
