@@ -334,23 +334,23 @@ export const indicators = {
         }]    
     },
 
-    "PrevOpen": {
+    "PrevOPEN": {
         "label": "Previous Open"
     },
 
-    "PrevHigh": {
+    "PrevHIGH": {
         "label": "Previous High"
     },
 
-    "PrevLow": {
+    "PrevLOW": {
         "label": "Previous Low"
     },
 
-    "PrevClose": {
+    "PrevCLOSE": {
         "label": "Previous Close"
     },
 
-    "PrevVolume": {
+    "PrevVOL": {
         "label": "Previous Volume"
     },
 
