@@ -354,7 +354,7 @@ export const indicators = {
         "label": "Previous Volume"
     },
 
-    "LagOpen": {
+    "LagOPEN": {
         "label": "Lagged Open",
         "options":[{
             "key": "period", "type": "Integer",
@@ -365,7 +365,7 @@ export const indicators = {
         }]
     },
 
-    "LagHigh": {
+    "LagHIGH": {
         "label": "Lagged High",
         "options":[{
             "key": "period", "type": "Integer",
@@ -376,7 +376,7 @@ export const indicators = {
         }]
     },
 
-    "LagLow": {
+    "LagLOW": {
         "label": "Lagged Low",
         "options":[{
             "key": "period", "type": "Integer",
@@ -387,7 +387,7 @@ export const indicators = {
         }]
     },
 
-    "LagClose": {
+    "LagCLOSE": {
         "label": "Lagged Close",
         "options":[{
             "key": "period", "type": "Integer",
@@ -398,7 +398,7 @@ export const indicators = {
         }]
     },
 
-    "LagVolume": {
+    "LagVOL": {
         "label": "Lagged Volume",
         "options":[{
             "key": "period", "type": "Integer",
@@ -408,6 +408,29 @@ export const indicators = {
             "maxValue" : {"daily":  252, "minute": 9375}
         }]
     },
+
+    "PeriodHIGH": {
+        "label": "N Period High Price",
+        "options":[{
+            "key": "period", "type": "Integer",
+            "label": "Period",
+            "defaultValue": {"daily": 1, "minute": 5}, 
+            "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]
+    },
+
+    "PeriodLOW": {
+        "label": "N Period Low Price",
+        "options":[{
+            "key": "period", "type": "Integer",
+            "label": "Period",
+            "defaultValue": {"daily": 1, "minute": 5}, 
+            "values": {"daily" : [1, 2, 3, 4, 5], "minute": [1, 5, 10, 30, 60]},
+            "maxValue" : {"daily":  252, "minute": 9375}
+        }]
+    },
+    
 
     "TYPICAL": {
         "label": "Typical Price"
