@@ -45,7 +45,8 @@ class DialogComponent extends React.Component {
             maxWidth = 'md',
             cancelButtonStyle = {},
             okButtonStyle = {},
-            hideClose = false
+            hideClose = false,
+            titleStyle = {}
         } = this.props;
 
         return (
@@ -64,7 +65,7 @@ class DialogComponent extends React.Component {
                 >
                     {
                         title &&
-                        <DialogTitle>{title}</DialogTitle>
+                        <DialogTitle style={titleStyle}>{title}</DialogTitle>
                     }
                     {
                         !hideClose &&

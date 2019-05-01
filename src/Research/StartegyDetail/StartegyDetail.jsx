@@ -36,6 +36,7 @@ import {algo, defaultFirstRowEntryCondition} from '../FlowChartAlgo/constants';
 import {fetchAjaxPromise} from '../../utils/requests';
 import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
 import CardNavCustomRadio from '../../components/Selections/CardNavCustomRadio';
+import TranslucentLoader from '../../components/Loaders/TranslucentLoader';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -144,7 +145,9 @@ class StartegyDetail extends Component {
             universeSearchValue: '',// contains text field input when searching for a particular universe,
             openBacktestLimitExceededDialog: false,
             backtestProgressTimerCount: 0, // Contains the number of seconds passed while running the backtest
-            currentBacktestId: null // id of the current backtest that is running
+            currentBacktestId: null, // id of the current backtest that is running,
+            settingsPreviewDialogOpen: false,
+            preparingBacktestToRun: false // flag that indicates when backtest is being prepared to run
         };
 
         this.updateState = (data) => {
@@ -435,11 +438,11 @@ class StartegyDetail extends Component {
             this.setState({backtestProgressTimerCount: 0});
         }
 
-        this.clickedOnRunBacktest = () => {
+        this.clickedOnRunBacktest = () => new Promise((resolve, reject) => {
             if (this.state.selectedStocks.length === 0) {
                 this.toggleEditStocksDialog();
                 this.openSnackbar('Please select atleast one stock for your Universe');
-                return;
+                return reject(false);
             }
             try {
                 const logsDivRef = document.getElementById('logsDiv');
@@ -448,6 +451,7 @@ class StartegyDetail extends Component {
                     logElement.removeChild(logElement.lastChild);
                 }
             } catch (error) {
+                return reject(false);
             }
             this.saveStartegy(true)
                 .then(data => {
@@ -480,6 +484,7 @@ class StartegyDetail extends Component {
                     this.startBacktestCountdownTimer();
                     this.setupWebSocketConnections(response.data._id);
                     this.getBackTest(response.data._id);
+                    return resolve(true);
                 })
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
@@ -497,8 +502,9 @@ class StartegyDetail extends Component {
                     this.updateState({
                         'isBacktestRunning': false
                     });
-                });
-        }
+                    return reject(false);
+                })
+        })
 
         this.getCurrentBacktest = () => {
             return axios(Utils.getBaseUrl() + '/backtest/' + this.state.currentBacktestId, {
@@ -624,6 +630,10 @@ class StartegyDetail extends Component {
             }
         }
 
+    }
+
+    toggleSettingsPreviewDialog = () => {
+        this.setState({settingsPreviewDialogOpen: !this.state.settingsPreviewDialogOpen});
     }
 
     toggleBacktestLimitExceededDialog = () => {
@@ -757,6 +767,7 @@ class StartegyDetail extends Component {
             }
             const backtestData = JSON.parse(JSON.stringify(this.state.newBacktestRunData));
             backtestData['status'] = 'Complete';
+            this.clearBacktestCountdownTimer();
             this.updateState({
                 'isBackTestRunComplete': true,
                 'newBacktestRunData': backtestData
@@ -771,6 +782,7 @@ class StartegyDetail extends Component {
         }
         const backtestData = JSON.parse(JSON.stringify(this.state.newBacktestRunData));
         backtestData['status'] = 'Error';
+        this.clearBacktestCountdownTimer();
         this.updateState({
             'isBackTestRunComplete': true,
             'newBacktestRunData': backtestData
@@ -1272,6 +1284,429 @@ class StartegyDetail extends Component {
         }) 
     }
 
+    renderSettingsPreviewDialog = () => {
+        const dialogTitle = (
+            <div 
+                style={{
+                    marginTop: '10px'
+                }}
+            >
+                <h3 
+                        style={{
+                            fontWeight: '700',
+                            color: '#222',
+                            fontSize: '16px'
+                        }}
+                >
+                    Confirm Settings
+                </h3>
+            </div>
+        );
+        return (
+            <DialogComponent
+                    style={{width: '520px', paddingBottom: 0}}
+                    action
+                    open={this.state.settingsPreviewDialogOpen}
+                    onOk={() => {
+                        this.setState({preparingBacktestToRun: true});
+                        this.clickedOnRunBacktest()
+                        .then(() => {
+                            this.toggleSettingsPreviewDialog();
+                        })
+                        .finally(() => {
+                            this.setState({preparingBacktestToRun: false});
+                        })
+                    }}
+                    onCancel={this.toggleSettingsPreviewDialog}
+                    hideClose
+            >
+                {
+                    this.state.preparingBacktestToRun &&
+                    <TranslucentLoader />
+                }
+                {dialogTitle}
+                {this.getSettingsDivTabsRight({dialogMode: true})}
+            </DialogComponent>
+        );
+    }
+
+    getSettingsDivTabsRight = ({dialogMode = false}) => {
+        const tabs = [];
+        const rebalanceRadioItems = ['Daily', 'Weekly', 'Monthly'];
+        const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
+        const selectedSlipPageTypeRadioItems = ['Variable', 'Spread'];
+        const positionActionItems = ['BUY', 'SELL'];
+        const resolutionItems = ['Day', 'Minute'];
+        const inputProps = {style: {padding: '7px'}};
+        const {classes} = this.props;
+        const inputContainerStyle = dialogMode ? {padding: 0} : {};
+
+        const benchmarksOptions = [];
+        for (let i = 0; i < this.state.benchmark.length; i++) {
+            benchmarksOptions.push(<MenuItem key={i} value={this.state.benchmark[i]}>{this.state.benchmark[i]}</MenuItem>);
+        }
+
+        const universeOptions = [];
+        for (let i = 0; i < this.state.universe.length; i++) {
+            universeOptions.push(<MenuItem key={i} value={this.state.universe[i]}>{this.state.universe[i]}</MenuItem>);
+        }
+
+        tabs.push(
+            <Grid 
+                    container 
+                    style={{ 
+                        height: '100%', 
+                        overflowY: 'auto',
+                        marginTop: '10px',
+                        backgroundColor: dialogMode ? '#fff' : '#fcfcfc'
+                    }}
+            >
+                <Grid item xs={12}>
+                    <InputContainer
+                        style={inputContainerStyle}
+                        label='Initial Capital'
+                        input={
+                            <div 
+                                    style={{
+                                        ...horizontalBox,
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}
+                            >
+                                <CustomOutlinedInput
+                                    value={this.state.initialCapital}
+                                    onChange={e => { 
+                                        const numValue = Number(e.target.value);
+                                        if (numValue < 0) {
+                                            return;
+                                        }
+                                        this.updateState({ 'initialCapital': e.target.value }) 
+                                    }}
+                                    type="number"
+                                    style={{width: '100%'}}
+                                    disabled={this.state.isBacktestRunning} 
+                                />
+                                <h3 
+                                        style={{
+                                            fontSize: '14px',
+                                            fontWeight: 700,
+                                            color: '#575757',
+                                            fontFamily: 'Lato, sans-serif',
+                                            marginLeft: '10px'
+                                        }}
+                                >
+                                    {Utils.formatInvestmentValueNormal(Number(this.state.initialCapital))}
+                                </h3>
+                            </div>
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        label='Resolution'
+                        style={inputContainerStyle}
+                        input={
+                            <RadioGroup 
+                                items={resolutionItems}
+                                onChange={this.onResolutionChanged}
+                                defaultSelected={resolutionItems.indexOf(this.state.selectedResolution)}
+                                disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
+                                CustomRadio={CardRadio}
+                                small
+                            />
+                        }
+                    />
+                </Grid>
+                {
+                    this.state.codeEditorReadOnly &&
+                    <Grid item xs={12}>
+                        <InputContainer 
+                            style={inputContainerStyle}
+                            label='Trade Direction'
+                            input={
+                                <RadioGroup 
+                                    items={positionActionItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue === 0 ? 'BUY' : 'SELL';
+                                        const modifiedAlgo = {
+                                            ...this.state.algo,
+                                            position: {
+                                                ...this.state.algo.position,
+                                                type: value
+                                            }
+                                        };
+                                        this.updateAlgo(modifiedAlgo);
+                                    }}
+                                    defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
+                                    disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
+                                    CustomRadio={CardRadio}
+                                    small
+                                />
+                            }
+                        />
+                    </Grid>
+                }
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Universe'
+                        input={
+                            <div
+                                    style={{
+                                        ...horizontalBox,
+                                        justifyContent: 'space-between'
+                                    }}
+                            >
+                                {/* <Select 
+                                        style={{width: '100%'}}
+                                        input={
+                                            <CustomOutlinedInput
+                                                name="universe"
+                                                id="universe"
+                                                margin="dense"
+                                                labelWidth={60}
+                                            />
+                                        }
+                                        value={this.state.selectedUniverse}
+                                        onChange={this.onUniverseChange}
+                                        disabled={this.state.isBacktestRunning}
+                                        placeholder="Universe"
+                                >
+                                    {universeOptions}
+                                </Select> */}
+                                <CustomOutlinedInput
+                                    name="universe"
+                                    id="universe"
+                                    margin="dense"
+                                    labelWidth={60}
+                                    onClick={this.toggleEditStocksDialog}
+                                    style={{width: '190px', display: 'block'}}
+                                    value={
+                                        _.get(this.state, 'selectedStocks', [])
+                                        .join(', ')
+                                    }
+                                />
+                                <ActionIcon 
+                                    size={16}
+                                    onClick={this.toggleEditStocksDialog}
+                                    type='edit'
+                                    style={{marginLeft: '10px'}}
+                                />
+                            </div>
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Date Range'
+                        input={
+                            <div 
+                                    style={{
+                                        ...horizontalBox, 
+                                        justifyContent: 'space-between'
+                                    }}
+                            >
+                                <DateComponent
+                                    value={this.state.startDate}
+                                    onChange={this.onStartDateChange}
+                                    format="DD-MM-YYYY"
+                                    disabledDate={this.getDisabledStartDate}
+                                    disabled={this.state.isBacktestRunning} 
+                                    color='#222'
+                                    compact
+                                    hideNavButtons={true}
+                                />
+                                <h3 
+                                        style={{
+                                            fontSize: '13px',
+                                            fontFamily: 'Lato, sans-serif',
+                                            fontWeight: 700,
+                                            color: '#747474'
+                                        }}
+                                >
+                                    to
+                                </h3>
+                                <DateComponent
+                                    value={this.state.endDate}
+                                    onChange={this.onEndDateChange}
+                                    format="DD-MM-YYYY"
+                                    disabledDate={this.getDisabledEndDate}
+                                    disabled={this.state.isBacktestRunning} 
+                                    color='#222'
+                                    compact
+                                    hideNavButtons={true}
+                                />
+                            </div>
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Target (%)'
+                        input={
+                            <CustomOutlinedInput
+                                value={this.state.algo.target}
+                                onChange={e => {
+                                    const numValue = Number(e.target.value);
+                                    if (numValue < 0) {
+                                        return;
+                                    }
+                                    const modifiedAlgo = {
+                                        ...this.state.algo,
+                                        target: e.target.value
+                                    };
+                                    this.updateAlgo(modifiedAlgo);
+                                }}
+                                type="number"
+                                style={{width: '100%'}}
+                                disabled={this.state.isBacktestRunning} 
+                            />
+                        }
+                        disabled={this.state.isBacktestRunning} 
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Stop/Loss (%)'
+                        input={
+                            <CustomOutlinedInput
+                                value={this.state.algo.stopLoss}
+                                onChange={e => {
+                                    const numValue = Number(e.target.value);
+                                    if (numValue < 0 || numValue > 100) {
+                                        return;
+                                    }
+                                    const modifiedAlgo = {
+                                        ...this.state.algo,
+                                        stopLoss: e.target.value
+                                    };
+                                    this.updateAlgo(modifiedAlgo);
+                                }}
+                                type="number"
+                                style={{width: '100%'}}
+                                disabled={this.state.isBacktestRunning} 
+                            />
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Benchmark'
+                        input={
+                            <Select 
+                                classes={{select: classes.selectInput}}
+                                style={{width: '100%', boxSizing: 'border-box'}}
+                                input={
+                                    <CustomOutlinedInput
+                                        name="benchmark"
+                                        id="benchmark"
+                                        margin="dense"
+                                        inputProps={inputProps}
+                                    />
+                                }
+                                value={this.state.selectedBenchmark}
+                                onChange={this.onBenchmarkChange}
+                                disabled={this.state.isBacktestRunning}
+                        >
+                            {benchmarksOptions}
+                        </Select>
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Rebalance'
+                        input={
+                            <RadioGroup 
+                                items={rebalanceRadioItems}
+                                onChange={this.onRebalanceChange} 
+                                defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
+                                disabled={
+                                    this.state.isBacktestRunning || 
+                                    this.state.selectedResolution === 'Minute' 
+                                }
+                                CustomRadio={CardRadio}
+                                style={{marginTop: '10px'}}
+                                small
+                            />
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Commission'
+                        input={
+                            <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
+                                <CustomOutlinedInput
+                                    style={{ 
+                                        width: '80px', 
+                                        margin: 0,
+                                        marginRight: '6px' 
+                                    }} 
+                                    value={this.state.selectedCommission}
+                                    onChange={(e) => { this.updateState({ 'selectedCommission': e.target.value }) }}
+                                    type="number"
+                                    disabled={this.state.isBacktestRunning} 
+                                />
+                                <RadioGroup 
+                                    items={selectedCommissionTypeRadioItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue >= selectedCommissionTypeRadioItems.length 
+                                            ? selectedCommissionTypeRadioItems[0]
+                                            : selectedCommissionTypeRadioItems[selectedValue]; 
+                                        this.updateState({ 'selectedCommissionType': value }) 
+                                    }}
+                                    defaultSelected={selectedCommissionTypeRadioItems.indexOf(this.state.selectedCommissionType)}
+                                    disabled={this.state.isBacktestRunning}
+                                    CustomRadio={CardRadio}
+                                    small
+                                />
+                            </div>
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <InputContainer 
+                        style={inputContainerStyle}
+                        label='Slippage'
+                        input={
+                            <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
+                                <CustomOutlinedInput
+                                    style={{width: '80px', margin: 0, marginRight: '6px'}}
+                                    value={this.state.selectedSlipPage}
+                                    onChange={(e) => { this.updateState({ 'selectedSlipPage': e.target.value }) }}
+                                    type="number"
+                                    disabled={this.state.isBacktestRunning} 
+                                />
+                                <RadioGroup 
+                                    items={selectedSlipPageTypeRadioItems}
+                                    onChange={(selectedValue) => { 
+                                        const value = selectedValue >= selectedSlipPageTypeRadioItems.length 
+                                            ? selectedSlipPageTypeRadioItems[0]
+                                            : selectedSlipPageTypeRadioItems[selectedValue]; 
+                                        this.updateState({ 'selectedSlipPageType': value }) 
+                                    }}
+                                    defaultSelected={selectedSlipPageTypeRadioItems.indexOf(this.state.selectedSlipPageType)}
+                                    disabled={this.state.isBacktestRunning}
+                                    CustomRadio={CardRadio}
+                                    small
+                                />
+                            </div>
+                        }
+                    />
+                </Grid>
+            </Grid>
+        );
+        
+        return tabs;
+    }
+
     render() {
         const getNewStartegyModal = () => {
             return (
@@ -1310,371 +1745,6 @@ class StartegyDetail extends Component {
             );
         }
 
-        const getSettingsDivTabsRight = () => {
-            const tabs = [];
-            const rebalanceRadioItems = ['Daily', 'Weekly', 'Monthly'];
-            const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
-            const selectedSlipPageTypeRadioItems = ['Variable', 'Spread'];
-            const positionActionItems = ['BUY', 'SELL'];
-            const resolutionItems = ['Day', 'Minute'];
-            const inputProps = {style: {padding: '7px'}};
-            const {classes} = this.props;
-
-            const benchmarksOptions = [];
-            for (let i = 0; i < this.state.benchmark.length; i++) {
-                benchmarksOptions.push(<MenuItem key={i} value={this.state.benchmark[i]}>{this.state.benchmark[i]}</MenuItem>);
-            }
-
-            const universeOptions = [];
-            for (let i = 0; i < this.state.universe.length; i++) {
-                universeOptions.push(<MenuItem key={i} value={this.state.universe[i]}>{this.state.universe[i]}</MenuItem>);
-            }
-
-            tabs.push(
-                <Grid 
-                        container 
-                        style={{ 
-                            height: '100%', 
-                            overflowY: 'auto',
-                            marginTop: '10px',
-                            backgroundColor: '#fcfcfc'
-                        }}
-                >
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Initial Capital'
-                            input={
-                                <div 
-                                        style={{
-                                            ...horizontalBox,
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center'
-                                        }}
-                                >
-                                    <CustomOutlinedInput
-                                        value={this.state.initialCapital}
-                                        onChange={e => { 
-                                            const numValue = Number(e.target.value);
-                                            if (numValue < 0) {
-                                                return;
-                                            }
-                                            this.updateState({ 'initialCapital': e.target.value }) 
-                                        }}
-                                        type="number"
-                                        style={{width: '100%'}}
-                                        disabled={this.state.isBacktestRunning} 
-                                    />
-                                    <h3 
-                                            style={{
-                                                fontSize: '14px',
-                                                fontWeight: 700,
-                                                color: '#575757',
-                                                fontFamily: 'Lato, sans-serif',
-                                                marginLeft: '10px'
-                                            }}
-                                    >
-                                        {Utils.formatInvestmentValueNormal(Number(this.state.initialCapital))}
-                                    </h3>
-                                </div>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Resolution'
-                            input={
-                                <RadioGroup 
-                                    items={resolutionItems}
-                                    onChange={this.onResolutionChanged}
-                                    defaultSelected={resolutionItems.indexOf(this.state.selectedResolution)}
-                                    disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
-                                    CustomRadio={CardRadio}
-                                    small
-                                />
-                            }
-                        />
-                    </Grid>
-                    {
-                        this.state.codeEditorReadOnly &&
-                        <Grid item xs={12}>
-                            <InputContainer 
-                                label='Trade Direction'
-                                input={
-                                    <RadioGroup 
-                                        items={positionActionItems}
-                                        onChange={(selectedValue) => { 
-                                            const value = selectedValue === 0 ? 'BUY' : 'SELL';
-                                            const modifiedAlgo = {
-                                                ...this.state.algo,
-                                                position: {
-                                                    ...this.state.algo.position,
-                                                    type: value
-                                                }
-                                            };
-                                            this.updateAlgo(modifiedAlgo);
-                                        }}
-                                        defaultSelected={this.state.algo.position.type === 'BUY' ? 0 : 1}
-                                        disabled={this.state.isBacktestRunning || !this.state.codeEditorReadOnly}
-                                        CustomRadio={CardRadio}
-                                        small
-                                    />
-                                }
-                            />
-                        </Grid>
-                    }
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Universe'
-                            input={
-                                <div
-                                        style={{
-                                            ...horizontalBox,
-                                            justifyContent: 'space-between'
-                                        }}
-                                >
-                                    {/* <Select 
-                                            style={{width: '100%'}}
-                                            input={
-                                                <CustomOutlinedInput
-                                                    name="universe"
-                                                    id="universe"
-                                                    margin="dense"
-                                                    labelWidth={60}
-                                                />
-                                            }
-                                            value={this.state.selectedUniverse}
-                                            onChange={this.onUniverseChange}
-                                            disabled={this.state.isBacktestRunning}
-                                            placeholder="Universe"
-                                    >
-                                        {universeOptions}
-                                    </Select> */}
-                                    <CustomOutlinedInput
-                                        name="universe"
-                                        id="universe"
-                                        margin="dense"
-                                        labelWidth={60}
-                                        onClick={this.toggleEditStocksDialog}
-                                        style={{width: '190px', display: 'block'}}
-                                        value={
-                                            _.get(this.state, 'selectedStocks', [])
-                                            .join(', ')
-                                        }
-                                    />
-                                    <ActionIcon 
-                                        size={16}
-                                        onClick={this.toggleEditStocksDialog}
-                                        type='edit'
-                                        style={{marginLeft: '10px'}}
-                                    />
-                                </div>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Date Range'
-                            input={
-                                <div 
-                                        style={{
-                                            ...horizontalBox, 
-                                            justifyContent: 'space-between'
-                                        }}
-                                >
-                                    <DateComponent
-                                        value={this.state.startDate}
-                                        onChange={this.onStartDateChange}
-                                        format="DD-MM-YYYY"
-                                        disabledDate={this.getDisabledStartDate}
-                                        disabled={this.state.isBacktestRunning} 
-                                        color='#222'
-                                        compact
-                                        hideNavButtons={true}
-                                    />
-                                    <h3 
-                                            style={{
-                                                fontSize: '13px',
-                                                fontFamily: 'Lato, sans-serif',
-                                                fontWeight: 700,
-                                                color: '#747474'
-                                            }}
-                                    >
-                                        to
-                                    </h3>
-                                    <DateComponent
-                                        value={this.state.endDate}
-                                        onChange={this.onEndDateChange}
-                                        format="DD-MM-YYYY"
-                                        disabledDate={this.getDisabledEndDate}
-                                        disabled={this.state.isBacktestRunning} 
-                                        color='#222'
-                                        compact
-                                        hideNavButtons={true}
-                                    />
-                                </div>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Target (%)'
-                            input={
-                                <CustomOutlinedInput
-                                    value={this.state.algo.target}
-                                    onChange={e => {
-                                        const numValue = Number(e.target.value);
-                                        if (numValue < 0) {
-                                            return;
-                                        }
-                                        const modifiedAlgo = {
-                                            ...this.state.algo,
-                                            target: e.target.value
-                                        };
-                                        this.updateAlgo(modifiedAlgo);
-                                    }}
-                                    type="number"
-                                    style={{width: '100%'}}
-                                    disabled={this.state.isBacktestRunning} 
-                                />
-                            }
-                            disabled={this.state.isBacktestRunning} 
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Stop/Loss (%)'
-                            input={
-                                <CustomOutlinedInput
-                                    value={this.state.algo.stopLoss}
-                                    onChange={e => {
-                                        const numValue = Number(e.target.value);
-                                        if (numValue < 0 || numValue > 100) {
-                                            return;
-                                        }
-                                        const modifiedAlgo = {
-                                            ...this.state.algo,
-                                            stopLoss: e.target.value
-                                        };
-                                        this.updateAlgo(modifiedAlgo);
-                                    }}
-                                    type="number"
-                                    style={{width: '100%'}}
-                                    disabled={this.state.isBacktestRunning} 
-                                />
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Benchmark'
-                            input={
-                                <Select 
-                                    classes={{select: classes.selectInput}}
-                                    style={{width: '100%', boxSizing: 'border-box'}}
-                                    input={
-                                        <CustomOutlinedInput
-                                            name="benchmark"
-                                            id="benchmark"
-                                            margin="dense"
-                                            inputProps={inputProps}
-                                        />
-                                    }
-                                    value={this.state.selectedBenchmark}
-                                    onChange={this.onBenchmarkChange}
-                                    disabled={this.state.isBacktestRunning}
-                            >
-                                {benchmarksOptions}
-                            </Select>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Rebalance'
-                            input={
-                                <RadioGroup 
-                                    items={rebalanceRadioItems}
-                                    onChange={this.onRebalanceChange} 
-                                    defaultSelected={rebalanceRadioItems.indexOf(this.state.selectedRebalance)}
-                                    disabled={
-                                        this.state.isBacktestRunning || 
-                                        this.state.selectedResolution === 'Minute' 
-                                    }
-                                    CustomRadio={CardRadio}
-                                    style={{marginTop: '10px'}}
-                                    small
-                                />
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Commission'
-                            input={
-                                <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
-                                    <CustomOutlinedInput
-                                        style={{ 
-                                            width: '80px', 
-                                            margin: 0,
-                                            marginRight: '6px' 
-                                        }} 
-                                        value={this.state.selectedCommission}
-                                        onChange={(e) => { this.updateState({ 'selectedCommission': e.target.value }) }}
-                                        type="number"
-                                        disabled={this.state.isBacktestRunning} 
-                                    />
-                                    <RadioGroup 
-                                        items={selectedCommissionTypeRadioItems}
-                                        onChange={(selectedValue) => { 
-                                            const value = selectedValue >= selectedCommissionTypeRadioItems.length 
-                                                ? selectedCommissionTypeRadioItems[0]
-                                                : selectedCommissionTypeRadioItems[selectedValue]; 
-                                            this.updateState({ 'selectedCommissionType': value }) 
-                                        }}
-                                        defaultSelected={selectedCommissionTypeRadioItems.indexOf(this.state.selectedCommissionType)}
-                                        disabled={this.state.isBacktestRunning}
-                                        CustomRadio={CardRadio}
-                                        small
-                                    />
-                                </div>
-                            }
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputContainer 
-                            label='Slippage'
-                            input={
-                                <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
-                                    <CustomOutlinedInput
-                                        style={{width: '80px', margin: 0, marginRight: '6px'}}
-                                        value={this.state.selectedSlipPage}
-                                        onChange={(e) => { this.updateState({ 'selectedSlipPage': e.target.value }) }}
-                                        type="number"
-                                        disabled={this.state.isBacktestRunning} 
-                                    />
-                                    <RadioGroup 
-                                        items={selectedSlipPageTypeRadioItems}
-                                        onChange={(selectedValue) => { 
-                                            const value = selectedValue >= selectedSlipPageTypeRadioItems.length 
-                                                ? selectedSlipPageTypeRadioItems[0]
-                                                : selectedSlipPageTypeRadioItems[selectedValue]; 
-                                            this.updateState({ 'selectedSlipPageType': value }) 
-                                        }}
-                                        defaultSelected={selectedSlipPageTypeRadioItems.indexOf(this.state.selectedSlipPageType)}
-                                        disabled={this.state.isBacktestRunning}
-                                        CustomRadio={CardRadio}
-                                        small
-                                    />
-                                </div>
-                            }
-                        />
-                    </Grid>
-                </Grid>
-            );
-            
-            return tabs;
-        }
-
         const getExtraSettingTabDiv = () => {
             const {extraTabsContent = 'settings'} = this.state;
 
@@ -1685,7 +1755,7 @@ class StartegyDetail extends Component {
                                 display: extraTabsContent === 'settings' ? 'block' : 'none',
                             }} 
                     >
-                        {getSettingsDivTabsRight()[this.state.settingsTab]}
+                        {this.getSettingsDivTabsRight({dialogMode: false})[this.state.settingsTab]}
                     </div>
                     <div 
                             id="logsDiv" 
@@ -1816,7 +1886,7 @@ class StartegyDetail extends Component {
                         />
                         <ActionIcon 
                             type='play_arrow' 
-                            onClick={this.clickedOnRunBacktest}
+                            onClick={this.toggleSettingsPreviewDialog}
                             color={secondaryColor}
                             toolTipTitle='Run Backtest'
                         />
@@ -2075,6 +2145,7 @@ class StartegyDetail extends Component {
         return (
             <AqLayoutDesktop loading={this.state.loading} hideFooter>
                 <StrategyDetailMeta />
+                {this.renderSettingsPreviewDialog()}
                 <DialogComponent 
                         title="Edit Code"
                         open={this.state.editCodeDialogOpen}
