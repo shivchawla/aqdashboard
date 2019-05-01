@@ -68,6 +68,7 @@ class StartegyDetail extends Component {
     backtestId = '';
     autoSaveTimer = undefined;
     autoSaveTime = 5 * 60 * 1000;
+    backtestProgressTimer = undefined; // Timer which calculates amount of time spent on running the backtest
 
     gotLabelDataFromSocket = false;
     socketOpenConnectionTimeout = 1000;
@@ -141,7 +142,9 @@ class StartegyDetail extends Component {
             selectedStocks: savedSelectedStocks, // contains the list of the stocks that are selected
             searchStocksList: [], // contains the list of the stocks that are obtained from the search response
             universeSearchValue: '',// contains text field input when searching for a particular universe,
-            openBacktestLimitExceededDialog: false
+            openBacktestLimitExceededDialog: false,
+            backtestProgressTimerCount: 0, // Contains the number of seconds passed while running the backtest
+            currentBacktestId: null // id of the current backtest that is running
         };
 
         this.updateState = (data) => {
@@ -408,6 +411,30 @@ class StartegyDetail extends Component {
             })
         }
 
+        this.startBacktestCountdownTimer = () => {
+            this.backtestProgressTimer = setInterval(() => {
+                this.setState({backtestProgressTimerCount: this.state.backtestProgressTimerCount + 1}, async () => {
+                    // If backtest has been running for more than 10s, N/W call should be done every 10s
+                    const shouldDoNWCall = this.state.backtestProgressTimerCount > 10 
+                        && this.state.backtestProgressTimerCount % 10 === 0;
+                    if (shouldDoNWCall) {
+                        const currentBacktest = await this.getCurrentBacktest();
+                        const status = _.get(currentBacktest, 'status', null);
+                        if (status === 'complete' || status === 'exception') {
+                            const backtestRedirectUrl = `/research/backtests/${this.state.strategyId}/${this.state.currentBacktestId}?type=backtest&strategyName=${this.state.strategy.name}&backtestName=New Backtest`;
+                            this.clearBacktestCountdownTimer();
+                            this.props.history.push(backtestRedirectUrl)
+                        }
+                    }
+                });
+            }, 1000);
+        }
+
+        this.clearBacktestCountdownTimer = () => {
+            clearInterval(this.backtestProgressTimer);
+            this.setState({backtestProgressTimerCount: 0});
+        }
+
         this.clickedOnRunBacktest = () => {
             if (this.state.selectedStocks.length === 0) {
                 this.toggleEditStocksDialog();
@@ -450,6 +477,7 @@ class StartegyDetail extends Component {
                         this.recursiveUpdateGraphData();
                         this.recursiveUpdateLogData();
                     }, 100);
+                    this.startBacktestCountdownTimer();
                     this.setupWebSocketConnections(response.data._id);
                     this.getBackTest(response.data._id);
                 })
@@ -472,12 +500,24 @@ class StartegyDetail extends Component {
                 });
         }
 
+        this.getCurrentBacktest = () => {
+            return axios(Utils.getBaseUrl() + '/backtest/' + this.state.currentBacktestId, {
+                'headers': Utils.getAuthTokenHeader()
+            })
+            .then(response => {
+                return response.data;
+            });
+        }
+
         this.getBackTest = (backtestId) => {
             axios(Utils.getBaseUrl() + '/backtest/' + backtestId, {
                 'headers': Utils.getAuthTokenHeader()
             })
                 .then((response) => {
-                    this.updateState({ 'newBacktestRunData': response.data });
+                    this.updateState({
+                        'newBacktestRunData': response.data,
+                        currentBacktestId: response.data._id
+                    });
                     this.getLogs(response.data._id);
                     this.getTransactionHistory(response.data._id);
                     this.getPortfolioHistory(response.data._id);
