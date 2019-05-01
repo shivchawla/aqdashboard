@@ -37,6 +37,7 @@ import {fetchAjaxPromise} from '../../utils/requests';
 import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
 import CardNavCustomRadio from '../../components/Selections/CardNavCustomRadio';
 import TranslucentLoader from '../../components/Loaders/TranslucentLoader';
+import { Checkbox } from '@material-ui/core';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -147,7 +148,10 @@ class StartegyDetail extends Component {
             backtestProgressTimerCount: 0, // Contains the number of seconds passed while running the backtest
             currentBacktestId: null, // id of the current backtest that is running,
             settingsPreviewDialogOpen: false,
-            preparingBacktestToRun: false // flag that indicates when backtest is being prepared to run
+            preparingBacktestToRun: false, // flag that indicates when backtest is being prepared to run
+            showPreviewSettingsDialog: _.get(savedSettings, 'showPreviewSettingsDialog', true), // flag to show if the preview settings dialog should be shown when run backtest pressed
+            errorDialogOpen: false,
+            errorDialogMessage: ''
         };
 
         this.updateState = (data) => {
@@ -355,7 +359,8 @@ class StartegyDetail extends Component {
                 tradeDirection: _.get(this.state, 'algo.position.type', 'BUY'),
                 selectedResolution: this.state.selectedResolution,
                 algo: this.state.algo,
-                selectedStocks: this.state.selectedStocks
+                selectedStocks: this.state.selectedStocks,
+                showPreviewSettingsDialog: this.state.showPreviewSettingsDialog
             }
             const {algo = {}} = this.state;
             const data = {
@@ -492,7 +497,11 @@ class StartegyDetail extends Component {
                         const status = _.get(error, 'response.status', null);
                         if (status === 400) {
                             const errorMessage = _.get(error, 'response.data', {});
-                            this.openErrorSnackbar(JSON.stringify(`Error Occured - ${errorMessage}`));
+                            if (errorMessage.toLowerCase() === 'limit exceeded') {
+                                this.openErrorDialog(errorMessage);
+                            } else {
+                                this.openErrorSnackbar(JSON.stringify(`Error Occured - ${errorMessage}`));
+                            }
                             this.setState({isBacktestRunning: false});
                             return;
                         }
@@ -1288,7 +1297,9 @@ class StartegyDetail extends Component {
         const dialogTitle = (
             <div 
                 style={{
-                    marginTop: '10px'
+                    ...horizontalBox,
+                    marginTop: '10px',
+                    justifyContent: 'space-between'
                 }}
             >
                 <h3 
@@ -1300,6 +1311,32 @@ class StartegyDetail extends Component {
                 >
                     Confirm Settings
                 </h3>
+                {/* <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
+                    <Checkbox 
+                        color="primary"
+                        style={{fontSize: '16px'}}
+                        onChange={e => {
+                            let savedSettings = Utils.getFromLocalStorage('StrategyDetailSettings');
+                            this.setState({showPreviewSettingsDialog: e.target.checked}, () => {
+                                savedSettings = {
+                                    ...savedSettings, 
+                                    showPreviewSettingsDialog: this.state.showPreviewSettingsDialog
+                                };
+                                Utils.localStorageSaveObject('StrategyDetailSettings', savedSettings);
+                            })
+                        }}
+                        checked={this.state.showPreviewSettingsDialog}
+                    />
+                    <h3
+                            style={{
+                                fontSize: '14px',
+                                color: '#444',
+                                fontWeight: 400                            
+                            }}
+                    >
+                        Always Show
+                    </h3>
+                </div> */}
             </div>
         );
         return (
@@ -1307,6 +1344,7 @@ class StartegyDetail extends Component {
                     style={{width: '520px', paddingBottom: 0}}
                     action
                     open={this.state.settingsPreviewDialogOpen}
+                    okText='Run Backtest'
                     onOk={() => {
                         this.setState({preparingBacktestToRun: true});
                         this.clickedOnRunBacktest()
@@ -1326,6 +1364,27 @@ class StartegyDetail extends Component {
                 }
                 {dialogTitle}
                 {this.getSettingsDivTabsRight({dialogMode: true})}
+            </DialogComponent>
+        );
+    }
+
+    openErrorDialog = (message) => {
+        this.setState({errorDialogOpen: true, errorDialogMessage: message});
+    }
+
+    closeErrorDialog = () => {
+        this.setState({errorDialogOpen: false});
+    }
+
+    renderErrorDialog = () => {
+        return (
+            <DialogComponent
+                    style={{width: '420px'}}
+                    open={this.state.errorDialogOpen}
+                    onClose={this.closeErrorDialog}
+                    title='Error'
+            >
+                <ErrorText>{this.state.errorDialogMessage}</ErrorText>
             </DialogComponent>
         );
     }
@@ -2145,6 +2204,7 @@ class StartegyDetail extends Component {
         return (
             <AqLayoutDesktop loading={this.state.loading} hideFooter>
                 <StrategyDetailMeta />
+                {this.renderErrorDialog()}
                 {this.renderSettingsPreviewDialog()}
                 <DialogComponent 
                         title="Edit Code"
@@ -2231,4 +2291,11 @@ const SearchHeader = styled.h3`
     color: #444;
     font-family: 'Lato', sans-serif;
     margin: 10px 0;
+`;
+
+const ErrorText = styled.h3`
+    font-size: 16px;
+    color: red;
+    font-weight: 500;
+    font-family: 'Lato', sans-serif;
 `;

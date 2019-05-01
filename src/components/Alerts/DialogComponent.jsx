@@ -46,7 +46,8 @@ class DialogComponent extends React.Component {
             cancelButtonStyle = {},
             okButtonStyle = {},
             hideClose = false,
-            titleStyle = {}
+            titleStyle = {},
+            okText = null
         } = this.props;
 
         return (
@@ -90,7 +91,9 @@ class DialogComponent extends React.Component {
                                 color="primary"
                                 style={okButtonStyle}
                         >
-                            OK
+                            {
+                                okText ? okText : 'OK'
+                            }
                         </Button>
                     </DialogActions>
                 }
