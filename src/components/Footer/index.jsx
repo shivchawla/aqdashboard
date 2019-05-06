@@ -69,7 +69,7 @@ class NewFooter extends React.Component {
                         </ColGrid>
                         <ColGrid item sm={3} xs={12}>
                             <LinkHeader>Contact Info</LinkHeader>
-                            <ListItemText>connect@aimsquant.com</ListItemText>
+                            <ListItemText>connect@adviceqube.com</ListItemText>
                         </ColGrid>
                     </Grid>
                 </OuterContainer>

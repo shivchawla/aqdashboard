@@ -498,7 +498,7 @@ class StartegyDetail extends Component {
                         if (status === 400) {
                             const errorMessage = _.get(error, 'response.data', {});
                             if (errorMessage.toLowerCase() === 'limit exceeded') {
-                                this.openErrorDialog(errorMessage);
+                                this.openErrorDialog("Daily limit of 20 backtests exceeded!! Write us at connect@adviceqube.com to request more!");
                             } else {
                                 this.openErrorSnackbar(JSON.stringify(`Error Occured - ${errorMessage}`));
                             }
@@ -1311,7 +1311,7 @@ class StartegyDetail extends Component {
                 >
                     Confirm Settings
                 </h3>
-                {/* <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
+                <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
                     <Checkbox 
                         color="primary"
                         style={{fontSize: '16px'}}
@@ -1336,7 +1336,7 @@ class StartegyDetail extends Component {
                     >
                         Always Show
                     </h3>
-                </div> */}
+                </div> 
             </div>
         );
         return (
@@ -1374,6 +1374,7 @@ class StartegyDetail extends Component {
 
     closeErrorDialog = () => {
         this.setState({errorDialogOpen: false});
+        this.setState({settingsPreviewDialogOpen: false});
     }
 
     renderErrorDialog = () => {
@@ -1945,7 +1946,7 @@ class StartegyDetail extends Component {
                         />
                         <ActionIcon 
                             type='play_arrow' 
-                            onClick={this.toggleSettingsPreviewDialog}
+                            onClick={this.state.showPreviewSettingsDialog ? this.toggleSettingsPreviewDialog : this.clickedOnRunBacktest}
                             color={secondaryColor}
                             toolTipTitle='Run Backtest'
                         />
@@ -2295,7 +2296,6 @@ const SearchHeader = styled.h3`
 
 const ErrorText = styled.h3`
     font-size: 16px;
-    color: red;
     font-weight: 500;
     font-family: 'Lato', sans-serif;
 `;
