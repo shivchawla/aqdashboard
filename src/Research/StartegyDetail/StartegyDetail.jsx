@@ -1297,25 +1297,13 @@ class StartegyDetail extends Component {
 
     renderAlwaysShowCheckbox = () => {
         return (
-            <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
-                <Checkbox 
-                    color="primary"
-                    style={{fontSize: '16px'}}
-                    onChange={e => {
-                        this.setState({showPreviewSettingsDialog: e.target.checked})
-                    }}
-                    checked={this.state.showPreviewSettingsDialog}
-                />
-                <h3
-                        style={{
-                            fontSize: '14px',
-                            color: '#444',
-                            fontWeight: 400                            
-                        }}
-                >
-                    Always Show
-                </h3>
-            </div> 
+            <CustomCheckbox 
+                onChange={e => {
+                    this.setState({showPreviewSettingsDialog: e.target.checked})
+                }}
+                checked={this.state.showPreviewSettingsDialog}
+                label='Always Show'
+            />
         );
     }
 
@@ -2302,6 +2290,34 @@ const InputContainer = props => {
                 {input}
             </Grid>
         </Grid>
+    );
+}
+
+const CustomCheckbox = ({onChange, checked, label = 'Label', style = {}}) => {
+    return (
+        <div 
+                style={{
+                    ...horizontalBox, 
+                    justifyContent: 'flex-end',
+                    ...style
+                }}
+        >
+            <Checkbox 
+                color="primary"
+                style={{fontSize: '16px'}}
+                onChange={onChange}
+                checked={checked}
+            />
+            <h3
+                    style={{
+                        fontSize: '14px',
+                        color: '#444',
+                        fontWeight: 400                            
+                    }}
+            >
+                {label}
+            </h3>
+        </div> 
     );
 }
 
