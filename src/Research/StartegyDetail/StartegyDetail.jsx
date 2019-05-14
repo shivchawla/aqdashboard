@@ -66,6 +66,7 @@ class StartegyDetail extends Component {
     totalDataLength = 1;
     highStockSeriesPosition = {};
     timeOutcheck = undefined;
+    recursiveUpdateTimeout = null;
     errorOccured = false;
     backtestId = '';
     autoSaveTimer = undefined;
@@ -931,7 +932,7 @@ class StartegyDetail extends Component {
             logsDivRef.scrollTop = logsDivRef.scrollHeight;
         }
         if (!this.gotBacktestCompleteLog || this.logsData.length > 0) {
-            setTimeout(() => {
+            this.recursiveUpdateTimeout = setTimeout(() => {
                 this.recursiveUpdateLogData();
             }, 1000);
         } else {
@@ -1054,6 +1055,7 @@ class StartegyDetail extends Component {
         window.removeEventListener("resize", this.updateDimensions);
         this.runningBackTestDivUnmount();
         clearInterval(this.stratergySaveInterval);
+        clearTimeout(this.recursiveUpdateTimeout);
         if (this.cancelGetStrategy) {
             this.cancelGetStrategy();
         }
