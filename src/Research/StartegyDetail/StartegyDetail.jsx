@@ -448,7 +448,7 @@ class StartegyDetail extends Component {
             if (this.state.selectedStocks.length === 0) {
                 this.toggleEditStocksDialog();
                 this.openSnackbar('Please select atleast one stock for your Universe');
-                return reject(false);
+                reject(false);
             }
             try {
                 const logsDivRef = document.getElementById('logsDiv');
@@ -457,7 +457,7 @@ class StartegyDetail extends Component {
                     logElement.removeChild(logElement.lastChild);
                 }
             } catch (error) {
-                return reject(false);
+                reject(false);
             }
             this.saveStartegy(true)
                 .then(data => {
@@ -490,7 +490,7 @@ class StartegyDetail extends Component {
                     this.startBacktestCountdownTimer();
                     this.setupWebSocketConnections(response.data._id);
                     this.getBackTest(response.data._id);
-                    return resolve(true);
+                    resolve(true);
                 })
                 .catch((error) => {
                     Utils.checkForInternet(error, this.props.history);
@@ -499,20 +499,24 @@ class StartegyDetail extends Component {
                         if (status === 400) {
                             const errorMessage = _.get(error, 'response.data', {});
                             if (errorMessage.toLowerCase() === 'limit exceeded') {
-                                this.openErrorDialog("Daily limit of 20 backtests exceeded!! Write us at connect@adviceqube.com to request more!");
+                                this.openErrorDialog("Daily limit of 20 backtests exceeded!\nWrite us at connect@adviceqube.com to request more!");
                             } else {
                                 this.openErrorSnackbar(JSON.stringify(`Error Occured - ${errorMessage}`));
                             }
-                            this.setState({isBacktestRunning: false});
+                            this.setState({
+                                isBacktestRunning: false,
+                                settingsPreviewDialogOpen: false
+                            });
+                            reject(false);
                             return;
                         }
                         Utils.goToErrorPage(error, this.props.history);
                         Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
                     }
                     this.updateState({
-                        'isBacktestRunning': false
+                        'isBacktestRunning': false,
                     });
-                    return reject(false);
+                    reject(false);
                 })
         })
 
@@ -1297,7 +1301,11 @@ class StartegyDetail extends Component {
 
     renderAlwaysShowCheckbox = () => {
         return (
-            <CustomCheckbox 
+            <CustomCheckbox
+                style={{
+                    position: 'absolute',
+                    left: 0
+                }}
                 onChange={e => {
                     this.setState({showPreviewSettingsDialog: e.target.checked})
                 }}
@@ -1325,12 +1333,15 @@ class StartegyDetail extends Component {
                 >
                     Confirm Settings
                 </h3>
-                {this.renderAlwaysShowCheckbox()}
             </div>
         );
         return (
             <DialogComponent
-                    style={{width: '520px', paddingBottom: 0}}
+                    style={{
+                        width: '520px', 
+                        paddingBottom: 0,
+                        position: 'relative'
+                    }}
                     action
                     open={this.state.settingsPreviewDialogOpen}
                     okText='Run Backtest'
@@ -1340,6 +1351,9 @@ class StartegyDetail extends Component {
                         .then(() => {
                             this.toggleSettingsPreviewDialog();
                         })
+                        .catch(err => {
+                            console.log('Error Occured ', err.messagee);
+                        })
                         .finally(() => {
                             this.setState({preparingBacktestToRun: false});
                         })
@@ -1347,6 +1361,7 @@ class StartegyDetail extends Component {
                     onCancel={this.toggleSettingsPreviewDialog}
                     hideClose
                     onClose={this.toggleSettingsPreviewDialog}
+                    extraActionContent={this.renderAlwaysShowCheckbox()}
             >
                 {
                     this.state.preparingBacktestToRun &&
@@ -1368,14 +1383,25 @@ class StartegyDetail extends Component {
     }
 
     renderErrorDialog = () => {
+        const {errorDialogMessage = ''} = this.state;
+        const hasNewLine = errorDialogMessage.split('\n').length > 0;
         return (
             <DialogComponent
                     style={{width: '420px'}}
+                    titleStyle={{color: '#c62828'}}
                     open={this.state.errorDialogOpen}
                     onClose={this.closeErrorDialog}
                     title='Error'
             >
-                <ErrorText>{this.state.errorDialogMessage}</ErrorText>
+                <ErrorText>
+                    {
+                        hasNewLine
+                        ?   errorDialogMessage.split('\n').map((text, index ) => (
+                                <React.Fragment key={index}>{text}<br/></React.Fragment>
+                            ))
+                        :   errorDialogMessage
+                    }
+                </ErrorText>
             </DialogComponent>
         );
     }
