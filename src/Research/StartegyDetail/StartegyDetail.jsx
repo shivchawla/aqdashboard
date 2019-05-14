@@ -1293,6 +1293,30 @@ class StartegyDetail extends Component {
         }) 
     }
 
+    renderAlwaysShowCheckbox = () => {
+        return (
+            <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
+                <Checkbox 
+                    color="primary"
+                    style={{fontSize: '16px'}}
+                    onChange={e => {
+                        this.setState({showPreviewSettingsDialog: e.target.checked})
+                    }}
+                    checked={this.state.showPreviewSettingsDialog}
+                />
+                <h3
+                        style={{
+                            fontSize: '14px',
+                            color: '#444',
+                            fontWeight: 400                            
+                        }}
+                >
+                    Always Show
+                </h3>
+            </div> 
+        );
+    }
+
     renderSettingsPreviewDialog = () => {
         const dialogTitle = (
             <div 
@@ -1311,32 +1335,7 @@ class StartegyDetail extends Component {
                 >
                     Confirm Settings
                 </h3>
-                <div style={{...horizontalBox, justifyContent: 'flex-end'}}>
-                    <Checkbox 
-                        color="primary"
-                        style={{fontSize: '16px'}}
-                        onChange={e => {
-                            let savedSettings = Utils.getFromLocalStorage('StrategyDetailSettings');
-                            this.setState({showPreviewSettingsDialog: e.target.checked}, () => {
-                                savedSettings = {
-                                    ...savedSettings, 
-                                    showPreviewSettingsDialog: this.state.showPreviewSettingsDialog
-                                };
-                                Utils.localStorageSaveObject('StrategyDetailSettings', savedSettings);
-                            })
-                        }}
-                        checked={this.state.showPreviewSettingsDialog}
-                    />
-                    <h3
-                            style={{
-                                fontSize: '14px',
-                                color: '#444',
-                                fontWeight: 400                            
-                            }}
-                    >
-                        Always Show
-                    </h3>
-                </div> 
+                {this.renderAlwaysShowCheckbox()}
             </div>
         );
         return (
@@ -1357,6 +1356,7 @@ class StartegyDetail extends Component {
                     }}
                     onCancel={this.toggleSettingsPreviewDialog}
                     hideClose
+                    onClose={this.toggleSettingsPreviewDialog}
             >
                 {
                     this.state.preparingBacktestToRun &&
@@ -1388,6 +1388,11 @@ class StartegyDetail extends Component {
                 <ErrorText>{this.state.errorDialogMessage}</ErrorText>
             </DialogComponent>
         );
+    }
+
+    onPreviewDialogRadioChanged = value => {
+        const checked = value === 0;
+        this.setState({showPreviewSettingsDialog: checked});
     }
 
     getSettingsDivTabsRight = ({dialogMode = false}) => {
@@ -1691,7 +1696,6 @@ class StartegyDetail extends Component {
                                     this.state.selectedResolution === 'Minute' 
                                 }
                                 CustomRadio={CardRadio}
-                                style={{marginTop: '10px'}}
                                 small
                             />
                         }
@@ -1761,6 +1765,30 @@ class StartegyDetail extends Component {
                         }
                     />
                 </Grid>
+                {
+                    !dialogMode &&
+                    <Grid item xs={12}>
+                        <InputContainer 
+                            style={inputContainerStyle}
+                            label='Preview Dialog'
+                            input={
+                                <div style={{ 'display': 'flex', 'alignItems': 'center'}}>
+                                    <RadioGroup 
+                                        items={['Show', 'Hide']}
+                                        onChange={value => this.onPreviewDialogRadioChanged(value)} 
+                                        defaultSelected={this.state.showPreviewSettingsDialog === true ? 0 : 1}
+                                        disabled={
+                                            this.state.isBacktestRunning || 
+                                            this.state.selectedResolution === 'Minute' 
+                                        }
+                                        CustomRadio={CardRadio}
+                                        small
+                                    />
+                                </div>
+                            }
+                        />
+                    </Grid>
+                }
             </Grid>
         );
         
