@@ -1399,7 +1399,7 @@ class StartegyDetail extends Component {
         const tabs = [];
         const rebalanceRadioItems = ['Daily', 'Weekly', 'Monthly'];
         const selectedCommissionTypeRadioItems = ['PerTrade', 'PerShare'];
-        const selectedSlipPageTypeRadioItems = ['Variable', 'Spread'];
+        const selectedSlipPageTypeRadioItems = ['Variable', 'Fixed'];
         const positionActionItems = ['BUY', 'SELL'];
         const resolutionItems = ['Day', 'Minute'];
         const inputProps = {style: {padding: '7px'}};
