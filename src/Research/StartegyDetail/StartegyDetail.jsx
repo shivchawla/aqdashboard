@@ -1777,10 +1777,7 @@ class StartegyDetail extends Component {
                                         items={['Show', 'Hide']}
                                         onChange={value => this.onPreviewDialogRadioChanged(value)} 
                                         defaultSelected={this.state.showPreviewSettingsDialog === true ? 0 : 1}
-                                        disabled={
-                                            this.state.isBacktestRunning || 
-                                            this.state.selectedResolution === 'Minute' 
-                                        }
+                                        disabled={this.state.isBacktestRunning}
                                         CustomRadio={CardRadio}
                                         small
                                     />
