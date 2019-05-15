@@ -178,4 +178,38 @@ export const bottomSheetStyle = {
     overflowY: 'scroll',
     height: '100vh',
     marginLeft: '-20px'
-}
+};
+
+export const defaultButtonStyle = {
+    fontSize: '12px',
+    fontWeight: 700,
+    borderRadius: '4px',
+    padding: '8px',
+    margin: '0 10px',
+    marginTop: '8px',
+    fontFamily: 'Lato, sans-serif',
+    textTransform: 'uppercase',
+    minWidth: '63px',
+    cursor: 'pointer'
+};
+
+export const dangerButtonStyle = {
+    ...defaultButtonStyle,
+    backgroundColor: '#fff',
+    border: '1px solid #f5222d',
+    color: '#f5222d'
+};
+
+export const primaryButtonStyle = {
+    ...defaultButtonStyle,
+    backgroundColor: '#fff',
+    border: `1px solid ${primaryColor}`,
+    color: primaryColor
+};
+
+export const disabledButtonStyle = {
+    ...defaultButtonStyle,
+    backgroundColor: '#fff',
+    border: '1px solid #aeaeae',
+    color: '#aeaeae'
+};

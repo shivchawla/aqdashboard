@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import {withRouter} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -20,14 +21,17 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {processRowData} from '../utils';
 import {primaryColor} from '../../../constants';
+import {primaryButtonStyle, disabledButtonStyle} from '../../../constants/styles';
+import { CircularProgress } from '@material-ui/core';
 
 const rows = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Backtest' },
     { id: 'createdAt', numeric: true, disablePadding: false, label: 'Created Date' },
     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
     { id: 'dateRange', numeric: true, disablePadding: false, label: 'Date Range' },
-    { id: 'totalreturn', numeric: true, disablePadding: false, label: 'Total Return' },
+    { id: 'totalreturn', numeric: true, disablePadding: false, label: 'Total Ret.' },
     { id: 'sharperatio', numeric: true, disablePadding: false, label: 'Sharpe Ratio' },
+    { id: 'sharperatio', numeric: true, disablePadding: false, label: '' }
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -51,7 +55,7 @@ class EnhancedTableHead extends React.Component {
                                 <TableCell
                                     key={row.id}
                                     align='left'
-                                    padding={row.disablePadding ? 'none' : 'default'}
+                                    padding='none'
                                     sortDirection={orderBy === row.id ? order : false}
                                 >
                                     <Tooltip
@@ -196,7 +200,7 @@ class EnhancedTable extends React.Component {
 
     render() {
         const {classes, strategyName = ''} = this.props;
-        const {data = []} = this.props;
+        const {data = [], disableRunTests = false} = this.props;
         const {order, orderBy} = this.state;
 
         return (
@@ -221,12 +225,17 @@ class EnhancedTable extends React.Component {
                             {
                                 data.map((item, index) => {
                                     const dataItem = processRowData(item, index);
+                                    const isLoading = _.get(dataItem, 'isLoading', false);
                                     const isException = dataItem.status.toLowerCase() === 'exception';
+                                    const isStatusComplete = dataItem.status.trim().toLowerCase() === 'complete';
+                                    const isForwardTestButtonEnabled = !disableRunTests && isStatusComplete;
+                                    const forwardTestButtonStyle = isForwardTestButtonEnabled
+                                            ? primaryButtonStyle
+                                            : disabledButtonStyle;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(dataItem.name, dataItem.id)}
                                             role="checkbox"
                                             aria-checked={item.selected}
                                             tabIndex={-1}
@@ -236,7 +245,7 @@ class EnhancedTable extends React.Component {
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            <STableCell 
+                                            <STableCell
                                                     align="left" 
                                                     padding="checkbox"
                                                     onClick={e => e.stopPropagation()}
@@ -250,11 +259,14 @@ class EnhancedTable extends React.Component {
                                                     color='primary'
                                                 />
                                             </STableCell>
-                                            <STableCell align="left">
+                                            <STableCell align="left" padding='none'>
                                                 {dataItem.name}
                                             </STableCell>
-                                            <STableCell align="left">{dataItem.createdAt}</STableCell>
+                                            <STableCell align="left" padding='none'>
+                                                {dataItem.createdAt}
+                                            </STableCell>
                                             <STableCell 
+                                                    padding='none'
                                                     align="left"
                                                     style={{
                                                         color: isException ? '#ff3737' : '#595959',
@@ -263,9 +275,40 @@ class EnhancedTable extends React.Component {
                                             >
                                                 {dataItem.status}
                                             </STableCell>
-                                            <STableCell align="left">{dataItem.dateRange}</STableCell>
-                                            <STableCell align="left">{dataItem.totalReturn}</STableCell>
-                                            <STableCell align="left">{dataItem.sharpeRatio}</STableCell>
+                                            <STableCell align="left" padding='none'>
+                                                {dataItem.dateRange}
+                                            </STableCell>
+                                            <STableCell align="left" padding='none'>
+                                                {dataItem.totalReturn}
+                                            </STableCell>
+                                            <STableCell align="left" padding='none'>
+                                                {dataItem.sharpeRatio}
+                                            </STableCell>
+                                            <STableCell 
+                                                    align="left" 
+                                                    padding='checkbox'
+                                                    onClick={e => e.stopPropagation()}
+                                            >
+                                                {
+                                                    isLoading
+                                                    ?   <CircularProgress size={16} />
+                                                    :   <ButtonBase 
+                                                                style={{
+                                                                    ...forwardTestButtonStyle,
+                                                                    marginTop: 0,
+                                                                    fontSize: '10px',
+                                                                    zIndex: 20
+                                                                }}
+                                                                disabled={!isForwardTestButtonEnabled}
+                                                                onClick={e => {
+                                                                    e.stopPropagation();
+                                                                    this.props.runForwardTest && this.props.runForwardTest(dataItem);
+                                                                }}
+                                                        >
+                                                            RUN FORWARD
+                                                        </ButtonBase>
+                                                }
+                                            </STableCell>
                                         </TableRow>
                                     );
                                 })

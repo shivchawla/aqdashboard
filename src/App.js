@@ -23,6 +23,7 @@ const Research = React.lazy(() => import('./Research/Research'));
 const StrategyDetail = React.lazy(() => import('./Research/StartegyDetail/StartegyDetail'));
 const StrategyBacktests = React.lazy(() => import('./Research/StrategyBacktests/StrategyBacktests'));
 const BacktestDetail = React.lazy(() => import('./Research/BacktestDetail/BacktestDetail'));
+const ForwardTestDetail = React.lazy(() => import('./Research/ForwardtestDetail/ForwardtestDetail'));
 const Community = React.lazy(() => import('./Community/Community'));
 const ThreadView = React.lazy(() => import('./Community/ThreadView/ThreadView'));
 const NewPost = React.lazy(() => import('./Community/NewPost/NewPost'));
@@ -187,6 +188,7 @@ class App extends Component {
                                         <Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
                                         <Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
                                         <Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
+                                        <Route exact={true} path='/research/forwardtest/:strategyId/:forwardtestId' component={ForwardTestDetail} />
                                         <Route exact={true} path='/community' component={Community}/>
                                         <Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
                                         <Route exact={true} path='/community/newPost' component={NewPost} />

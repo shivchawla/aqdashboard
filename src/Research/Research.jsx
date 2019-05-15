@@ -368,7 +368,12 @@ class Research extends Component {
                 );
             } else {
                 return (
-                    <Button variant='contained' color='primary' disabled>
+                    <Button 
+                            variant='contained' 
+                            color='primary' 
+                            disabled 
+                            size='small'
+                    >
                         <Icon>delete</Icon>
                         Delete Selected
                     </Button>
@@ -401,21 +406,31 @@ class Research extends Component {
                 );
             } else if (showStopButton) {
                 return (
-                    <Button variant='contained' color='primary' onClick={
-                        () => {
-                            this.showStopConfirm();
-                        }
-                    }>
-                        <Icon>delete</Icon>
+                    <Button 
+                            variant='contained' 
+                            color='primary' 
+                            onClick={
+                                () => {
+                                    this.showStopConfirm();
+                                }
+                            }
+                            size='small'
+                    >
+                        <Icon>cancel</Icon>
                         Stop selected
                 </Button>
                 );
             } else {
                 return (
-                    <Button variant='contained' color='primary' disabled>
-                        {/* <Icon type="close-square" /> */}
-                        <Icon>cancel</Icon>Stop selected
-          </Button>
+                    <Button 
+                            variant='contained' 
+                            color='primary' 
+                            disabled
+                            size='small'
+                    >
+                        <Icon>cancel</Icon>
+                        Stop selected
+                    </Button>
                 );
             }
         }
@@ -441,24 +456,13 @@ class Research extends Component {
             }
         }
 
-        const getForwardTestButton = () => {
-            return (
-                <ButtonBase 
-                        style={forwardTestButtonStyle}
-                        onClick={() => {}}
-                >
-                    Forward Test
-                </ButtonBase>
-            );
-        }
-
         const getLiveTestStatus = (active, error, forwardTestId) => {
             if (error) {
                 return (
                     <p style={{
                         'backgroundColor': '#bd362f',
                         'fontSize': '12px', 'fontWeight': '700',
-                        'color': 'white', 'padding': '3px'
+                        'color': 'white', 'padding': '3px 6px', 'borderRadius': '2px'
                     }}>
                         ERROR
           </p>
@@ -468,7 +472,7 @@ class Research extends Component {
                     <p style={{
                         'backgroundColor': '#339933',
                         'fontSize': '12px', 'fontWeight': '700',
-                        'color': 'white', 'padding': '3px'
+                        'color': 'white', 'padding': '3px 6px', 'borderRadius': '2px'
                     }}>
                         RUNNING
           </p>
@@ -478,7 +482,7 @@ class Research extends Component {
                     <p style={{
                         'backgroundColor': '#bd362f',
                         'fontSize': '12px', 'fontWeight': '700',
-                        'color': 'white', 'padding': '3px'
+                        'color': 'white', 'padding': '3px 6px', 'borderRadius': '2px'
                     }}>
                         STOPPED
           </p>
@@ -501,20 +505,23 @@ class Research extends Component {
                     return (
                         <div 
                                 style={{
-                                    border: '1px solid #e1e1e1',
                                     width: '100%', 
-                                    marginBottom: '30px',
-                                    padding: '10px',
                                     boxSizing: 'border-box'
                                 }}
                         >
-                            <h2 style={{ 'fontWeight': '700', 'fontSize': '16px', 'margin': '0px' }}>
+                            <h2 
+                                    style={{
+                                        fontWeight: '700', 
+                                        fontSize: '16px', 
+                                        margin: '0px',
+                                        marginLeft: '8px'
+                                    }}
+                            >
                                 LIVE TESTS
                             </h2>
-                            <Grid container alignItems="center" style={{ 'marginBottom': '15px' }}>
+                            <Grid container alignItems="center">
                                 <Grid item xs={6}>
                                     <Checkbox 
-                                        style={{marginLeft: '15px'}}
                                         onChange={this.allLiveTestsCheckBoxChange}
                                         checked={this.state.allLiveTestsSelected} 
                                         label='All Tests'
@@ -530,23 +537,32 @@ class Research extends Component {
                             </Grid>
                             <div style={{
                                 width: '100%',
-                                padding: '15px',
                                 boxSizing: 'border-box'
                             }}>
-                                <List>
+                                <Grid container>
                                     {
                                         liveTests.map((liveTest, index) => (
-                                            <LiveTestListItem 
-                                                key={index}
-                                                item={liveTest}
-                                                liveTestCheckBoxChange={this.liveTestCheckBoxChange}
-                                                selectedLiveTests={this.state.selectedLiveTests}
-                                                getLiveTestStatus={getLiveTestStatus}
-                                                history={this.props.history}
-                                            />
+                                            <Grid
+                                                    key={index} 
+                                                    item xs={6} 
+                                                    style={{
+                                                        ...verticalBox, 
+                                                        alignItems: 'flex-start', 
+                                                        padding: '8px',
+                                                        boxSizing: 'border-box',
+                                                    }}
+                                            >
+                                                <LiveTestListItem 
+                                                    item={liveTest}
+                                                    liveTestCheckBoxChange={this.liveTestCheckBoxChange}
+                                                    selectedLiveTests={this.state.selectedLiveTests}
+                                                    getLiveTestStatus={getLiveTestStatus}
+                                                    history={this.props.history}
+                                                />
+                                            </Grid>
                                         ))
                                     }
-                                </List>
+                                </Grid>
                             </div>
                         </div>
                     );
@@ -604,7 +620,6 @@ class Research extends Component {
                                         index={index}
                                         item={item}
                                         getBackTestsButton={getBackTestsButton}
-                                        getForwardTestButton={getForwardTestButton}
                                         selectedStrategies={this.state.selectedStrategies}
                                         strategyCheckBoxChange={this.strategyCheckBoxChange}
                                     />
@@ -651,23 +666,47 @@ class Research extends Component {
                     <React.Fragment>
                         {this.showDeleteConfirm()}
                         {getSearchTextAsNeeded()}
-                        {/* {getLiveTestsDiv()} */}
                         <Grid 
                                 container
                                 style={{
-                                    // border: '1px solid #e1e1e1',
                                     width: '100%',
-                                    padding: '10px',
                                     boxSizing: 'border-box'
                                 }}
                         >
-                            <Grid item xs={12}>
-                                <h2 style={{ 'fontWeight': '700', 'fontSize': '16px', 'margin': '0px' }}>
+                            <Grid 
+                                    item 
+                                    xs={12}
+                                    className='card'
+                                    style={{
+                                        borderRadius: '2px',
+                                        marginBottom: '20px',
+                                        padding: '15px'
+                                    }}
+                            >
+                                {getLiveTestsDiv()}
+                            </Grid>
+                            <Grid 
+                                    item 
+                                    xs={12}
+                                    className='card'
+                                    style={{
+                                        ...verticalBox,
+                                        borderRadius: '2px',
+                                        padding: '15px',
+                                        alignItems: 'flex-start'
+                                    }}
+                            >
+                                <h2 
+                                        style={{
+                                            fontWeight: '700', 
+                                            fontSize: '16px', 
+                                            margin: '0px',
+                                            marginLeft: '8px'
+                                        }}
+                                >
                                     TEST STRATEGIES
                                 </h2>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Grid container alignItems="center" style={{ 'marginBottom': '15px' }}>
+                                <Grid container alignItems="center">
                                     <Grid item xs={6}>
                                         <Checkbox 
                                                 onChange={this.allStrategiesCheckboxChange}
@@ -685,9 +724,9 @@ class Research extends Component {
                                         </div>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                            <Grid item xs={12}>
-                                {getStrategiesListDiv()}
+                                <Grid item xs={12}>
+                                    {getStrategiesListDiv()}
+                                </Grid>
                             </Grid>
                         </Grid>
                     </React.Fragment>
@@ -743,11 +782,9 @@ class Research extends Component {
                         </Grid>
                     </Grid>
                     <div 
-                            className="card" 
                             style={{
                                 width: '100%', 
                                 background: 'white',
-                                padding: '40px 5%',
                                 boxSizing: 'border-box'
                             }}
                     >
@@ -768,50 +805,68 @@ class Research extends Component {
 
 export default withStyles(styles)(withRouter(Research));
 
-const LiveTestListItem = ({item, liveTestCheckBoxChange, selectedLiveTests, getLiveTestStatus, history}) => {
+const LiveTestListItem = ({
+        item, 
+        liveTestCheckBoxChange, 
+        selectedLiveTests, 
+        getLiveTestStatus, 
+        history
+}) => {
     return (
-        <ListItem 
+        <div
                 onClick={() => history.push('/research/forwardtest/'+item.strategy._id+'/'+item._id+'?strategyName='+item.fullName)}
-                className="card-1 research-livetests-listitem"
+                style={{
+                    ...horizontalBox, 
+                    justifyContent: 'flex-start', 
+                    alignItems: 'flex-start', 
+                    width: '100%',
+                    borderRadius: '2px',
+                    border: '1px solid #e1e1e1',
+                    padding: '10px 0',
+                    boxSizing: 'border-box',
+                    cursor: 'pointer'
+                }}
         >
-            <div style={{...horizontalBox, alignItems: 'center', width: '100%'}}>
-                <div>
-                    {
-                        (item.active) 
-                        ?   <Checkbox style={{'fontSize': '18px'}} 
-                                onChange={(e) => {liveTestCheckBoxChange(e.target.checked, item._id)}}
-                                checked={(selectedLiveTests.indexOf(item._id) >= 0) ? true : false}
-                                color='primary' 
-                            />
-                        :   <Checkbox style={{'fontSize': '18px'}} disabled color='primary' />
-                    }
-                </div>
-                <Grid container alignItems="center">
-                    <Grid item xs={12} sm={6}>
-                        <div style={{paddingLeft: '15px'}}>
-                            <StrategyName>{item.fullName}</StrategyName>
-                            <DateTimeText>
-                                Created At: 
-                                <Moment format="DD/MM/YYYY hh:mm A">
-                                    {item.createdAt}
-                                </Moment>
-                            </DateTimeText>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <div 
-                                style={{
-                                    display: 'flex', 
-                                    justifyContent: 'flex-end', 
-                                    paddingRight: '15px'
-                                }}
-                        >
-                            {getLiveTestStatus(item.active, item.error, item._id)}
-                        </div>
-                    </Grid>
-                </Grid>
+            <div onClick={e => e.stopPropagation()}>
+                {
+                    item.active
+                    ?   <Checkbox 
+                            style={{'fontSize': '18px'}}
+                            onChange={e => {
+                                e.stopPropagation();
+                                liveTestCheckBoxChange(e.target.checked, item._id)
+                            }}
+                            checked={(selectedLiveTests.indexOf(item._id) >= 0) ? true : false}
+                            color='primary' 
+                        />
+                    :   <Checkbox style={{'fontSize': '18px'}} disabled color='primary' />
+                }
             </div>
-        </ListItem>
+            <Grid container alignItems="center">
+                <Grid item xs={12} sm={6}>
+                    <div style={{paddingLeft: '15px'}}>
+                        <StrategyName>{item.fullName}</StrategyName>
+                        <DateTimeText>
+                            Created At: 
+                            <Moment format="DD/MM/YYYY hh:mm A">
+                                {item.createdAt}
+                            </Moment>
+                        </DateTimeText>
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <div 
+                            style={{
+                                display: 'flex', 
+                                justifyContent: 'flex-end', 
+                                paddingRight: '15px'
+                            }}
+                    >
+                        {getLiveTestStatus(item.active, item.error, item._id)}
+                    </div>
+                </Grid>
+            </Grid>
+        </div>
     );
 }
 
@@ -820,9 +875,8 @@ const StrategyListItem = ({
         getBackTestsButton, 
         selectedStrategies, 
         strategyCheckBoxChange, 
-        getForwardTestButton,
         hideBottomBorder = false
-    }) => {
+}) => {
     return (
         <div 
                 style={{
@@ -861,7 +915,6 @@ const StrategyListItem = ({
                 <Grid sm={6} xs={12}>
                     <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
                         {getBackTestsButton(item.numBacktests, item._id)}
-                        {getForwardTestButton()}
                     </div>
                 </Grid>
                 <Grid item xs={12} style={{marginTop: '10px'}}>

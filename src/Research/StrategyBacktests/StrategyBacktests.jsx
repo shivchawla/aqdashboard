@@ -376,6 +376,8 @@ class StrategyBacktests extends Component {
                     openCompare={this.showcompareModal}
                     toggleDeleteDialog={this.toggleDeleteDialog}
                     onAllItemsSelected={this.onAllItemsSelected}
+                    disableRunTests={this.state.disableRunTests}
+                    runForwardTest={this.runForwardTest}
                 />
             );
         }
