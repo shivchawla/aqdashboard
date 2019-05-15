@@ -135,6 +135,7 @@ const defaultButtonStyle = {
     marginTop: '8px',
     fontFamily: 'Lato, sans-serif',
     textTransform: 'uppercase',
+    minWidth: '63px'
 };
 
 const cancelDefaultButtonStyle = {

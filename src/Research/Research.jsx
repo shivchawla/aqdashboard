@@ -6,18 +6,25 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Checkbox from '../components/Selections/Checkbox';
 import {withRouter, Link} from 'react-router-dom';
+import {withStyles} from '@material-ui/core/styles';
 import NewStartegy from './NewStrategy/NewStrategy.jsx';
 import DialogComponent from '../components/Alerts/DialogComponent';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
 import Breadcrumbs from '../components/UI/Breadcrumbs';
 import {StrategiesMeta} from '../metas';
 import Utils from './../Utils';
-import {horizontalBox, verticalBox} from '../constants';
+import {horizontalBox, verticalBox, primaryColor} from '../constants';
 
+const styles = theme => ({
+    root: {
+      flexGrow: 1,
+    },
+  });
 
 class Research extends Component {
 
@@ -416,24 +423,33 @@ class Research extends Component {
         const getBackTestsButton = (numOfBacktests, strategyId) => {
             if (numOfBacktests > 0) {
                 return (
-                    <Button 
-                            variant='outlined' 
-                            color="primary" 
-                            size='small'
+                    <ButtonBase 
+                            style={backtestButtonStyle}
                             onClick={() => {
                                 this.props.history.push('/research/backtests/' + strategyId)
                             }}
                     >
                         Backtests ({numOfBacktests})
-                    </Button>
+                    </ButtonBase>
                 );
             } else {
                 return (
-                    <Button variant='outlined' color="primary" disabled size='small'>
+                    <ButtonBase style={disabledButtonStyle} disabled>
                         Backtests (0)
-                    </Button>
+                    </ButtonBase>
                 );
             }
+        }
+
+        const getForwardTestButton = () => {
+            return (
+                <ButtonBase 
+                        style={forwardTestButtonStyle}
+                        onClick={() => {}}
+                >
+                    Forward Test
+                </ButtonBase>
+            );
         }
 
         const getLiveTestStatus = (active, error, forwardTestId) => {
@@ -571,20 +587,31 @@ class Research extends Component {
         const getStrategiesListDiv = () => {
             if (this.state.strategies && this.state.strategies.length > 0) {
                 return (
-                    <List>
+                    <Grid container>
                         {
                             this.state.strategies.map((item, index) => (
-                                <StrategyListItem
-                                    key={index} 
-                                    item={item}
-                                    getBackTestsButton={getBackTestsButton}
-                                    selectedStrategies={this.state.selectedStrategies}
-                                    strategyCheckBoxChange={this.strategyCheckBoxChange}
-                                    hideBottomBorder={index === this.state.strategies.length - 1}
-                                />
+                                <Grid
+                                        key={index} 
+                                        item xs={6} 
+                                        style={{
+                                            ...verticalBox, 
+                                            alignItems: 'flex-start', 
+                                            padding: '8px',
+                                            boxSizing: 'border-box',
+                                        }}
+                                >
+                                    <StrategyListItem
+                                        index={index}
+                                        item={item}
+                                        getBackTestsButton={getBackTestsButton}
+                                        getForwardTestButton={getForwardTestButton}
+                                        selectedStrategies={this.state.selectedStrategies}
+                                        strategyCheckBoxChange={this.strategyCheckBoxChange}
+                                    />
+                                </Grid>
                             ))
                         }
-                    </List>
+                    </Grid>
                 );
             } else {
                 return (
@@ -622,62 +649,47 @@ class Research extends Component {
 
                 return (
                     <React.Fragment>
-                        {/* <div style={{'display': 'flex', 'justifyContent': 'flex-end',
-              'marginBottom': '15px'}}>
-              {(!this.state.searchBoxOpen) ? 
-                (<Icon type="search" style={{'border': '1px solid #e1e1e1', 
-                'padding': '10px', 'cursor': 'pointer'}}
-                onClick={()=>{this.updateState({'searchBoxOpen': true})}}/>)
-                :
-                (
-                  <Input.Search
-                    placeholder="Strategy Search"
-                    onSearch={value => this.searchStrategies(value)}
-                    enterButton
-                    style={{'maxWidth': '300px'}}
-                    defaultValue={this.state.oldSearchString}
-                    onKeyDown = {this.onSearchKeyPressed}
-                  />
-                )}
-            </div> */}
                         {this.showDeleteConfirm()}
                         {getSearchTextAsNeeded()}
                         {/* {getLiveTestsDiv()} */}
-                        <div style={{
-                            border: '1px solid #e1e1e1',
-                            width: '100%',
-                            padding: '10px',
-                            boxSizing: 'border-box'
-                        }}>
-                            <h2 style={{ 'fontWeight': '700', 'fontSize': '16px', 'margin': '0px' }}>
-                                TEST STRATEGIES
-                            </h2>
-                            <Grid container alignItems="center" style={{ 'marginBottom': '15px' }}>
-                                <Grid item xs={6}>
-                                    <Checkbox 
-                                            onChange={this.allStrategiesCheckboxChange}
-                                            checked={this.state.allSelected}
-                                            label='All Strategies'
-                                            labelStyle={{
-                                                fontSize: '18px'
-                                            }}
-                                            color='primary'
-                                    />
-                                </Grid>
-                                <Grid item xs={6} >
-                                    <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                                        {getDeleteButton()}
-                                    </div>
+                        <Grid 
+                                container
+                                style={{
+                                    // border: '1px solid #e1e1e1',
+                                    width: '100%',
+                                    padding: '10px',
+                                    boxSizing: 'border-box'
+                                }}
+                        >
+                            <Grid item xs={12}>
+                                <h2 style={{ 'fontWeight': '700', 'fontSize': '16px', 'margin': '0px' }}>
+                                    TEST STRATEGIES
+                                </h2>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Grid container alignItems="center" style={{ 'marginBottom': '15px' }}>
+                                    <Grid item xs={6}>
+                                        <Checkbox 
+                                                onChange={this.allStrategiesCheckboxChange}
+                                                checked={this.state.allSelected}
+                                                label='All Strategies'
+                                                labelStyle={{
+                                                    fontSize: '18px'
+                                                }}
+                                                color='primary'
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6} >
+                                        <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
+                                            {getDeleteButton()}
+                                        </div>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-                            <div style={{
-                                padding: '15px',
-                                boxSizing: 'border-box',
-                                border: '1px solid #e1e1e1'
-                            }}>
+                            <Grid item xs={12}>
                                 {getStrategiesListDiv()}
-                            </div>
-                        </div>
+                            </Grid>
+                        </Grid>
                     </React.Fragment>
                 );
             }
@@ -754,7 +766,7 @@ class Research extends Component {
     }
 }
 
-export default withRouter(Research);
+export default withStyles(styles)(withRouter(Research));
 
 const LiveTestListItem = ({item, liveTestCheckBoxChange, selectedLiveTests, getLiveTestStatus, history}) => {
     return (
@@ -808,62 +820,87 @@ const StrategyListItem = ({
         getBackTestsButton, 
         selectedStrategies, 
         strategyCheckBoxChange, 
+        getForwardTestButton,
         hideBottomBorder = false
     }) => {
     return (
-        <ListItem 
+        <div 
                 style={{
-                    ...verticalBox, 
+                    ...horizontalBox, 
+                    justifyContent: 'flex-start', 
                     alignItems: 'flex-start', 
-                    borderBottom: hideBottomBorder ? 'none' : '1px solid #e8e8e8',
-                    paddingBottom: '25px',
-                    paddingTop: '15px'
+                    width: '100%',
+                    borderRadius: '2px',
+                    border: '1px solid #e1e1e1',
+                    padding: '10px 0',
+                    boxSizing: 'border-box',
                 }}
         >
-            <div 
-                    style={{
-                        ...horizontalBox, 
-                        justifyContent: 'flex-start', 
-                        alignItems: 'flex-start', 
-                        width: '100%'
-                    }}
-            >
-                <Checkbox
-                    onChange={(e) => {strategyCheckBoxChange(e.target.checked, item._id)}}
-                    checked={(selectedStrategies.indexOf(item._id) >= 0) ? true : false}
-                    style={{marginTop: '-10px'}}
-                    color='primary'
-                />
-                <Grid container>
-                    <Grid item sm={6} xs={12}>
-                        <div style={{ 'paddingLeft': '15px' }}>
-                            <StrategyLink to={'/research/strategy/' + item._id}>
-                                {item.fullName}
-                            </StrategyLink>
-                            <DateTimeText 
-                                    style={{marginTop: '10px'}}
-                            >
-                                Created At:
-                                <Moment format="DD/MM/YYYY hh:mm A">
-                                    {item.createdAt}
-                                </Moment>
-                            </DateTimeText>
-                        </div>
-                    </Grid>
-                    <Grid sm={6} xs={12}>
-                        <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                            {getBackTestsButton(item.numBacktests, item._id)}
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} style={{marginTop: '10px'}}>
-                        <StrategyDescription style={{paddingLeft: '15px'}}>
-                            {item.description}
-                        </StrategyDescription>
-                    </Grid>
+            <Checkbox
+                onChange={(e) => {strategyCheckBoxChange(e.target.checked, item._id)}}
+                checked={(selectedStrategies.indexOf(item._id) >= 0) ? true : false}
+                style={{marginTop: '-10px'}}
+                color='primary'
+            />
+            <Grid container>
+                <Grid item sm={6} xs={12}>
+                    <div>
+                        <StrategyLink to={'/research/strategy/' + item._id}>
+                            {item.fullName}
+                        </StrategyLink>
+                        <DateTimeText 
+                                style={{marginTop: '10px'}}
+                        >
+                            Created At:
+                            <Moment format="DD/MM/YYYY hh:mm A">
+                                {item.createdAt}
+                            </Moment>
+                        </DateTimeText>
+                    </div>
                 </Grid>
-            </div>
-        </ListItem>
+                <Grid sm={6} xs={12}>
+                    <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
+                        {getBackTestsButton(item.numBacktests, item._id)}
+                        {getForwardTestButton()}
+                    </div>
+                </Grid>
+                <Grid item xs={12} style={{marginTop: '10px'}}>
+                    <StrategyDescription>
+                        {item.description}
+                    </StrategyDescription>
+                </Grid>
+            </Grid>
+        </div>
     );
+}
+
+const defaultButtonStyle = {
+    fontSize: '10px',
+    fontWeight: 700,
+    borderRadius: '4px',
+    padding: '8px',
+    margin: '0 10px',
+    marginTop: '8px',
+    fontFamily: 'Lato, sans-serif',
+    textTransform: 'uppercase',
+};
+
+const forwardTestButtonStyle = {
+    ...defaultButtonStyle,
+    border: `1px solid #388E3C`,
+    color: '#388E3C'
+};
+
+const disabledButtonStyle = {
+    ...defaultButtonStyle,
+    border: '1px solid #aeaeae',
+    color: '#aeaeae'
+};
+
+const backtestButtonStyle = {
+    ...defaultButtonStyle,
+    border: `1px solid ${primaryColor}`,
+    color: primaryColor
 }
 
 const StrategyName = styled.h3`
