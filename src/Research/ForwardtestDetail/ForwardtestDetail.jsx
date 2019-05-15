@@ -257,7 +257,7 @@ class ForwardtestDetail extends Component {
     constructor(props) {
         super();
         this.state = {
-            loading: true,
+            loading: false,
             forwardTestData: {},
             portfolioMode: 'LatestPortfolio',
             transactionMode: 'ProposedOrders',
@@ -277,6 +277,7 @@ class ForwardtestDetail extends Component {
         }
 
         this.getForwardTest = () => {
+            this.setState({loading: true});
             axios(Utils.getBaseUrl() + '/forwardtest/' + _.get(props, 'match.params.forwardtestId', null), {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
