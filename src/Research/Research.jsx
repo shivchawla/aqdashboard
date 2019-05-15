@@ -775,6 +775,7 @@ class Research extends Component {
                                     style={{float: 'right', boxShadow: 'none'}}
                                     onClick={() => this.updateState({ 'showNewStartegyDiv': true })}
                                     variant='contained'
+                                    size='small'
                             >
                                 CREATE NEW
                             </Button>
