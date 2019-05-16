@@ -441,17 +441,6 @@ class Research extends Component {
             }
         }
 
-        const getForwardTestButton = () => {
-            return (
-                <ButtonBase 
-                        style={forwardTestButtonStyle}
-                        onClick={() => {}}
-                >
-                    Forward Test
-                </ButtonBase>
-            );
-        }
-
         const getLiveTestStatus = (active, error, forwardTestId) => {
             if (error) {
                 return (
@@ -604,7 +593,6 @@ class Research extends Component {
                                         index={index}
                                         item={item}
                                         getBackTestsButton={getBackTestsButton}
-                                        getForwardTestButton={getForwardTestButton}
                                         selectedStrategies={this.state.selectedStrategies}
                                         strategyCheckBoxChange={this.strategyCheckBoxChange}
                                     />
@@ -820,7 +808,6 @@ const StrategyListItem = ({
         getBackTestsButton, 
         selectedStrategies, 
         strategyCheckBoxChange, 
-        getForwardTestButton,
         hideBottomBorder = false
     }) => {
     return (
@@ -861,7 +848,6 @@ const StrategyListItem = ({
                 <Grid sm={6} xs={12}>
                     <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
                         {getBackTestsButton(item.numBacktests, item._id)}
-                        {getForwardTestButton()}
                     </div>
                 </Grid>
                 <Grid item xs={12} style={{marginTop: '10px'}}>
