@@ -244,6 +244,7 @@ class EnhancedTable extends React.Component {
                                             style={{
                                                 cursor: 'pointer'
                                             }}
+                                            onClick={event => this.handleClick(dataItem.name, dataItem.id)}
                                         >
                                             <STableCell
                                                     align="left" 
