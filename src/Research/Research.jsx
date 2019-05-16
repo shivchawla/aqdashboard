@@ -619,7 +619,7 @@ class Research extends Component {
             }
         }
 
-        const getStrategiesListDiv = () => {
+        const getStrategiesList = () => {
             if (this.state.strategies && this.state.strategies.length > 0) {
                 return (
                     <Grid container>
@@ -666,6 +666,44 @@ class Research extends Component {
                     </div>
                 );
             }
+        }
+
+        const getStrategiesListDiv = () => {
+            return (
+                <Grid container alignItems="center">
+                    <Grid item xs={12}>
+                        <h2 
+                                style={{
+                                    fontWeight: '700', 
+                                    fontSize: '16px', 
+                                    margin: '0px',
+                                    marginLeft: '8px'
+                                }}
+                        >
+                            TEST STRATEGIES
+                        </h2>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Checkbox 
+                                onChange={this.allStrategiesCheckboxChange}
+                                checked={this.state.allSelected}
+                                label='All Strategies'
+                                labelStyle={{
+                                    fontSize: '18px'
+                                }}
+                                color='primary'
+                        />
+                    </Grid>
+                    <Grid item xs={6} >
+                        <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
+                            {getDeleteButton()}
+                        </div>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {getStrategiesList()}
+                    </Grid>
+                </Grid>
+            );
         }
 
         const getStrategiesDiv = () => {
@@ -716,37 +754,7 @@ class Research extends Component {
                                         alignItems: 'flex-start'
                                     }}
                             >
-                                <h2 
-                                        style={{
-                                            fontWeight: '700', 
-                                            fontSize: '16px', 
-                                            margin: '0px',
-                                            marginLeft: '8px'
-                                        }}
-                                >
-                                    TEST STRATEGIES
-                                </h2>
-                                <Grid container alignItems="center">
-                                    <Grid item xs={6}>
-                                        <Checkbox 
-                                                onChange={this.allStrategiesCheckboxChange}
-                                                checked={this.state.allSelected}
-                                                label='All Strategies'
-                                                labelStyle={{
-                                                    fontSize: '18px'
-                                                }}
-                                                color='primary'
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6} >
-                                        <div style={{ 'display': 'flex', 'justifyContent': 'flex-end' }}>
-                                            {getDeleteButton()}
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    {getStrategiesListDiv()}
-                                </Grid>
+                                {getStrategiesListDiv()}
                             </Grid>
                         </Grid>
                     </React.Fragment>
