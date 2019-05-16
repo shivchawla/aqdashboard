@@ -31,7 +31,7 @@ const rows = [
     { id: 'dateRange', numeric: true, disablePadding: false, label: 'Date Range' },
     { id: 'totalreturn', numeric: true, disablePadding: false, label: 'Total Ret.' },
     { id: 'sharperatio', numeric: true, disablePadding: false, label: 'Sharpe Ratio' },
-    { id: 'sharperatio', numeric: true, disablePadding: false, label: '' }
+    { id: 'runForward', numeric: true, disablePadding: false, label: '' }
 ];
 
 class EnhancedTableHead extends React.Component {
