@@ -47,7 +47,8 @@ class Research extends Component {
             searchBoxOpen: false,
             oldSearchString: '',
             showNewStartegyDiv: false,
-            showDeleteDialog: false
+            showDeleteDialog: false,
+            showStopDialog: false
         };
         this.updateState = (data) => {
             if (this._mounted) {
@@ -257,6 +258,7 @@ class Research extends Component {
                         open={this.state.showDeleteDialog}
                         onCancel={this.toggleDeleteDialog}
                         onOk={this.deleteAllSelectedStrategies}
+                        onClose={this.toggleDeleteDialog}
                         action
                         hideClose
                 >
@@ -276,19 +278,35 @@ class Research extends Component {
         }
 
         this.showStopConfirm = () => {
-            // Modal.confirm({
-            //     title: "Are you sure you want to stop?",
-            //     content: this.state.selectedLiveTests.length + ' live tests will be stopped.',
-            //     okText: 'Yes',
-            //     okType: 'danger',
-            //     cancelText: 'No',
-            //     onOk: () => {
-            //         this.stopAllSelectedForwardTests();
-            //     },
-            //     onCancel: () => {
-            //     },
-            // });
-            console.log('Show Stop Confirm');
+            this.toggleStopForwardTestDialog();
+        }
+
+        this.toggleStopForwardTestDialog = () => {
+            this.setState({showStopDialog: !this.state.showStopDialog});
+        }
+
+        this.renderStopConfirmDialog = () => {
+            const content = this.state.selectedLiveTests.length + ' live tests will be stopped.';
+
+            return (
+                <DialogComponent 
+                    title='Are you sure you want to stop?'
+                    open={this.state.showStopDialog}
+                    onCancel={this.toggleStopForwardTestDialog}
+                    onClose={this.toggleStopForwardTestDialog}
+                    onOk={this.stopAllSelectedForwardTests}
+                    action
+                    hideClose
+                >
+                    {
+                        this.state.stopForwardTestLoading
+                            ?   <div style={{...horizontalBox, justifyContent: 'center'}}>
+                                    <CircularProgress size={22} />
+                                </div>
+                            :   <span>{content}</span>
+                    }
+                </DialogComponent>
+            );
         }
 
         this.onSearchKeyPressed = event => {
@@ -309,6 +327,8 @@ class Research extends Component {
             }
         }
     }
+
+    render
 
     componentDidMount() {
         this._mounted = true;
@@ -350,7 +370,6 @@ class Research extends Component {
                         'alignItems': 'center', 'justifyContent': 'center',
                         'minWidth': '100px'
                     }}>
-                        {/* <Spin indicator={antIconLoading} /> */}
                         <CircularProgress size={22} />
                     </div>
                 );
@@ -665,6 +684,7 @@ class Research extends Component {
                 return (
                     <React.Fragment>
                         {this.showDeleteConfirm()}
+                        {this.renderStopConfirmDialog()}
                         {getSearchTextAsNeeded()}
                         <Grid 
                                 container
