@@ -32,9 +32,9 @@ class NewFooter extends React.Component {
                             <ListItem 
                                     history={this.props.history} 
                                     href={true}
-                                    url={`${dailyContestDomain}/dailycontest/home`}
+                                    url={`${dailyContestDomain}/dailycontest/stockpredictions`}
                             >
-                                Stock Prediction Contest
+                                Track Stock Predictions
                             </ListItem>
                             <ListItem 
                                     history={this.props.history} 

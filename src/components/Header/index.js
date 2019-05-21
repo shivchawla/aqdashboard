@@ -112,7 +112,7 @@ export default withStyles(styles)(withRouter(Header));
 
 const HeaderLinks = ({activeIndex = 0, history, isLoggedIn = null, renderQuantResearchMenu, handleMenuClick, handleMenuClose}) => {
     const urls = [
-        {name: 'Contest', url: `${dailyContestDomain}/dailycontest/home`, href: true},
+        {name: 'Predict', url: `${dailyContestDomain}/dailycontest/stockpredictions`, href: true},
     ];
     return (
         <React.Fragment>
