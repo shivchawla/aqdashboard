@@ -149,7 +149,7 @@ const HeaderLinks = ({
         handleMarketplaceMenuClick,
 }) => {
     const urls = [
-        {name: 'Contest', url: `${dailyContestDomain}/dailycontest/home`, href: true},
+        {name: 'Predict', url: `${dailyContestDomain}/dailycontest/stockpredictions`, href: true},
     ];
     return (
         <React.Fragment>

@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Slide from '@material-ui/core/Slide';
 import {withStyles} from '@material-ui/core/styles';
 import ActionIcon from '../Buttons/ActionIcon';
-import { horizontalBox } from '../../constants';
+import { horizontalBox, primaryColor } from '../../constants';
 
 const dialogStyles = theme => ({
     root: {
@@ -16,6 +16,11 @@ const dialogStyles = theme => ({
             padding: 0,
             backgroundColor: 'red',
         },
+    },
+    dialogActionRoot: {
+        borderTop: '2px solid #e1e1e1',
+        margin: '8px 0',
+        position: 'relative'
     }
 })
 
@@ -45,7 +50,11 @@ class DialogComponent extends React.Component {
             maxWidth = 'md',
             cancelButtonStyle = {},
             okButtonStyle = {},
-            hideClose = false
+            hideClose = false,
+            titleStyle = {},
+            okText = null,
+            classes,
+            extraActionContent = null
         } = this.props;
 
         return (
@@ -64,7 +73,7 @@ class DialogComponent extends React.Component {
                 >
                     {
                         title &&
-                        <DialogTitle>{title}</DialogTitle>
+                        <DialogTitle style={titleStyle}>{title}</DialogTitle>
                     }
                     {
                         !hideClose &&
@@ -76,21 +85,38 @@ class DialogComponent extends React.Component {
                 </DialogContent>
                 {
                     action &&
-                    <DialogActions>
-                        <Button 
+                    <DialogActions 
+                            classes={{
+                                root: classes.dialogActionRoot
+                            }}
+                    >
+                        {extraActionContent}
+                        <ButtonBase 
                                 onClick={this.onCancel} 
                                 color="secondary"
-                                style={cancelButtonStyle}
+                                style={{
+                                    ...defaultButtonStyle,
+                                    ...cancelDefaultButtonStyle,
+                                    ...cancelButtonStyle
+                                }}
+                                variant='outlined'
                         >
                             CANCEL
-                        </Button>
-                        <Button 
+                        </ButtonBase>
+                        <ButtonBase 
                                 onClick={this.onOk} 
                                 color="primary"
-                                style={okButtonStyle}
+                                style={{
+                                    ...defaultButtonStyle,
+                                    ...okDefaultButtonStyle,
+                                    ...okButtonStyle
+                                }}
+                                variant='outlined'
                         >
-                            OK
-                        </Button>
+                            {
+                                okText ? okText : 'OK'
+                            }
+                        </ButtonBase>
                     </DialogActions>
                 }
             </Dialog>
@@ -99,6 +125,28 @@ class DialogComponent extends React.Component {
 }
 
 export default withStyles(dialogStyles)(DialogComponent);
+
+const defaultButtonStyle = {
+    fontSize: '12px',
+    fontWeight: 700,
+    borderRadius: '4px',
+    padding: '8px',
+    margin: '0 10px',
+    marginTop: '8px',
+    fontFamily: 'Lato, sans-serif',
+    textTransform: 'uppercase',
+    minWidth: '63px'
+};
+
+const cancelDefaultButtonStyle = {
+    backgroundColor: '#a5a5a5',
+    color: '#fff'
+};
+
+const okDefaultButtonStyle = {
+    backgroundColor: primaryColor,
+    color: '#fff'
+}
 
 const Transition = props => {
     return <Slide direction="up" {...props} />;
