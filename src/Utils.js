@@ -4,7 +4,7 @@ import _ from 'lodash';
 import axios from 'axios';
 import cookie from 'react-cookies';
 
-const {requestUrl, webSocketUrl, dailyContestDomain, env = ''} = require('./localConfig');
+const {requestUrl, webSocketUrl, dailyContestDomain, env = '', marketPlaceDomain} = require('./localConfig');
 
 class Utils{
 	static userInfoString = `${env}USERINFO`;
@@ -18,6 +18,11 @@ class Utils{
 	static goToDailyContestPage = url => {
 		window.location.href = `${dailyContestDomain}/${url}`;
 	}
+
+	static goToMarketPlace = url => {
+		window.location.href = `${marketPlaceDomain}${url}`;
+	}
+
 
 	static setShouldUpdateToken(status){
 		this.cookieStorageSave('SHOULDUPDATETOKEN', status);
