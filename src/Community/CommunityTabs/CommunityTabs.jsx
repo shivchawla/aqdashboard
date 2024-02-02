@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { withRouter } from 'react-router-dom';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useNavigate } from 'react-router-dom';
 import {communityTabsArray} from './constants';
 import { verticalBox } from '../../constants';
 
@@ -28,4 +28,4 @@ class CommunityTabs extends Component {
     }
 }
 
-export default withRouter(CommunityTabs);
+export default CommunityTabs;

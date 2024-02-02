@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Breadcrumbs from '@material-ui/lab/Breadcrumbs';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import {Link as RouterLink} from 'react-router-dom';
 
 export default class CustomBreadcrumbs extends React.Component {

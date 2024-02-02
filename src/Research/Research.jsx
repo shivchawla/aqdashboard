@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Moment from 'react-moment';
 import styled from 'styled-components';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Icon from '@material-ui/core/Icon';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import CircularProgress from '@mui/material/CircularProgress';
+import Icon from '@mui/material/Icon';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import Checkbox from '../components/Selections/Checkbox';
-import {withRouter, Link} from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
+import {useNavigate, Link} from 'react-router-dom';
+import {withStyles} from '@mui/styles';
 import NewStartegy from './NewStrategy/NewStrategy.jsx';
 import DialogComponent from '../components/Alerts/DialogComponent';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
@@ -312,8 +312,8 @@ class Research extends Component {
 
     componentDidMount() {
         this._mounted = true;
-        const params = new URLSearchParams(this.props.location.search);
-        const token = params.get('token');
+        // const params = new URLSearchParams(this.props.location.search);
+        // const token = params.get('token');
         // if (Utils.checkToken(token) && !Utils.isLoggedIn()) {
         //     Utils.autoLogin(token,this.props.history, this.props.match.url, () => {
         //       this.updateState({'loading': true});
@@ -754,7 +754,7 @@ class Research extends Component {
     }
 }
 
-export default withStyles(styles)(withRouter(Research));
+export default withStyles(styles)(Research);
 
 const LiveTestListItem = ({item, liveTestCheckBoxChange, selectedLiveTests, getLiveTestStatus, history}) => {
     return (

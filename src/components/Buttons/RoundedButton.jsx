@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import Icon from '@material-ui/core/Icon';
-import ButtonBase from '@material-ui/core/ButtonBase';
+import Icon from '@mui/material/Icon';
+import ButtonBase from '@mui/material/ButtonBase';
 import {primaryColor, verticalBox, horizontalBox} from '../../constants';
 
 export default class RoundedButton extends React.Component {

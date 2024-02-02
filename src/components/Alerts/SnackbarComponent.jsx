@@ -1,7 +1,7 @@
 import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close'
 
 export default ({openStatus = true, message = 'Snackbar Data', handleClose = () => {}, position = 'bottom', autoHideDuration = 1500, renderAction = null, style = {}}) => {
     return (

@@ -2,18 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import IndicatorLabel from './IndicatorLabel';
-import Popover from '@material-ui/core/Popover';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import {withStyles} from '@material-ui/core/styles';
+import Popover from '@mui/material/Popover';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import {withStyles} from '@mui/styles';
 import EditDialog from './EditDialog';
 import ActionIcon from '../../../../../components/Buttons/ActionIcon';
 import {comparators, conditionalOperators} from '../../../constants';
 import {ValueHeader, OptionValue, OptionLabel} from './RowTexts';
 import {horizontalBox, verticalBox, primaryColor} from '../../../../../constants';
-import { Icon } from '@material-ui/core';
+import Icon from '@mui/material/Icon';
 
 const styles = {
     backdropRoot: {

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Icon from '@material-ui/core/Icon';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import Button from '@mui/material/Button';
 import {PostDetailMeta} from '../../metas';
 import Chip from '../../components/DataDisplay/Chip';
 import Utils from './../../Utils';
@@ -253,7 +253,8 @@ class ThreadView extends Component {
                             onClick={() => { this.attachBackTest() }}
                             size="small"
                     >
-                        ATTACH<Icon style={{fontSize: '18px'}}>attach_file</Icon>
+                        ATTACH
+                        <AttachFileIcon style={{fontSize: '18px'}}/>
                     </Button>
                 );
             }
@@ -409,4 +410,4 @@ class ThreadView extends Component {
     }
 }
 
-export default withRouter(ThreadView);
+export default ThreadView;

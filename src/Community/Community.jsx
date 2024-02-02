@@ -4,10 +4,9 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import {CommunityMeta} from '../metas';
 import Utils from './../Utils';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import MultiRadioGroup from '../components/Selections/MultiRadioGroup';
-import {withRouter } from 'react-router-dom';
 import Search from './Search/Search.jsx';
 import CommunityTabs from './CommunityTabs/CommunityTabs.jsx';
 import ThreadList from './ThreadList/ThreadList.jsx';
@@ -15,7 +14,7 @@ import Pagination from './Pagination/Pagination.jsx';
 import AqDesktopLayout from '../components/Layout/AqDesktopLayout';
 import Breadcrumbs from '../components/UI/Breadcrumbs';
 import {communityTabsArray} from './CommunityTabs/constants';
-import 'react-loading-bar/dist/index.css';
+// import 'react-loading-bar/dist/index.css';
 
 class Community extends Component {
 
@@ -573,4 +572,4 @@ class Community extends Component {
     }
 }
 
-export default withRouter(Community);
+export default Community;

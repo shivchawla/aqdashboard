@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import classNames from 'classnames';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import {withStyles} from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import {withStyles} from '@mui/styles';
 import SectionHeader from './common/SectionHeader';
 
 const styles = theme => ({

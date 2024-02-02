@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Radio from '@material-ui/core/Radio';
+import Radio from '@mui/material/Radio';
 import {horizontalBox, primaryColor} from '../../constants';
 
 const disabledColor = '#bdbdbd';

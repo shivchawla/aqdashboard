@@ -1,7 +1,7 @@
 import React from 'react';
-import Chip from '@material-ui/core/Chip';
-import {withStyles} from '@material-ui/core/styles';
-import Close from '@material-ui/icons/Cancel';
+import Chip from '@mui/material/Chip';
+import {withStyles} from '@mui/styles';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const style = theme => ({
     root: {
@@ -23,7 +23,7 @@ class CustomChip extends React.Component {
                     root: classes.root,
                     label: classes.label
                 }}
-                deleteIcon={<Close style={{fontSize: '20px'}}/>}
+                deleteIcon={<CancelIcon style={{fontSize: '20px'}}/>}
             />
         );
     }

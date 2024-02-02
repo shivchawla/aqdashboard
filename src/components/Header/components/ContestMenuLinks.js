@@ -1,12 +1,12 @@
 import React from 'react';
-import Menu from '@material-ui/core/Menu';
-import Paper from '@material-ui/core/Paper';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Popper from '@material-ui/core/Popper';
-import ButtonBase from '@material-ui/core/ButtonBase';
+import Menu from '@mui/material/Menu';
+import Paper from '@mui/material/Paper';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Popper from '@mui/material/Popper';
+import ButtonBase from '@mui/material/ButtonBase';
 import {NavLink} from './NavLink';
 
 export default class ContestMenuLinks extends React.Component {

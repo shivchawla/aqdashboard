@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
+import { useNavigate } from 'react-router-dom';
+import {withStyles} from '@mui/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
 import Moment from 'react-moment';
 import Utils from './../../../Utils';
 import RunningBacktestChart from './../../../CustomHighCharts/RunningBacktestChart.jsx';
@@ -280,4 +280,4 @@ class RunningBackTest extends Component {
     }
 }
 
-export default withStyles(styles)(withRouter(RunningBackTest));
+export default withStyles(styles)(RunningBackTest);

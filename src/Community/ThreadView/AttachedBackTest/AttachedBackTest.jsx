@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import Utils from './../../../Utils';
 import Moment from 'react-moment';
 import AceEditor from 'react-ace';
-import 'brace/mode/julia';
-import 'brace/theme/xcode';
+// import 'brace/mode/julia';
+// import 'brace/theme/xcode';
 import Chip from '../../../components/DataDisplay/Chip';
 import RadioGroup from '../../../components/Selections/RadioGroup';
 import CustomRadio from '../../../components/Selections/CardCustomRadio';
@@ -631,4 +631,4 @@ class AttachedBackTest extends Component {
     }
 }
 
-export default withRouter(AttachedBackTest);
+export default AttachedBackTest;

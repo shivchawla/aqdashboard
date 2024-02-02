@@ -3,18 +3,18 @@ import axios from 'axios';
 import _ from 'lodash';
 import Utils from './../../Utils';
 import ReactTable from "react-table";
-import Loading from 'react-loading-bar';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import {withRouter} from 'react-router-dom';
+// import Loading from 'react-loading-bar';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import {useNavigate} from 'react-router-dom';
 import Moment from 'react-moment';
 import moment from 'moment';
 import AceEditor from 'react-ace';
-import 'brace/mode/julia';
-import 'brace/theme/xcode';
+// import 'brace/mode/julia';
+// import 'brace/theme/xcode';
 import {BacktestDetailMeta} from '../../metas';
 import CustomHighCharts from './../../CustomHighCharts/CustomHighCharts.jsx';
 import RunningBacktestChart from './../../CustomHighCharts/RunningBacktestChart.jsx';
@@ -24,8 +24,8 @@ import CardCustomRadio from '../../components/Selections/CardCustomRadio';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import Chip from '../../components/DataDisplay/Chip';
-import "react-table/react-table.css";
-import 'react-loading-bar/dist/index.css';
+// import "react-table/react-table.css";
+// import 'react-loading-bar/dist/index.css';
 import { processConditionsToAlgo } from '../StartegyDetail/utils';
 import FlowChartAlgo from '../FlowChartAlgo';
 import { verticalBox, horizontalBox, primaryColor } from '../../constants';
@@ -933,11 +933,11 @@ class BacktestDetail extends Component {
                             minHeight: '400px'
                         }}
                 >
-                    <Loading
+                    {/* <Loading
                         show={this.state.logsLoading}
                         color="teal"
                         showSpinner={false}
-                    />
+                    /> */}
                     {logs}
                 </div>
             );
@@ -971,11 +971,11 @@ class BacktestDetail extends Component {
                             padding: '10px'
                         }}
                 >
-                    <Loading
+                    {/* <Loading
                         show={this.state.transactionLoading}
                         color="teal"
                         showSpinner={false}
-                    />
+                    /> */}
                     <ReactTable ref="transactionTable" columns={this.transactionColumns}
                         data={this.state.transactionHistoryParentData}
                         // minRows={4}
@@ -1081,11 +1081,11 @@ class BacktestDetail extends Component {
                             overflowY: 'auto', 'padding': '0px 10px'
                         }}
                 >
-                    <Loading
+                    {/* <Loading
                         show={this.state.portfolioHistoryLoading}
                         color="teal"
                         showSpinner={false}
-                    />
+                    /> */}
                     <div style={{
                         'display': 'flex', 'justifyContent': 'center',
                         'margin': '10px'
@@ -1733,4 +1733,4 @@ class BacktestDetail extends Component {
     }
 }
 
-export default withRouter(BacktestDetail);
+export default BacktestDetail;

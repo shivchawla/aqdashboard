@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Highstocks from 'highcharts/highstock';
 import Highcharts from 'highcharts';
@@ -128,5 +128,5 @@ class RunningBacktestChart extends React.Component {
       );
     }
 }
-export default withRouter(RunningBacktestChart);
+export default RunningBacktestChart;
 

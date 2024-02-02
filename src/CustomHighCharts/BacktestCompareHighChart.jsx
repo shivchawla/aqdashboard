@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Highstocks from 'highcharts/highstock';
 import Highcharts from 'highcharts';
 import moment from 'moment';
@@ -225,5 +225,5 @@ class BacktestCompareHighChart extends React.Component {
         );
     }
 }
-export default withRouter(BacktestCompareHighChart);
+export default BacktestCompareHighChart;
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import windowSize from 'react-window-size';
+// import windowSize from 'react-window-size';
 import styled from 'styled-components';
-import Grid from '@material-ui/core/Grid';
-import {withRouter} from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import {useNavigate} from 'react-router-dom';
 import {horizontalBox, verticalBox} from '../../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from "@fortawesome/free-brands-svg-icons";
@@ -109,7 +109,8 @@ class NewFooter extends React.Component {
     }
 }
 
-export default withRouter(windowSize(NewFooter));
+//export default windowSize(NewFooter);
+export default NewFooter;
 
 const ListItem = ({url, children, history, href = false}) => {
     return (

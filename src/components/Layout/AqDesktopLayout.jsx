@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
-import Loading from 'react-loading-bar';
+// import Loading from 'react-loading-bar';
 import styled from 'styled-components';
-import Grid from '@material-ui/core/Grid';
-import {withRouter} from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import {useNavigate} from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
-import 'react-loading-bar/dist/index.css';
+// import 'react-loading-bar/dist/index.css';
 
 class AqDesktopLayout extends React.Component {
     constructor(props) {
@@ -23,13 +23,13 @@ class AqDesktopLayout extends React.Component {
             <ContainerGrid container>
                 <Grid item xs={12}>
                     <Header activeIndex={1} />
-                    <div className="main-loader">
+                    {/* <div className="main-loader">
                         <Loading
                             show={loading}
                             color="teal"
                             showSpinner={false}
                         />
-                    </div>
+                    </div> */}
                 </Grid>
                 <ColContainer 
                         item 
@@ -55,7 +55,7 @@ class AqDesktopLayout extends React.Component {
     }
 }
 
-export default withRouter(AqDesktopLayout);
+export default AqDesktopLayout;
 
 const ContainerGrid = styled(Grid)`
     height: 100%;

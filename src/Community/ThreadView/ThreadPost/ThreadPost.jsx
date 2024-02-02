@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Chip from '../../../components/DataDisplay/Chip';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Icon from '@material-ui/core/Icon';
+import CircularProgress from '@mui/material/CircularProgress';    
 import Utils from './../../../Utils';
 import Moment from 'react-moment';
 import ThreadReply from './../ThreadReply/ThreadReply.jsx';
 import AttachedBackTest from './../AttachedBackTest/AttachedBackTest.jsx';
-
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 class ThreadPost extends Component {
 
@@ -188,16 +187,14 @@ class ThreadPost extends Component {
                     <Grid container>
                         <Grid item sm={12} md={6}>
                             <div style={{ 'display': 'flex', 'alignItems': 'center' }}>
-                                <Icon
-                                        style={{
-                                            alignSelf: 'center', 
-                                            fontSize: 34,
-                                            color: '#cc4444', 
-                                            fontWeight: 'bold'
-                                        }} 
-                                >
-                                    {iconLeft}
-                                </Icon>
+                                <KeyboardArrowLeftIcon
+                                    style={{
+                                        alignSelf: 'center', 
+                                        fontSize: 34,
+                                        color: '#cc4444', 
+                                        fontWeight: 'bold'
+                                    }} 
+                                />
                                 <div style={{ 'marginLeft': '10px' }}>
                                     <h3 style={{
                                         'margin': '0px', 'fontSize': '1.4em',
@@ -282,4 +279,4 @@ class ThreadPost extends Component {
     }
 }
 
-export default withRouter(ThreadPost);
+export default ThreadPost;

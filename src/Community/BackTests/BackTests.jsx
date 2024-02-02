@@ -1,13 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Radio from '@material-ui/core/Radio';
+import { useNavigate } from 'react-router-dom';
+import {withStyles} from '@mui/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Radio from '@mui/material/Radio';
 import moment from 'moment';
 import Utils from './../../Utils';
 
@@ -211,5 +211,5 @@ class BackTests extends React.Component {
         );
     }
 }
-export default withStyles(styles)(withRouter(BackTests));
+export default withStyles(styles)(BackTests);
 

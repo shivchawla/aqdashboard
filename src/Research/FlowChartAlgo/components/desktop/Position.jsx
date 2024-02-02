@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import {buy, sell} from '../../constants';
 import {updateScript} from '../../utils';
 

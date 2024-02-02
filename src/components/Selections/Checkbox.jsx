@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import {horizontalBox} from '../../constants';
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 
 export default class CustomCheckbox extends React.Component {
     render() {

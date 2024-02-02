@@ -1,10 +1,10 @@
 import React from 'react';
 import _ from 'lodash';
-import FilledInput from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import { withStyles } from '@material-ui/core/styles';
+import FilledInput from '@mui/material/Input';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import {withStyles} from '@mui/styles';
 import {metricColor} from '../../../../constants';
 
 const styles = theme => ({

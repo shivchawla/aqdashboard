@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import Utils from './../../Utils';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BacktestsTable from './BacktestsTable';
 import axios from 'axios';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
@@ -10,7 +10,7 @@ import {processBacktests} from './utils';
 import Compare from '../Compare/Compare';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import Breadcrumbs from '../../components/UI/Breadcrumbs';
-import { CircularProgress } from '@material-ui/core';
+import CircularProgress from '@mui/material/CircularProgress';
 import { horizontalBox } from '../../constants';
 
 class StrategyBacktests extends Component {
@@ -424,4 +424,4 @@ class StrategyBacktests extends Component {
     }
 }
 
-export default withRouter(StrategyBacktests);
+export default StrategyBacktests;

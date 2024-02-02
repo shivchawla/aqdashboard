@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import InputBase from '@material-ui/core/InputBase';
-import Paper from '@material-ui/core/Paper';
-import {withStyles} from '@material-ui/core/styles';
+import InputBase from '@mui/material/InputBase';
+import Paper from '@mui/material/Paper';
+import {withStyles} from '@mui/styles';
 
 const styles = {
     root: {

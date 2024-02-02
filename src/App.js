@@ -1,43 +1,42 @@
 import React, { Component } from 'react';
-import Route from 'react-router/Route';
 import ReactGA from 'react-ga';
 import Media from 'react-media';
-import Switch from 'react-router-dom/Switch';
-import Button from '@material-ui/core/Button';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import Button from '@mui/material/Button';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 import Snackbar from './components/Alerts/SnackbarComponent';
-import MomentUtils from '@date-io/moment';
-import {withRouter} from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+
 import ChunkingLoader from './components/Loaders/ChunkingLoader';
 import {horizontalBox} from './constants';
 import './App.css';
 
-const {gaTrackingId} = require('./localConfig');
+// const {gaTrackingId} = require('./localConfig');
 
 /**
  * Chunking code using React.Suspense and async imports
  */
+import Research from './Research/Research';
+import StrategyDetail from './Research/StartegyDetail/StartegyDetail';
+import StrategyBacktests from './Research/StrategyBacktests/StrategyBacktests';
+import BacktestDetail from './Research/BacktestDetail/BacktestDetail';
+import Community from './Community/Community';
+import ThreadView from './Community/ThreadView/ThreadView';
+import NewPost from './Community/NewPost/NewPost';
+// import Help from './HelpFrame';
+// import Home from './HomeFrame';
+import Tutorial from './TutorialFrame';
+import ForbiddenAccess from './ErrorPages/ForbiddenAccess';
+import NoIternetAccess from './ErrorPages/NoIternetAccess';
+import BadRequest from './ErrorPages/BadRequest';
+import PageNotFound from './ErrorPages/PageNotFound';
+import UnderDevelopment from './ErrorPages/UnderDevelopment';
+import FlowChartAlgo from './Research/FlowChartAlgo';
 
-const Research = React.lazy(() => import('./Research/Research'));
-const StrategyDetail = React.lazy(() => import('./Research/StartegyDetail/StartegyDetail'));
-const StrategyBacktests = React.lazy(() => import('./Research/StrategyBacktests/StrategyBacktests'));
-const BacktestDetail = React.lazy(() => import('./Research/BacktestDetail/BacktestDetail'));
-const Community = React.lazy(() => import('./Community/Community'));
-const ThreadView = React.lazy(() => import('./Community/ThreadView/ThreadView'));
-const NewPost = React.lazy(() => import('./Community/NewPost/NewPost'));
-const Help = React.lazy(() => import('./HelpFrame'));
-const Home = React.lazy(() => import('./HomeFrame'));
-const Tutorial = React.lazy(() => import('./TutorialFrame'));
-const ForbiddenAccess = React.lazy(() => import('./ErrorPages/ForbiddenAccess'));
-const NoIternetAccess = React.lazy(() => import('./ErrorPages/NoIternetAccess'));
-const BadRequest = React.lazy(() => import('./ErrorPages/BadRequest'));
-const PageNotFound = React.lazy(() => import('./ErrorPages/PageNotFound'));
-const UnderDevelopment = React.lazy(() => import('./ErrorPages/UnderDevelopment'));
-const FlowChartAlgo = React.lazy(() => import('./Research/FlowChartAlgo'));
 
-
-const theme = createMuiTheme({
+const theme = createTheme({
 	palette: {
 		primary: {
 			main: '#008080'
@@ -49,7 +48,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.deferredA2HSEvent = null;
-        ReactGA.initialize(gaTrackingId); //Unique Google Analytics tracking number
+        // ReactGA.initialize(gaTrackingId); //Unique Google Analytics tracking number
         this.state = {
             newContentToast: false,
             addToHomescreenToast: false,
@@ -152,8 +151,8 @@ class App extends Component {
 
     render() {
         return (
-            <MuiThemeProvider theme={theme}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
+            <ThemeProvider theme={theme}>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
                     <div className="App">
                         <Snackbar 
                             openStatus={this.state.newContentToast}
@@ -182,32 +181,32 @@ class App extends Component {
                             query="(min-width: 801px)"
                             render={() => (
                                 <React.Suspense fallback={<ChunkingLoader />}>
-                                    <Switch>
-                                        <Route exact={true} path='/research' component={Research} />
-                                        <Route exact={true} path='/research/strategy/:strategyId' component={StrategyDetail} />
-                                        <Route exact={true} path='/research/backtests/:strategyId' component={StrategyBacktests} />
-                                        <Route exact={true} path='/research/backtests/:strategyId/:backtestId' component={BacktestDetail} />
-                                        <Route exact={true} path='/community' component={Community}/>
-                                        <Route exact={true} path='/community/postDetail/:postId' component={ThreadView} />
-                                        <Route exact={true} path='/community/newPost' component={NewPost} />
-                                        <Route exact={true} path='/help' component={Help}/>
-                                        <Route exact={true} path='/tutorial' component={Tutorial}/>
-                                        <Route exact={true} path='/home' component={Home}/>
-                                        <Route exact={true} path='/' component={Home}/>
-                                        <Route exact={true} path='/forbiddenAccess' component={ForbiddenAccess} />
-                                        <Route exact={true} path='/errorPage' component={NoIternetAccess} />
-                                        <Route exact={true} path='/badRequest' component={BadRequest} />
-                                        <Route exact={true} path='/algo' component={FlowChartAlgo} />
-                                        <Route component={PageNotFound} />
-                                    </Switch>
+                                    <Routes>
+                                        {/* <Route exact={true} path='/home' element={<Home/>}/> */}
+                                        <Route exact={true} path='/' element={<Research/>}/>
+                                        <Route exact={true} path='/research' element={<Research/>}/>
+                                        <Route exact={true} path='/research/strategy/:strategyId' element={<StrategyDetail/>}/>
+                                        <Route exact={true} path='/research/backtests/:strategyId' element={<StrategyBacktests/>}/>
+                                        <Route exact={true} path='/research/backtests/:strategyId/:backtestId' element={<BacktestDetail/>}/>
+                                        <Route exact={true} path='/community' element={<Community/>}/>
+                                        <Route exact={true} path='/community/postDetail/:postId' element={<ThreadView/>}/>
+                                        <Route exact={true} path='/community/newPost' element={<NewPost/>}/>
+                                        {/* <Route exact={true} path='/help' element={<Help/>}/> */}
+                                        <Route exact={true} path='/tutorial' element={<Tutorial/>}/>
+                                        <Route exact={true} path='/forbiddenAccess' element={<ForbiddenAccess/>}/>
+                                        <Route exact={true} path='/errorPage' element={<NoIternetAccess/>}/>
+                                        <Route exact={true} path='/badRequest' element={<BadRequest/>}/>
+                                        <Route exact={true} path='/algo' element={<FlowChartAlgo/>}/>
+                                        <Route element={<PageNotFound/>}/>
+                                    </Routes>
                                 </React.Suspense>
                             )}
                         />
                     </div>
-                </MuiPickersUtilsProvider>
-            </MuiThemeProvider>
+                </LocalizationProvider>
+            </ThemeProvider>
         );
     }
 }
 
-export default withRouter(App);
+export default App;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { verticalBox } from '../constants';
 
 export default class NoIternetAccess extends React.Component {

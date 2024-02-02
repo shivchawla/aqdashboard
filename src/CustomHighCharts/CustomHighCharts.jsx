@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Highstocks from 'highcharts/highstock';
 import Highcharts from 'highcharts';
 import moment from 'moment';
@@ -309,5 +309,5 @@ class CustomHighCharts extends React.Component {
         );
     }
 }
-export default withRouter(CustomHighCharts);
+export default CustomHighCharts;
 

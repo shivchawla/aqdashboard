@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Radio from '@material-ui/core/Radio';
-import Checkbox from '@material-ui/core/Checkbox';
+import Radio from '@mui/material/Radio';
+import Checkbox from '@mui/material/Checkbox';
 import {horizontalBox, primaryColor} from '../../constants';
 
 const disabledColor = '#bdbdbd';

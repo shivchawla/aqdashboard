@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Icon from '@mui/material/Icon';
 import {primaryColor} from '../../constants';
 
 export default class ActionIcons extends React.Component {

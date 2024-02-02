@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import Utils from './../../Utils';
 import Chip from '../../components/DataDisplay/Chip';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import {NewPostMeta} from '../../metas';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import RadioGroup from '../../components/Selections/RadioGroup';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { withRouter} from 'react-router-dom';
+import Button from '@mui/material/Button';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate} from 'react-router-dom';
 import SnackbarComponent from '../../components/Alerts/SnackbarComponent';
 import AvailableBackTests from './../ThreadView/AvailableBackTests/AvailableBackTests.jsx';
 import ReactQuill from 'react-quill';
@@ -238,7 +238,8 @@ class NewPost extends Component {
                             variant='outlined'
                             size="small"
                     >
-                        ATTACH<Icon style={{fontSize: '18px'}}>attach_file</Icon>
+                        ATTACH
+                        <AttachFileIcon style={{fontSize: '18px'}}/>
                     </Button>
                 );
             }
@@ -476,4 +477,4 @@ class NewPost extends Component {
     }
 }
 
-export default withRouter(NewPost);
+export default NewPost;

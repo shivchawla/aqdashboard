@@ -1,4 +1,4 @@
-import {emphasize} from '@material-ui/core/styles/colorManipulator';
+import { emphasize } from '@mui/system';
 
 export default theme => ({
     root: {

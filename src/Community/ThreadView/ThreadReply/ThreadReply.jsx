@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
+import { useNavigate } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
 import Moment from 'react-moment';
 import Utils from './../../../Utils';
-import 'highlight.js/styles/atelier-cave-light.css';
+// import 'highlight.js/styles/atelier-cave-light.css';
 import Highlight from './../../HighLight/Highlight.jsx';
 import AttachedBackTest from './../AttachedBackTest/AttachedBackTest.jsx';
 
@@ -111,4 +111,4 @@ class ThreadReply extends Component {
     }
 }
 
-export default withRouter(ThreadReply);
+export default ThreadReply;

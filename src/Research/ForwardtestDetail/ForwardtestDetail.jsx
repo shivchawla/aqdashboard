@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import Utils from './../../Utils';
 import { Spin, Icon, Row, Col, Tabs, Radio, Button, Modal } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'react-moment';
 import AceEditor from 'react-ace';
@@ -10,8 +10,8 @@ import ReactTable from 'react-table';
 import moment from 'moment';
 import LiveTestPerformanceChart from './../../CustomHighCharts/LiveTestPerformanceChart.jsx';
 
-import Loading from 'react-loading-bar'
-import 'react-loading-bar/dist/index.css'
+// import Loading from 'react-loading-bar'
+// import 'react-loading-bar/dist/index.css'
 
 class ForwardtestDetail extends Component {
 
@@ -1415,17 +1415,17 @@ class ForwardtestDetail extends Component {
 
     return (
       <React.Fragment>
-        <div className="main-loader">
+        {/* <div className="main-loader">
           <Loading
             show={this.state.loading}
             color="teal"
             showSpinner={false}
           />
-        </div>
+        </div> */}
         {getTotalDiv()}
       </React.Fragment>
     );
   }
 }
 
-export default withRouter(ForwardtestDetail);
+export default ForwardtestDetail;

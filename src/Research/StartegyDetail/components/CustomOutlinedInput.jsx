@@ -1,6 +1,6 @@
 import React from 'react';
-import InputBase from '@material-ui/core/InputBase';
-import {withStyles} from '@material-ui/core/styles';
+import InputBase from '@mui/material/InputBase';
+import {withStyles} from '@mui/styles';
 import { primaryColor } from '../../../constants';
 
 export default withStyles(theme => ({

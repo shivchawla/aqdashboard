@@ -2,11 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
-import {withRouter} from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
+import {useNavigate} from 'react-router-dom';
 import AutoComplete from '../../../../components/input/AutoComplete';
 import SectionHeader from './common/SectionHeader';
 import Utils from '../../../../Utils';
@@ -158,7 +158,7 @@ class Script extends React.Component {
     }
 }
 
-export default withRouter(Script);
+export default Script;
 
 const SChip = styled(Chip)`
     margin: 0 3px;

@@ -1,11 +1,11 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import {withRouter} from 'react-router-dom';
-import {withStyles} from '@material-ui/core/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Grid from '@mui/material/Grid';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import {useNavigate} from 'react-router-dom';
+import {withStyles} from '@mui/styles';
 import {NavLink} from './components/NavLink';
 import Utils from '../../Utils';
 import {horizontalBox} from '../../constants';
@@ -136,7 +136,7 @@ class Header extends React.Component {
     }
 }
 
-export default withStyles(styles)(withRouter(Header));
+export default withStyles(styles)(Header);
 
 const HeaderLinks = ({
         activeIndex = 0, 

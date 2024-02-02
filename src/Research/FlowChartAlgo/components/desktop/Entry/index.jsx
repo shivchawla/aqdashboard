@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import Icon from '@mui/material/Icon';
+import Button from '@mui/material/Button';
 import {horizontalBox, primaryColor} from '../../../../../constants';
 import ConditionRow from '../common/ConditionRow';
 import {defaultFirstRowEntryCondition, defaultSecondRowEntryCondition} from '../../../constants';

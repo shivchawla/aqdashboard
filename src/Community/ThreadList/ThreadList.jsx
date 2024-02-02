@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ThreadListItem from './ThreadListItem/ThreadListItem.jsx';
-import { withRouter } from 'react-router-dom';
-import Loading from 'react-loading-bar';
-import 'react-loading-bar/dist/index.css';
+import { useNavigate } from 'react-router-dom';
+// import Loading from 'react-loading-bar';
+// import 'react-loading-bar/dist/index.css';
 
 class ThreadList extends Component {
 
@@ -51,17 +51,17 @@ class ThreadList extends Component {
                     'padding': '0px 4px 1% 4px',
                     'overflowY': 'auto', 'minHeight': '300px'
                 }}>
-                <div className="main-loader">
+                {/* <div className="main-loader">
                     <Loading
                         show={this.props.loading}
                         color="teal"
                         showSpinner={false}
                     />
-                </div>
+                </div> */}
                 {getDisplayData()}
             </div>
         );
     }
 }
 
-export default withRouter(ThreadList);
+export default ThreadList;

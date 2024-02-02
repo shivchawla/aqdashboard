@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import ButtonBase from '@material-ui/core/ButtonBase';
+import ButtonBase from '@mui/material/ButtonBase';
 import { primaryColor } from '../../constants';
 const inactiveColor = '#9C9C9C';
 

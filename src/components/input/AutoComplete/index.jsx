@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async';
 import Select from 'react-select';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import NoSsr from '@material-ui/core/NoSsr';
-import MenuItem from '@material-ui/core/MenuItem';
+import {withStyles} from '@mui/styles';
+import Typography from '@mui/material/Typography';
+import NoSsr from '@mui/material/NoSsr';
+import MenuItem from '@mui/material/MenuItem';
 import styles from './styles';
 import { verticalBox } from '../../../constants';
 

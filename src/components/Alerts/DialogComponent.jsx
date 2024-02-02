@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import Slide from '@material-ui/core/Slide';
-import {withStyles} from '@material-ui/core/styles';
+import ButtonBase from '@mui/material/ButtonBase';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import Slide from '@mui/material/Slide';
+import {withStyles} from '@mui/styles';
 import ActionIcon from '../Buttons/ActionIcon';
 import { horizontalBox, primaryColor } from '../../constants';
 

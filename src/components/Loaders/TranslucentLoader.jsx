@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default class TranslucentLoader extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {

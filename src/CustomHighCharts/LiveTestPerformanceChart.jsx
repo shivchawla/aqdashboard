@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Highstocks from 'highcharts/highstock';
 import Highcharts from 'highcharts';
@@ -262,5 +262,5 @@ class LiveTestPerformanceChart extends React.Component {
       );
     }
 }
-export default withRouter(LiveTestPerformanceChart);
+export default LiveTestPerformanceChart;
 

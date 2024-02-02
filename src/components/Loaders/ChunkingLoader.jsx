@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default class ChunkingLoader extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {

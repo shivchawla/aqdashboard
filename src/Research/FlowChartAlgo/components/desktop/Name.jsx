@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import {updateScript} from '../../utils';
 
 export default class Name extends React.Component {

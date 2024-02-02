@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Chip from '../../components/DataDisplay/Chip';
-import Button from '@material-ui/core/Button';
-import { withRouter } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import Utils from './../../Utils';
 class Search extends Component {
 
@@ -161,4 +161,4 @@ class Search extends Component {
     }
 }
 
-export default withRouter(Search);
+export default Search;

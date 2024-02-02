@@ -2,10 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import moment from 'moment';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import ActionIcon from '../Buttons/ActionIcon';
-import DatePicker from 'material-ui-pickers/DatePicker';
-import {withRouter} from 'react-router-dom';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {horizontalBox} from '../../constants';
 const DateHelper = require('../../utils/date');
 
@@ -215,7 +214,7 @@ class DateComponent extends React.Component {
     }
 }
 
-export default withRouter(DateComponent);
+export default DateComponent;
 
 const DateFields = props => {
     return (

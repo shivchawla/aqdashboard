@@ -1,13 +1,13 @@
 import React from 'react';
-import windowWidth from 'react-window-size';
+// import windowWidth from 'react-window-size';
 import styled from 'styled-components';
 import _ from 'lodash';
-import Grid from '@material-ui/core/Grid';
-import Slider from '@material-ui/lab/Slider';
-import {withStyles} from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import Slider from '@mui/material/Slider';
+import {withStyles} from '@mui/styles';
 import ActionIcon from '../../../../../../components/Buttons/ActionIcon';
 import CustomRadio from './CustomRadio';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import {horizontalBox, verticalBox, primaryColor} from '../../../../../../constants';
 
 let sliderInputTimeout = null;
@@ -91,7 +91,9 @@ class StockCardRadioGroup extends React.Component {
 
     render() {
         const {items = ['One', 'Two'], showSlider = false, classes, hideSlider = false, style = {}, label = ''} = this.props;
-        const isDesktop = this.props.windowWidth > 800;
+        // Not available in this version. Needs fix!
+        // const isDesktop = this.props.windowWidth > 800;
+        const isDesktop = true;
         const textFieldLabel = this.state.sliderValue;
 
         return (
@@ -250,7 +252,8 @@ class StockCardRadioGroup extends React.Component {
     }
 }
 
-export default withStyles(styles)(windowWidth(StockCardRadioGroup));
+// export default withStyles(styles)(windowWidth(StockCardRadioGroup));
+export default withStyles(styles)(StockCardRadioGroup);
 
 const ValueContainer = styled.div`
     width: 32px;

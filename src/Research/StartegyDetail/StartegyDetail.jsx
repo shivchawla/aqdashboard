@@ -3,27 +3,27 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import Utils from './../../Utils';
 import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 import Chip from '../../components/DataDisplay/Chip';
-import Select from '@material-ui/core/Select';
-import {withStyles} from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
+import Select from '@mui/material/Select';
+import {withStyles} from '@mui/styles';
+import Tooltip from '@mui/material/Tooltip';
 import {StrategyDetailMeta} from '../../metas';
 import ActionIcon from '../../components/Buttons/ActionIcon';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import DateComponent from '../../components/Selections/DateComponent';
 import CardRadio from '../../components/Selections/CardCustomRadio';
-import {withRouter} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import NewStartegy from './../NewStrategy/NewStrategy.jsx';
 import DialogComponent from '../../components/Alerts/DialogComponent';
 import SnackbarComponent from '../../components/Alerts/SnackbarComponent';
 import FlowChartAlgo from '../FlowChartAlgo';
 import AceEditor from 'react-ace';
-import 'brace/theme/tomorrow_night_bright';
-import 'brace/mode/julia';
+// import 'brace/theme/tomorrow_night_bright';
+// import 'brace/mode/julia';
 import moment from 'moment';
 import CustomOutlinedInput from './components/CustomOutlinedInput';
 import RunningBackTest from './RunningBackTest/RunningBackTest.jsx';
@@ -37,7 +37,7 @@ import {fetchAjaxPromise} from '../../utils/requests';
 import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
 import CardNavCustomRadio from '../../components/Selections/CardNavCustomRadio';
 import TranslucentLoader from '../../components/Loaders/TranslucentLoader';
-import { Checkbox } from '@material-ui/core';
+import Checkbox from '@mui/material/Checkbox';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -2293,7 +2293,7 @@ class StartegyDetail extends Component {
     }
 }
 
-export default withStyles(styles)(withRouter(StartegyDetail));
+export default withStyles(styles)(StartegyDetail);
 
 const InputContainer = props => {
     const {label = '', input, style = {}} = props;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ActionIcon from '../../components/Buttons/ActionIcon';
-import {withRouter} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Utils from './../../Utils';
 
 class Pagination extends Component {
@@ -141,4 +141,4 @@ class Pagination extends Component {
     }
 }
 
-export default withRouter(Pagination);
+export default Pagination;

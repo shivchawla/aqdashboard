@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Slide from '@material-ui/core/Slide';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import {withStyles} from '@material-ui/core/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import Slide from '@mui/material/Slide';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/material/CloseIcon';
+import {withStyles} from '@mui/styles';
 import {horizontalBox} from '../../constants';
 
 const styles = theme => ({

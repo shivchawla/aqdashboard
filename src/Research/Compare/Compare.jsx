@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import ReactTable from "react-table";
 import _ from 'lodash';
-import {withRouter} from 'react-router-dom';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
+import {useNavigate} from 'react-router-dom';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
 import RadioGroup from '../../components/Selections/RadioGroup';
 import CardRadio from '../../components/Selections/CardCustomRadio';
 import Utils from './../../Utils';
-import "react-table/react-table.css";
+// import "react-table/react-table.css";
 import AceDiff from 'ace-diff';
 
 // optionally, include CSS, or use your own
 import 'ace-diff/dist/ace-diff.min.css';
-import Loading from 'react-loading-bar';
-import 'react-loading-bar/dist/index.css';
+// import Loading from 'react-loading-bar';
+// import 'react-loading-bar/dist/index.css';
 
 import BacktestCompareHighChart from './../../CustomHighCharts/BacktestCompareHighChart.jsx';
 import { processConditionsToAlgo } from '../StartegyDetail/utils';
@@ -1023,17 +1023,17 @@ class Compare extends Component {
 
         return (
             <React.Fragment>
-                <div className="main-loader">
+                {/* <div className="main-loader">
                     <Loading
                         show={this.state.loading}
                         color="teal"
                         showSpinner={false}
                     />
-                </div>
+                </div> */}
                 {getTotalDiv()}
             </React.Fragment>
         );
     }
 }
 
-export default withRouter(Compare);
+export default Compare;

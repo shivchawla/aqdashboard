@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import Icon from '@material-ui/core/Icon';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Chip from '../../../components/DataDisplay/Chip';
-// import Chip from '@material-ui/core/Chip';
-import { withRouter } from 'react-router-dom';
+// import Chip from '@mui/material/Chip';
+import { useNavigate } from 'react-router-dom';
 import Moment from 'react-moment';
 import Utils from './../../../Utils';
 class ThreadListItem extends Component {
@@ -86,16 +87,14 @@ class ThreadListItem extends Component {
             }
             if (showAttachmentIcon) {
                 return (
-                    <Icon
+                    <AttachFileIcon
                             style={{
                                 marginLeft: 'auto', 
                                 color: '#cc4444', 
                                 transform: 'rotate(90deg)',
                                 fontSize: '24px',
                             }}
-                    >
-                        attach_file
-                    </Icon>
+                    />
                 );
             } else {
                 return (
@@ -123,16 +122,14 @@ class ThreadListItem extends Component {
                     onClick={this.clickedThread}
             >
                 <div style={{ 'display': 'flex' }}>
-                    <Icon
+                    <KeyboardArrowLeftIcon
                        style={{
                             alignSelf: 'center', 
                             color: '#cc4444', 
                             fontWeight: 'bold'
                         }} 
                         size={34}
-                    >
-                        {iconLeft}
-                    </Icon>
+                    />
                     <div style={{ 'marginLeft': '10px' }}>
                         <PostName>{this.props.threadData.title}</PostName>
                         <p style={{
@@ -184,7 +181,7 @@ class ThreadListItem extends Component {
     }
 }
 
-export default withRouter(ThreadListItem);
+export default ThreadListItem;
 
 const PostName = styled.h3`
     font-size: 16px;

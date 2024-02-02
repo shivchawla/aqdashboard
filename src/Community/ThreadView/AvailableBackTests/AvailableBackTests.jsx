@@ -1,14 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BackTests from './../../BackTests/BackTests.jsx';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
-import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import { Tabs, Tab, TabPanel, TabList } from 'react-tabs';
 import Utils from './../../../Utils';
 import axios from 'axios';
-import 'react-web-tabs/dist/react-web-tabs.css';
+// import 'react-web-tabs/dist/react-web-tabs.css';
 import { horizontalBox } from '../../../constants/index.js';
 
 class AvailableBackTests extends React.Component {
@@ -248,5 +248,5 @@ class AvailableBackTests extends React.Component {
         );
     }
 }
-export default withRouter(AvailableBackTests);
+export default AvailableBackTests;
 

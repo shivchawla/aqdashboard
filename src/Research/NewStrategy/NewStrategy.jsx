@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import Utils from './../../Utils';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import {Form, Formik} from 'formik';
-import {withRouter} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import InputComponent from '../../components/input/Form/components/InputComponent';
 import {getFormProps, validateSchema} from '../../utils/form';
 import {getValidationSchema} from './utils';
@@ -165,7 +165,7 @@ class NewStartegy extends Component {
     }
 }
 
-export default withRouter(NewStartegy);
+export default NewStartegy;
 
 const submitButtonStyle = {
     width: '100%',

@@ -2,9 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import {Motion, spring} from 'react-motion';
-import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
+import Grid from '@mui/material/Grid';
+import Icon from '@mui/material/Icon';
+import IconButton from '@mui/material/IconButton';
 import {bottomSheetStyle} from '../../constants';
 import {metricColor, primaryColor, horizontalBox} from '../../constants';
 
