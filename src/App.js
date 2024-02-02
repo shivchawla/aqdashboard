@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 import Media from 'react-media';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -58,7 +58,7 @@ class App extends Component {
     }
 
     fireTracking = () => {
-        ReactGA.pageview(window.location.href);
+        // ReactGA.pageview(window.location.href);
     }
 
     captureSWEvent = payload => {

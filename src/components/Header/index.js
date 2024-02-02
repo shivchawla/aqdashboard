@@ -156,6 +156,7 @@ const HeaderLinks = ({
             {
                 urls.map((item, index) => (
                     <NavLink
+                        key={item.url}
                         active={index === activeIndex}
                         onClick={() => {
                             if (item.href) {

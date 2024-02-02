@@ -328,7 +328,7 @@ class Research extends Component {
         } else {
             this.updateState({ 'loading': true });
             if (this._mounted) {
-                this.getAllStrategies(undefined);
+                this.getAllStrategies();
             }
             // }
         }
