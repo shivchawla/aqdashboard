@@ -36,7 +36,7 @@ class Script extends React.Component {
         .catch(error => {
             reject(error);
             if (error.response) {
-                Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
             }
         })
     })

@@ -67,7 +67,7 @@ class StrategyBacktests extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.updateState({
                         'backtests': [],
@@ -94,7 +94,7 @@ class StrategyBacktests extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.updateState({
                         'backtests': [],
@@ -121,7 +121,7 @@ class StrategyBacktests extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.removeAllLoading();
                 });
@@ -207,7 +207,7 @@ class StrategyBacktests extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.deletesCompleted = this.deletesCompleted + 1;
                     if (this.deletesCompleted === this.state.selectedBacktests.length) {

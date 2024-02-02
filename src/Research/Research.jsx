@@ -75,7 +75,7 @@ class Research extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.updateState({
                         'strategies': [],
@@ -315,7 +315,7 @@ class Research extends Component {
         // const params = new URLSearchParams(this.props.location.search);
         // const token = params.get('token');
         // if (Utils.checkToken(token) && !Utils.isLoggedIn()) {
-        //     Utils.autoLogin(token,this.props.history, this.props.match.url, () => {
+        //     Utils.autoLogin(token,this.props.history, this.props.url, () => {
         //       this.updateState({'loading': true});
         //       this.props.completeLogin();
         //       if (this._mounted){

@@ -38,6 +38,7 @@ import {parseObjectToCode} from '../FlowChartAlgo/utils/parser';
 import CardNavCustomRadio from '../../components/Selections/CardNavCustomRadio';
 import TranslucentLoader from '../../components/Loaders/TranslucentLoader';
 import Checkbox from '@mui/material/Checkbox';
+import { withRouter } from '../../function2Class.js';
 
 const dateFormat = 'YYYY-MM-DD H:mm:ss';
 const DateHelper = require('../../utils/date');
@@ -81,9 +82,12 @@ class StartegyDetail extends Component {
     constructor(props) {
         super(props);
         this.logElement = null;
-        this.stratergySaveInterval = setInterval(() => {
-            this.saveStartegy();
-        }, 5000);
+        
+        //FIX this: the saveStrategy function is not available in the scope
+        // this.stratergySaveInterval = setInterval(() => {
+        //     this.saveStrategy();
+        // }, 5000);
+
 
         let savedSettings = Utils.getFromLocalStorage('StrategyDetailSettings');
         if (!savedSettings) {
@@ -91,9 +95,10 @@ class StartegyDetail extends Component {
         }
         savedSettings = JSON.parse(savedSettings);
         const savedSelectedStocks = _.get(savedSettings, 'selectedStocks', []);
+        console.log(props)
         this.state = {
             loading: true,
-            strategyId: props.match.params.strategyId,
+            strategyId: props.params.strategyId,
             strategy: {},
             showNewStartegyDiv: false,
             showCloneStartegyDiv: false,
@@ -239,7 +244,7 @@ class StartegyDetail extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.updateState({
                         'loading': false
@@ -339,10 +344,10 @@ class StartegyDetail extends Component {
         }
 
         this.clickedOnSave = () => {
-            this.saveStartegy(true);
+            this.saveStrategy(true);
         }
 
-        this.saveStartegy = (showResultInfo) => new Promise((resolve, reject) => {
+        this.saveStrategy = (showResultInfo) => new Promise((resolve, reject) => {
             let settingsData = {
                 selectedBenchmark: this.state.selectedBenchmark,
                 selectedUniverse: this.state.selectedUniverse,
@@ -402,7 +407,7 @@ class StartegyDetail extends Component {
                     } else {
                         this.props.history.push('/errorPage');
                     }
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                 }
                 if (showResultInfo) {
                     // message.error('Unable to save strategy');
@@ -459,7 +464,7 @@ class StartegyDetail extends Component {
             } catch (error) {
                 reject(false);
             }
-            this.saveStartegy(true)
+            this.saveStrategy(true)
                 .then(data => {
                     this.updateState({
                         'isBacktestRunning': true,
@@ -511,7 +516,7 @@ class StartegyDetail extends Component {
                             return;
                         }
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                     this.updateState({
                         'isBacktestRunning': false,
@@ -546,7 +551,7 @@ class StartegyDetail extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                 });
         }
@@ -563,7 +568,7 @@ class StartegyDetail extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                 });
         }
@@ -580,7 +585,7 @@ class StartegyDetail extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                 });
         }
@@ -597,7 +602,7 @@ class StartegyDetail extends Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     }
                 });
         }
@@ -660,7 +665,7 @@ class StartegyDetail extends Component {
         let requiredUniverse = _.get(this.state, 'selectedUniverse', universe[0]);
         requiredUniverse = requiredUniverse.toUpperCase().split(' ').join('_');
         const url = `${Utils.getBaseUrl()}/stock?limit=20&universe=${requiredUniverse}&search=${search}`;
-        fetchAjaxPromise(url, this.props.history, this.props.match.url)
+        fetchAjaxPromise(url, this.props.history, this.props.url)
         .then(response => {
             const stocks = response.data.map(stockItem => {
                 const ticker = (_.get(stockItem, 'detail.NSE_ID', null));
@@ -1048,8 +1053,9 @@ class StartegyDetail extends Component {
                 this.loadBenchMarkDropdownData();
             }
             window.addEventListener("resize", this.updateDimensions);
+            //
             this.autoSaveTimer = setInterval(() => {
-                this.saveStartegy(true);
+                this.saveStrategy(true);
             }, this.autoSaveTime);
         }
     }
@@ -1145,7 +1151,7 @@ class StartegyDetail extends Component {
                 ...this.state.strategy,
                 type: 'CODE'
             }
-        }, () => this.saveStartegy(true));
+        }, () => this.saveStrategy(true));
     }
 
     renderSelectedStocks = () => {
@@ -2046,7 +2052,7 @@ class StartegyDetail extends Component {
         }
 
         const goBack = () => {
-            this.saveStartegy(true)
+            this.saveStrategy(true)
                 .finally(() => {
                     this.props.history.push('/research');
                 });
@@ -2293,7 +2299,7 @@ class StartegyDetail extends Component {
     }
 }
 
-export default withStyles(styles)(StartegyDetail);
+export default withStyles(styles)(withRouter(StartegyDetail));
 
 const InputContainer = props => {
     const {label = '', input, style = {}} = props;

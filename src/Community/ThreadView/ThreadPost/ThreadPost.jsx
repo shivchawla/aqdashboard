@@ -49,7 +49,7 @@ class ThreadPost extends Component {
                             if (error.response) {
                                 Utils.checkForInternet(error, this.props.history);
                                 Utils.goToErrorPage(error, this.props.history);
-                                Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                                Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                             }
                         });
                 } else {

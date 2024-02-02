@@ -321,7 +321,7 @@ class Community extends Component {
         const params = new URLSearchParams(this.props.location.search);
         // const token = params.get('token');
         // if (Utils.checkToken(token) && !Utils.isLoggedIn()) {  
-        //   Utils.autoLogin(token,this.props.history, this.props.match.url, () => {
+        //   Utils.autoLogin(token,this.props.history, this.props.url, () => {
         //     this.props.completeLogin();
         //   });
         // } 

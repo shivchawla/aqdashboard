@@ -292,7 +292,7 @@ class ForwardtestDetail extends Component {
             Utils.checkForInternet(error, this.props.history);
             if (error.response) {
               Utils.goToErrorPage(error, this.props.history);
-              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
             }
             this.updateState({
               'loading': false
@@ -331,7 +331,7 @@ class ForwardtestDetail extends Component {
             Utils.checkForInternet(error, this.props.history);
             if (error.response) {
               Utils.goToErrorPage(error, this.props.history);
-              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
             }
             this.cancelRestartApicall = undefined;
             this.updateState({
@@ -364,7 +364,7 @@ class ForwardtestDetail extends Component {
             Utils.checkForInternet(error, this.props.history);
             if (error.response) {
               Utils.goToErrorPage(error, this.props.history);
-              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
             }
             this.cancelStopApicall = undefined;
             this.updateState({
@@ -392,7 +392,7 @@ class ForwardtestDetail extends Component {
             Utils.checkForInternet(error, this.props.history);
             if (error.response) {
               Utils.goToErrorPage(error, this.props.history);
-              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+              Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
             }
             this.cancelDeleteApicall = undefined;
             this.updateState({

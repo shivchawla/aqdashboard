@@ -59,7 +59,7 @@ class AvailableBackTests extends React.Component {
                     Utils.checkForInternet(error, this.props.history);
                     if (error.response) {
                         Utils.goToErrorPage(error, this.props.history);
-                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                        Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                         this.cancelGetThreadData = undefined;
                     }
                     this.updateState({ 'loadingStrategy': false });
@@ -83,7 +83,7 @@ class AvailableBackTests extends React.Component {
                     this.cancelGetBacktests = undefined;
                 })
                 .catch((error) => {
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                     this.updateState({ 'loadingBackTests': false });
                     this.cancelGetBacktests = undefined;
                 });

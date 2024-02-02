@@ -281,7 +281,7 @@ class BacktestDetail extends Component {
                 if (error.response) {
                     Utils.checkForInternet(error, this.props.history);
                     Utils.goToErrorPage(error, this.props.history);
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                 }
                 this.updateState({
                     'loading': false
@@ -307,7 +307,7 @@ class BacktestDetail extends Component {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
                     Utils.goToErrorPage(error, this.props.history);
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                 }
                 this.cancelGetBacktest = undefined;
             })
@@ -341,7 +341,7 @@ class BacktestDetail extends Component {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
                     Utils.goToErrorPage(error, this.props.history);
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                 }
                 this.cancelGetLogs = undefined;
             })
@@ -459,7 +459,7 @@ class BacktestDetail extends Component {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
                     Utils.goToErrorPage(error, this.props.history);
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                 }
                 this.cancelGetTransactionHistory = undefined;
             })
@@ -564,7 +564,7 @@ class BacktestDetail extends Component {
                 Utils.checkForInternet(error, this.props.history);
                 if (error.response) {
                     Utils.goToErrorPage(error, this.props.history);
-                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.match.url);
+                    Utils.checkErrorForTokenExpiry(error, this.props.history, this.props.url);
                 }
                 this.cancelGetPortfolioHistory = undefined;
             })
