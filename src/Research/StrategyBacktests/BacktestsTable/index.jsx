@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { lighten } from '@mui/system';
 import {processRowData} from '../utils';
 import {primaryColor} from '../../../constants';
+import { withRouter } from '../../function2Class.js';
 
 const rows = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Backtest' },
@@ -183,7 +184,7 @@ class EnhancedTable extends React.Component {
 
     handleClick = (name, id) => {
         this.props.history.push('/research/backtests/'
-            + this.props.match.params.strategyId + '/' + id
+            + this.props.params.strategyId + '/' + id
             + '?type=backtest&strategyName=' + _.get(this.props, 'strategyName', '')
             + '&backtestName=' + name);
     };
@@ -278,7 +279,7 @@ class EnhancedTable extends React.Component {
     }
 }
 
-export default withStyles(styles)(EnhancedTable);
+export default withStyles(styles)(withRouter(EnhancedTable));
 
 const RowLabel = styled.span`
     font-size: 14px;

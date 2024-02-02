@@ -12,6 +12,7 @@ import DialogComponent from '../../components/Alerts/DialogComponent';
 import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import CircularProgress from '@mui/material/CircularProgress';
 import { horizontalBox } from '../../constants';
+import { withRouter } from '../../function2Class.js';
 
 class StrategyBacktests extends Component {
 
@@ -46,7 +47,7 @@ class StrategyBacktests extends Component {
         }
 
         this.getStrategy = () => {
-            axios(Utils.getBaseUrl() + '/strategy/' + props.match.params.strategyId, {
+            axios(Utils.getBaseUrl() + '/strategy/' + props.strategyId, {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
                     this.cancelGetStrategy = c;
@@ -78,7 +79,7 @@ class StrategyBacktests extends Component {
         }
 
         this.getAllBacktests = () => {
-            axios(Utils.getBaseUrl() + '/strategy/' + props.match.params.strategyId + '/backtests?skip=0&limit=0', {
+            axios(Utils.getBaseUrl() + '/strategy/' + props.params.strategyId + '/backtests?skip=0&limit=0', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
                     this.cancelGetBackTests = c;
@@ -109,7 +110,7 @@ class StrategyBacktests extends Component {
                 'method': 'post',
                 'url': Utils.getBaseUrl() + '/forwardtest',
                 'data': {
-                    "strategyId": this.props.match.params.strategyId,
+                    "strategyId": this.props.params.strategyId,
                     "backtestId": backtestId
                 },
                 'headers': Utils.getAuthTokenHeader()
@@ -424,4 +425,4 @@ class StrategyBacktests extends Component {
     }
 }
 
-export default StrategyBacktests;
+export default withRouter(StrategyBacktests);

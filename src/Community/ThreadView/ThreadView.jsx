@@ -16,6 +16,7 @@ import Breadcrumbs from '../../components/UI/Breadcrumbs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import AqDesktopLayout from '../../components/Layout/AqDesktopLayout';
+import { withRouter } from '../../function2Class.js';
 
 class ThreadView extends Component {
 
@@ -25,7 +26,7 @@ class ThreadView extends Component {
     constructor(props) {
         super();
         this.state = {
-            "id": props.match.params.postId,
+            "id": props.params.postId,
             "loading": true,
             "threadData": {},
             'userReply': '',
@@ -410,4 +411,4 @@ class ThreadView extends Component {
     }
 }
 
-export default ThreadView;
+export default withRouter(ThreadView);

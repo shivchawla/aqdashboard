@@ -29,6 +29,7 @@ import Chip from '../../components/DataDisplay/Chip';
 import { processConditionsToAlgo } from '../StartegyDetail/utils';
 import FlowChartAlgo from '../FlowChartAlgo';
 import { verticalBox, horizontalBox, primaryColor } from '../../constants';
+import { withRouter } from '../../function2Class.js';
 
 
 class BacktestDetail extends Component {
@@ -322,7 +323,7 @@ class BacktestDetail extends Component {
             this.updateState({
                 logsLoading: true
             });
-            axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=logs', {
+            axios(Utils.getBaseUrl() + '/backtest/' + props.params.backtestId + '?select=logs', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
                     this.cancelGetLogs = c;
@@ -355,7 +356,7 @@ class BacktestDetail extends Component {
 
         this.getTransactionHistory = () => {
             this.setState({transactionLoading: true});
-            axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=transactionHistory', {
+            axios(Utils.getBaseUrl() + '/backtest/' + props.params.backtestId + '?select=transactionHistory', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
                     this.cancelGetTransactionHistory = c;
@@ -473,7 +474,7 @@ class BacktestDetail extends Component {
         
         this.getPortfolioHistory = () => {
             this.updateState({portfolioHistoryLoading: true});
-            axios(Utils.getBaseUrl() + '/backtest/' + props.match.params.backtestId + '?select=portfolioHistory', {
+            axios(Utils.getBaseUrl() + '/backtest/' + props.backtestId + '?select=portfolioHistory', {
                 cancelToken: new axios.CancelToken((c) => {
                     // An executor function receives a cancel function as a parameter
                     this.cancelGetPortfolioHistory = c;
@@ -1698,7 +1699,7 @@ class BacktestDetail extends Component {
                     </div>
                 </div>
             );
-        }
+        }        
 
         return (
             <AqDesktopLayout loading={this.state.loading}>
@@ -1733,4 +1734,4 @@ class BacktestDetail extends Component {
     }
 }
 
-export default BacktestDetail;
+export default withRouter(BacktestDetail);
